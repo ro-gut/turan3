@@ -10,6 +10,15 @@ local notation "n" => Fintype.card α
 
 open Finset SimpleGraph
 
+structure FunToMax where
+  w : α → NNReal
+  h_w : ∑ v in V, w v = 1
+  fw := ∑ e in G.edgeFinset,
+    Quot.liftOn e (λ pair : α × α => w pair.1 * w pair.2)
+    (by intros x y h; cases h;
+        · apply refl
+        · apply mul_comm)
+
 -- Turán's Theorem
 theorem turan (h0 : p ≥ 2) (h1 : G.CliqueFree p)
   (w : α → NNReal) (h_w : ∑ v in V, w v = 1) :
@@ -21,12 +30,7 @@ theorem turan (h0 : p ≥ 2) (h1 : G.CliqueFree p)
   -- Second try (defining f(w))
   -- Define f(w): the sum over "edges" of the product of weights
   -- Iterate through all edges of G. Quot.liftOn "extracts" pair of vertices for each edge in G
-  let f : NNReal :=
-  ∑ e in G.edgeFinset,
-    Quot.liftOn e (λ pair : α × α => w pair.1 * w pair.2)
-    (by intros x y h; cases h;
-        · apply refl
-        · apply mul_comm)
+  sorry
 
 
 
