@@ -23,13 +23,6 @@ structure FunToMax where
 theorem turan (h0 : p ≥ 2) (h1 : G.CliqueFree p)
   (w : α → NNReal) (h_w : ∑ v in V, w v = 1) :
   #E ≤ (1 -  1 / (p - 1)) * n^2 / 2 := by
-
-  -- First try (defining f(w)):
-  -- let f : E -> NNReal := ∑ e in G.edgeFinset, Sym2.lift (λ u v => w u * w v) e
-
-  -- Second try (defining f(w))
-  -- Define f(w): the sum over "edges" of the product of weights
-  -- Iterate through all edges of G. Quot.liftOn "extracts" pair of vertices for each edge in G
   sorry
 
 

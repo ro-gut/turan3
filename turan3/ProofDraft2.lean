@@ -30,11 +30,29 @@ def SupposedMax {k : ℕ} (hk : k ≠ 0) {clique : Finset α} (hc : clique.card 
 noncomputable
 def definitionalMax := sSup (Set.image FunToMax.fw (Set.univ : Set (FunToMax G)))
 
----------------
+---------------------
 
-w
-
-
+theorem help (W : FunToMax G) : ∃ m : ℕ, (fun m =>
+  ∃ better : FunToMax G,
+    (∀ i, W.w i = 0 → better.w i = 0) ∧ -- support is included in that of W
+    (((Finset.univ : Finset α).filter (fun i => better.w i = 0)).card = m) ∧ -- support has size m
+    (W.fw ≤ better.fw) -- has better weights
+    ) m := by
+    let m := ((Finset.univ : Finset α).filter (fun i => W.w i = 0)).card
+    use m
+    let better := W
+    use better
+    have hP : ∀ (i : α), W.w i = 0 → better.w i = 0 := by
+      intro i h_w_zero
+      have better_eq : better.w = W.w := rfl
+      rw [better_eq]
+      exact h_w_zero
+    have hQ : (Finset.filter (fun i => better.w i = 0) Finset.univ).card = m := by
+      exact rfl
+    have hR : W.fw ≤ better.fw := by
+      have better_fw_eq : better.fw = W.fw := rfl
+      rw [better_fw_eq]
+    exact ⟨hP, ⟨hQ, hR⟩⟩
 
 open Classical
 
@@ -49,3 +67,10 @@ lemma help2 (W : FunToMax G):
     := Nat.find_spec (help G W)
 
 #check Nat.find_le
+
+open Finset SimpleGraph
+
+theorem turan (h0 : p ≥ 2) (h1 : G.CliqueFree p)
+  (w : α → NNReal) (h_w : ∑ v in V, w v = 1) :
+  #E ≤ (1 -  1 / (p - 1)) * n^2 / 2 := by
+  sorry
