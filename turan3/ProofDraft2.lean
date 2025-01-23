@@ -159,13 +159,39 @@ def Improve (W : FunToMax G) (loose gain : α) (h_neq : gain  ≠ loose) : FunTo
 lemma Improve_does_its_thing (W : FunToMax G) (loose gain : α) (h : W.w gain ≥ W.w loose) (h_neq : gain ≠ loose):
   (Improve G W loose gain h_neq).fw ≥ W.fw := by
   simp only [FunToMax.fw, Improve]
+  let W' := Improve G W loose gain h_neq
+  have well_defined : ∀ (a b : α × α),
+    Sym2.Rel α a b →
+      (fun pair =>
+        (if pair.1 = loose then 0 else if pair.1 = gain then W.w gain + W.w loose else W.w pair.1) *
+        (if pair.2 = loose then 0 else if pair.2 = gain then W.w gain + W.w loose else W.w pair.2)) a =
+      (fun pair =>
+        (if pair.1 = loose then 0 else if pair.1 = gain then W.w gain + W.w loose else W.w pair.1) *
+        (if pair.2 = loose then 0 else if pair.2 = gain then W.w gain + W.w loose else W.w pair.2)) b := by
+    intros a b h_rel
+    cases h_rel
+    · case refl => rfl
+    · case swap => simp [mul_comm]
   sorry
 
 
-
-lemma ImproveReducesSupport (W : FunToMax G) (loose gain : α) :
-  ∀ i, W.w i = 0 → (Improve G W loose gain).w i = 0 := by
-  sorry
+lemma ImproveReducesSupport (W : FunToMax G) (loose gain : α) (h_neq : gain ≠ loose) :
+  ∀ i, W.w i = 0 → (Improve G W loose gain h_neq).w i = 0 := by
+  intro i h_zero
+  simp only [Improve, FunToMax.w]
+  by_cases hi_loose : i = loose
+  · rw [hi_loose]
+    simp
+  · by_cases hi_gain : i = gain
+    · rw [hi_gain]
+      simp
+      intro h_not_eq
+      constructor
+      · have : i = gain := hi_gain
+        rw [this] at h_zero
+        exact h_zero
+      · sorry
+    · simp [hi_loose, hi_gain, h_zero]
 
 
 lemma BetterFormsClique (W : FunToMax G) : G.IsClique ((Finset.univ : Finset α).filter (fun i => (Better G W).w i > 0)) := by
