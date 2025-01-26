@@ -172,8 +172,29 @@ lemma Improve_does_its_thing (W : FunToMax G) (loose gain : α) (h : W.w gain �
     cases h_rel
     · case refl => rfl
     · case swap => simp [mul_comm]
-  sorry
-
+    -- split by cases 1. e_1 or e_2 = loose
+      --              2. e_1 or e_2 = gain
+      --              2. e_1 and e_2 =! gain or loose (remains unchanged by def)
+  let edges_with_loose := G.edgeFinset.filter (λ e => loose ∈ e)
+  let edges_with_gain := G.edgeFinset.filter (λ e => gain ∈ e ∧ ¬(loose ∈ e))
+  let edges_other := G.edgeFinset.filter (λ e => ¬(loose ∈ e) ∧ ¬(gain ∈ e))
+  let w' := (Improve G W loose gain h_neq).w
+  have h_partition : G.edgeFinset =
+    edges_with_loose ∪ edges_with_gain ∪ edges_other := by
+    apply Finset.ext
+    intro e
+    simp only [edges_with_loose, edges_with_gain, edges_other, Finset.mem_union, Finset.mem_filter]
+    constructor
+    · intro h_mem
+      by_cases h_loose : loose ∈ e
+      · left
+        exact Or.inl ⟨h_mem, h_loose⟩
+      by_cases h_gain : gain ∈ e
+      · left; right
+        exact ⟨h_mem, h_gain, h_loose⟩
+      · right
+        exact ⟨h_mem, h_loose, h_gain⟩
+    · sorry
 
 lemma ImproveReducesSupport (W : FunToMax G) (loose gain : α) (h_neq : gain ≠ loose) :
   ∀ i, W.w i = 0 → (Improve G W loose gain h_neq).w i = 0 := by
@@ -183,15 +204,25 @@ lemma ImproveReducesSupport (W : FunToMax G) (loose gain : α) (h_neq : gain ≠
   · rw [hi_loose]
     simp
   · by_cases hi_gain : i = gain
-    · rw [hi_gain]
-      simp
-      intro h_not_eq
-      constructor
-      · have : i = gain := hi_gain
-        rw [this] at h_zero
-        exact h_zero
-      · sorry
+    · rw [hi_gain] at h_zero
+      simp [h_zero]
+      have h_sum := W.h_w
+      have h_sum_split : ∑ v in Finset.univ, W.w v = W.w loose + ∑ v in Finset.univ.erase loose, W.w v := by
+        have h_not_mem : loose ∉ Finset.univ.erase loose := Finset.not_mem_erase loose Finset.univ
+        rw [←Finset.insert_erase (Finset.mem_univ loose)]
+        rw [Finset.sum_insert h_not_mem]
+        rw [Finset.insert_erase (Finset.mem_univ loose)]
+      have h_other_sum : ∑ v in Finset.univ.erase loose, W.w v = 1 - W.w loose := by
+        rw [h_sum_split] at h_sum
+        apply_fun (λ x => x - W.w loose) at h_sum
+        simp at h_sum
+        exact h_sum
+      have h_nonneg : W.w loose ≥ 0 := NNReal.coe_nonneg (W.w loose)
+      have h_contradiction : W.w loose = 0 := by
+        sorry
+      sorry
     · simp [hi_loose, hi_gain, h_zero]
+
 
 
 lemma BetterFormsClique (W : FunToMax G) : G.IsClique ((Finset.univ : Finset α).filter (fun i => (Better G W).w i > 0)) := by
@@ -204,6 +235,14 @@ lemma BetterFormsClique (W : FunToMax G) : G.IsClique ((Finset.univ : Finset α)
     specialize SymCase G W y ydef x xdef (ne_comm.mp xny) -- ...
     sorry
   · sorry
+
+
+
+
+
+
+
+-- Turan
 
 theorem turan (h0 : p ≥ 2) (h1 : G.CliqueFree p)
   (w : α → NNReal) (h_w : ∑ v in V, w v = 1) :

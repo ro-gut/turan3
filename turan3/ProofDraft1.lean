@@ -66,7 +66,89 @@ lemma help2 (W : FunToMax G):
     (W.fw ≤ better.fw) -- has better weights
     := Nat.find_spec (help G W)
 
-#check Nat.find_le
+--------- WIP -----------
+
+lemma Improve_does_its_thing (W : FunToMax G) (loose gain : α) (h : W.w gain ≥ W.w loose) (h_neq : gain ≠ loose):
+  (Improve G W loose gain h_neq).fw ≥ W.fw := by
+    simp only [Improve, FunToMax.w]
+  have left_hand : (Improve G W loose gain h_neq).fw =
+    ∑ e in G.edgeFinset,
+      Quot.liftOn e
+        (λ pair : α × α =>
+          (if pair.1 = loose then 0 else if pair.1 = gain then W.w gain + W.w loose else W.w pair.1) *
+          (if pair.2 = loose then 0 else if pair.2 = gain then W.w gain + W.w loose else W.w pair.2))
+        (by
+          intros x y hxy;
+          cases hxy with
+          | refl x y => rfl
+          | swap x y => simp only [mul_comm, if_pos, if_neg]) := by
+              simp only [Improve, FunToMax.fw]
+
+  have right_hand : W.fw = ∑ e in G.edgeFinset,
+    Quot.liftOn e
+      (λ pair : α × α => W.w pair.1 * W.w pair.2)
+      (by
+        intros x y hxy
+        cases hxy with
+        | refl x y => rfl
+        | swap x y => simp only [mul_comm, if_pos, if_neg]) := by
+
+    let fw_manual := ∑ e in G.edgeFinset,
+      Quot.liftOn e
+        (λ pair : α × α => W.w pair.1 * W.w pair.2)
+        (by
+          intros a b hab
+          cases hab with
+          | refl => rfl
+          | swap => simp only [mul_comm])
+
+    change W.fw = fw_manual
+    rfl
+    sorry
+
+
+    -- Idea: split by cases 1. e_1 or e_2 = loose
+      --              2. e_1 or e_2 = gain
+      --              2. e_1 and e_2 =! gain or loose (remains unchanged by def)
+    let edges_with_loose := G.edgeFinset.filter (λ e => loose ∈ e)
+    let edges_with_gain := G.edgeFinset.filter (λ e => gain ∈ e ∧ ¬(loose ∈ e))
+    let edges_other := G.edgeFinset.filter (λ e => ¬(loose ∈ e) ∧ ¬(gain ∈ e))
+    let w' := (Improve G W loose gain h_neq).w
+
+lemma ImproveReducesSupport (W : FunToMax G) (loose gain : α) (h_neq : gain ≠ loose) :
+  ∀ i, W.w i = 0 → (Improve G W loose gain h_neq).w i = 0 := by
+  intro i h_zero
+  simp only [Improve, FunToMax.w]
+  by_cases hi_loose : i = loose
+  · rw [hi_loose]
+    simp
+  · by_cases hi_gain : i = gain
+    · rw [hi_gain]
+      simp
+      intro h_not_eq
+      constructor
+      · rw [hi_gain] at h_zero
+        exact h_zero
+      ·
+        have h_sum_split : ∑ v in Finset.univ, W.w v = W.w loose + ∑ v in Finset.univ.erase loose, W.w v := by
+        W.w loose + W.w gain + ∑ v in (Finset.univ.erase loose).erase gain, W.w v := by
+          have h_not_mem : loose ∉ Finset.univ.erase loose := Finset.not_mem_erase loose Finset.univ
+          rw [←Finset.insert_erase (Finset.mem_univ loose)]
+          rw [Finset.sum_insert h_not_mem]
+          rw [Finset.insert_erase (Finset.mem_univ loose)]
+
+        have h_sum := W.h_w
+        rw [h_sum_split] at h_sum
+
+        have h_other_sum : ∑ v in Finset.univ.erase loose, W.w v = 1 - W.w loose := by
+          apply_fun (λ x => x - W.w loose) at h_sum
+          simp at h_sum
+          exact h_sum
+        rw[h_other_sum] at h_sum
+
+        sorry
+    · simp [hi_loose, hi_gain, h_zero]
+
 
 open Finset SimpleGraph
 
