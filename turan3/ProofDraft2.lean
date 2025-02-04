@@ -249,11 +249,6 @@ lemma Improve_does_its_thing_part_1 (W : FunToMax G) (loose gain : α)
       (Improve_does_its_thing_part_0 G h_neq h_adj)
   G.edgeFinset = disjUnion changed (G.edgeFinset \ changed) (disjoint_sdiff) := by
   intro changed
-  -- let changed :=
-  --   disjUnion
-  --     (G.incidenceFinset gain)
-  --     (G.incidenceFinset loose)
-  --     (Improve_does_its_thing_part_0 G h_neq h_adj)
   have h_disj_union : changed = G.incidenceFinset gain ∪ G.incidenceFinset loose := by
     apply Finset.disjUnion_eq_union
   ext e
@@ -274,11 +269,11 @@ lemma Improve_does_its_thing_part_1 (W : FunToMax G) (loose gain : α)
 #check Finset.disjUnion_eq_union
 #check Finset.sdiff_union_of_subset
 
-lemma incidenceFinset_subset (v : α) : G.incidenceFinset v ⊆ G.edgeFinset := by
-  intro e he
-  simp [incidenceFinset] at he
-  rw [mem_edgeFinset]
-  exact he.1
+-- lemma incidenceFinset_subset (v : α) : G.incidenceFinset v ⊆ G.edgeFinset := by
+--   intro e he
+--   simp [incidenceFinset] at he
+--   rw [mem_edgeFinset]
+--   exact he.1
 
 lemma Improve_does_its_thing_part_2 (W : FunToMax G) (loose gain : α)
   (h_neq : gain ≠ loose) (h_adj : ¬ G.Adj gain loose) :
@@ -292,11 +287,6 @@ lemma Improve_does_its_thing_part_2 (W : FunToMax G) (loose gain : α)
     ∑ e in G.incidenceFinset loose, vp W.w e +
     ∑ e in (G.edgeFinset \ changed), vp W.w e := by
   intro changed
-  -- let changed :=
-  --   disjUnion
-  --     (G.incidenceFinset gain)
-  --     (G.incidenceFinset loose)
-  --     (Improve_does_its_thing_part_0 G h_neq h_adj)
   have h_disj_union : changed = G.incidenceFinset gain ∪ G.incidenceFinset loose := by
     apply Finset.disjUnion_eq_union
   have h_disj_sdiff : Disjoint changed (G.edgeFinset \ changed) := Finset.disjoint_sdiff
