@@ -1,6 +1,6 @@
 import Mathlib
 
-variable {α : Type*} (G : SimpleGraph α)
+variable {α : Type*} [Fintype α](G : SimpleGraph α)
 variable [Fintype α] [DecidableEq α] [DecidableRel G.Adj]
 
 -- Vertice Set (V), Edge Set (E), Graphs order (n)
@@ -10,16 +10,27 @@ local notation "n" => Fintype.card α
 
 open Finset SimpleGraph
 
--- structure FunToMax where
---   w : α → NNReal
---   h_w : ∑ v in V, w v = 1
---   fw := ∑ e in G.edgeFinset,
---     Quot.liftOn e (λ pair : α × α => w pair.1 * w pair.2)
---     (by intros x y h; cases h;
---         · apply refl
---         · apply mul_comm)
+-- "Value" of an edge = product of its vertices weight
+def vp (w : α → NNReal) (e : Sym2 α) :=
+  Quot.liftOn e (λ pair : α × α => w pair.1 * w pair.2)
+    (by intros x y h; cases h;
+        · apply refl
+        · apply mul_comm)
 
--- help: Assures there exists an m s.t there is a weight function "better" with the following properties
+-- f(w) in the informal proof
+structure FunToMax (G : SimpleGraph α) [Fintype α] where
+  w   : α → NNReal
+  h_w : ∑ v in (Finset.univ : Finset α), w v = 1
+
+namespace FunToMax
+
+-- Definition of fw using the graph’s edge finset.
+def fw {G : SimpleGraph α} [DecidableRel G.Adj] (W : FunToMax G) : NNReal :=
+  ∑ e in G.edgeFinset, vp W.w e
+
+end FunToMax
+
+-- help: Assures that for any weight function W there exists an m and another weight function "better" with the following properties
 theorem help (W : FunToMax G) : ∃ m : ℕ, (fun m =>
   ∃ better : FunToMax G,
     (∀ i, W.w i = 0 → better.w i = 0) ∧ -- support is included in that of W
@@ -74,7 +85,7 @@ lemma BetterHigher (W : FunToMax G) : W.fw ≤ (Better G W).fw :=
   (Classical.choose_spec (help2 G W)).2.2
 
 -- Define a new weight function redistributing weight from one vertex (loose) to another (gain)
--- Notes : I added h_neq as an assumption
+-- Note : I added h_neq as an assumption
 def Improve (W : FunToMax G) (loose gain : α) (h_neq : gain  ≠ loose) : FunToMax G where
   w := fun i =>
           if i = loose
@@ -155,186 +166,7 @@ def Improve (W : FunToMax G) (loose gain : α) (h_neq : gain  ≠ loose) : FunTo
     rw[←h_sum]
     rw[remember]
 
-
-lemma Improve_does_its_thing (W : FunToMax G) (loose gain : α) (h : W.w gain ≥ W.w loose) (h_neq : gain ≠ loose):
-  (Improve G W loose gain h_neq).fw ≥ W.fw := by
-  -- unfold fw and Improve
-  simp only [FunToMax.fw, Improve]
-  let W' := Improve G W loose gain h_neq
-  -- Prove Quot.liftOn is well_defined
-  have well_defined : ∀ (a b : α × α),
-    Sym2.Rel α a b →
-      (fun pair =>
-        (if pair.1 = loose then 0 else if pair.1 = gain then W.w gain + W.w loose else W.w pair.1) *
-        (if pair.2 = loose then 0 else if pair.2 = gain then W.w gain + W.w loose else W.w pair.2)) a =
-      (fun pair =>
-        (if pair.1 = loose then 0 else if pair.1 = gain then W.w gain + W.w loose else W.w pair.1) *
-        (if pair.2 = loose then 0 else if pair.2 = gain then W.w gain + W.w loose else W.w pair.2)) b := by
-    intros a b h_rel
-    cases h_rel
-    · case refl => rfl
-    · case swap => simp [mul_comm]
-  -- Partitio G.edgeFinset into 3 parts by cases
-  let edges_with_loose := G.edgeFinset.filter (λ e => loose ∈ e)
-  let edges_with_gain := G.edgeFinset.filter (λ e => gain ∈ e ∧ ¬(loose ∈ e))
-  let edges_other := G.edgeFinset.filter (λ e => ¬(loose ∈ e) ∧ ¬(gain ∈ e))
-  let w' := (Improve G W loose gain h_neq).w
-  have h_partition : G.edgeFinset =
-    edges_with_loose ∪ edges_with_gain ∪ edges_other := by
-    apply Finset.ext
-    intro e
-    simp only [edges_with_loose, edges_with_gain, edges_other, Finset.mem_union, Finset.mem_filter]
-    constructor
-    · intro h_mem
-      by_cases h_loose : loose ∈ e
-      · left
-        exact Or.inl ⟨h_mem, h_loose⟩
-      by_cases h_gain : gain ∈ e
-      · left; right
-        exact ⟨h_mem, h_gain, h_loose⟩
-      · right
-        exact ⟨h_mem, h_loose, h_gain⟩
-    · rintro ((⟨eg,_⟩ | ⟨eg,_⟩) | ⟨eg,_⟩)
-      all_goals {apply eg}
-
-  -- disjoint lemmas
-
-  have disj₁ : Disjoint edges_with_loose edges_with_gain := by
-    rw [Finset.disjoint_left]
-    intros x hx hx'
-    rw [Finset.mem_filter] at hx hx'
-    exact hx'.2.2 hx.2
-
-
-
-  have disj₂ : Disjoint (edges_with_loose ∪ edges_with_gain) edges_other := by
-    rw [Finset.disjoint_left]
-    intros x hx hx'
-    rw [Finset.mem_union] at hx
-    cases hx
-    case inl hx_loose =>
-      rw [Finset.mem_filter] at hx_loose hx'
-      exact hx'.2.1 hx_loose.2
-    case inr hx_gain =>
-      rw [Finset.mem_filter] at hx_gain hx'
-      exact hx'.2.2 hx_gain.2.1
-
--- summand function f to define bigSum
-  let f : Sym2 α → NNReal :=
-    fun e =>
-      Quot.liftOn e
-        (fun pair =>
-          (if pair.1 = loose then 0
-          else if pair.1 = gain then W.w gain + W.w loose
-          else W.w pair.1) *
-          (if pair.2 = loose then 0
-          else if pair.2 = gain then W.w gain + W.w loose
-          else W.w pair.2)
-        )
-        well_defined
-
-  set bigSum :=
-    ∑ x in edges_with_loose, f x +
-    ∑ x in edges_with_gain,  f x +
-    ∑ x in edges_other,      f x
-
-  -- merge sums by steps
-
-  have step1 :
-    ∑ x in edges_with_loose, f x +
-    ∑ x in edges_with_gain, f x =
-    ∑ x in (edges_with_loose ∪ edges_with_gain), f x :=
-    (Finset.sum_union disj₁ (f := f)).symm
-
-  have step2 :
-    ∑ x in (edges_with_loose ∪ edges_with_gain), f x +
-    ∑ x in edges_other, f x =
-    ∑ x in (edges_with_loose ∪ edges_with_gain ∪ edges_other), f x :=
-    (Finset.sum_union disj₂ (f := f)).symm
-
-  have eq_bigSum : bigSum = W'.fw := by
-    calc
-      bigSum
-        = ∑ x in edges_with_loose, f x + ∑ x in edges_with_gain, f x + ∑ x in edges_other, f x
-          := rfl
-      _ = ∑ x in (edges_with_loose ∪ edges_with_gain), f x + ∑ x in edges_other, f x
-          := by rw [step1]
-      _ = ∑ x in (edges_with_loose ∪ edges_with_gain ∪ edges_other), f x
-          := by rw [step2]
-      _ = ∑ x in G.edgeFinset, f x
-          := by rw [h_partition]
-      _ = W'.fw
-          := rfl
-
------------------------ Show its not neg
-  sorry
-
------------------------
-
-
-
-lemma ImproveReducesSupport (W : FunToMax G) (loose gain : α) (h_neq : gain ≠ loose) :
-  ∀ i, W.w i = 0 → (Improve G W loose gain h_neq).w i = 0 := by
-  intro i h_zero
-  simp only [Improve, FunToMax.w]
-  by_cases hi_loose : i = loose
-  · rw [hi_loose]
-    simp
-  · by_cases hi_gain : i = gain
-    · rw [hi_gain] at h_zero
-      simp [h_zero]
-      have h_sum := W.h_w
-      have h_sum_split : ∑ v in Finset.univ, W.w v = W.w loose + ∑ v in Finset.univ.erase loose, W.w v := by
-        have h_not_mem : loose ∉ Finset.univ.erase loose := Finset.not_mem_erase loose Finset.univ
-        rw [←Finset.insert_erase (Finset.mem_univ loose)]
-        rw [Finset.sum_insert h_not_mem]
-        rw [Finset.insert_erase (Finset.mem_univ loose)]
-      have h_other_sum : ∑ v in Finset.univ.erase loose, W.w v = 1 - W.w loose := by
-        rw [h_sum_split] at h_sum
-        apply_fun (λ x => x - W.w loose) at h_sum
-        simp at h_sum
-        exact h_sum
-      have h_nonneg : W.w loose ≥ 0 := NNReal.coe_nonneg (W.w loose)
-      have h_contradiction : W.w loose = 0 := by
-        sorry
-      sorry
-    · simp [hi_loose, hi_gain, h_zero]
-
-
-lemma BetterFormsClique (W : FunToMax G) : G.IsClique ((Finset.univ : Finset α).filter (fun i => (Better G W).w i > 0)) := by
-  by_contra con
-  dsimp [IsClique, Set.Pairwise] at con
-  push_neg at con
-  obtain ⟨x,xdef,y,ydef,xny,xyAdj⟩ := con
-  wlog wlog : (Better G W).w x ≤ (Better G W).w y with SymCase
-  · push_neg at wlog
-    specialize SymCase G W y ydef x xdef (ne_comm.mp xny) -- ...
-    sorry
-  · sorry
-
-
-
--- Turan
-
-theorem turan (h0 : p ≥ 2) (h1 : G.CliqueFree p)
-  (w : α → NNReal) (h_w : ∑ v in V, w v = 1) :
-  #E ≤ (1 -  1 / (p - 1)) * n^2 / 2 := by
-  sorry
-
-
----------------------------------------------------
-
-def vp (w : α → NNReal) (e : Sym2 α) :=
-  Quot.liftOn e (λ pair : α × α => w pair.1 * w pair.2)
-    (by intros x y h; cases h;
-        · apply refl
-        · apply mul_comm)
-
-structure FunToMax where
-  w : α → NNReal
-  h_w : ∑ v in V, w v = 1
-  fw := ∑ e in G.edgeFinset, vp w e
-
+-- if an edge e is connceted to vertex gain --> gain ∈ e
 lemma mini_help (e : Sym2 α) (he : e ∈ G.incidenceFinset gain) :
   gain ∈ e := by
   rw [mem_incidenceFinset] at he
@@ -342,6 +174,104 @@ lemma mini_help (e : Sym2 α) (he : e ∈ G.incidenceFinset gain) :
   have wow : ↑e' ∈ G.incidenceSet gain := he
   rw [edge_mem_incidenceSet_iff] at wow
   exact wow
+
+-- Product of weights for an edge e "connected to gain" as wegith of gain * weight of the other vertices connected to gain
+lemma Improve_does_its_thing_part_help_0 (W : FunToMax G) (gain : α)
+  (e : Sym2 α) (he : e ∈ G.incidenceFinset gain) :
+  vp W.w e = (W.w gain) * (W.w (Sym2.Mem.other (mini_help G e he))) := by
+  revert he
+  apply @Sym2.inductionOn α (fun e => ∀ he : e ∈ G.incidenceFinset gain, vp W.w e = (W.w gain) * (W.w (Sym2.Mem.other (mini_help G e he))))
+  intro x y he
+  dsimp [vp]
+  have help := (Sym2.other_spec (mini_help _ _ he))
+  --rw [← help]  -- don't know  why this fails ...
+  -- I'm not expecting you to come up with ↓ ; If you get stuck, tell me
+  apply @Eq.ndrec _ (s(gain, Sym2.Mem.other (mini_help G s(x, y) he))) (fun X =>
+    Quot.liftOn X (fun pair => W.w pair.1 * W.w pair.2) (vp.proof_1 W.w) = W.w gain * W.w (Sym2.Mem.other (mini_help G s(x, y) he))
+    ) _ s(x,y) help
+  rw [Quot.liftOn_mk]
+
+
+#check vp
+#check Sym2.inductionOn
+#check Sym2.mem_iff_exists
+#check Sym2.mk_eq_mk_iff
+
+-- sum of vp W.w e = W.w gain * sum
+lemma Improve_does_its_thing_part_help_1 (W : FunToMax G) (gain : α) :
+    ∑ e in G.incidenceFinset gain, vp W.w e =
+    (W.w gain) * ∑ e in (G.incidenceFinset gain).attach, W.w (Sym2.Mem.other (mini_help G e.val e.prop)) := by
+  rw [mul_sum]
+  rw [← sum_attach]
+  apply sum_congr
+  · rfl
+  · intro x _
+    apply Improve_does_its_thing_part_help_0 _ _ gain _ x.prop
+
+#check sum_bij
+#check incidenceSetEquivNeighborSet
+#check mem_incidenceFinset
+#check mem_incidenceSet
+#check mem_neighborFinset
+#check mem_incidence_iff_neighbor
+#check mem_attach
+  --
+
+lemma Improve_does_its_thing_part_0 {loose gain : α}
+  (h_neq : gain ≠ loose) (h_adj : ¬ G.Adj gain loose) :
+  Disjoint (G.incidenceFinset gain) (G.incidenceFinset loose) := by
+    simp_rw [disjoint_iff_inter_eq_empty, eq_empty_iff_forall_not_mem, mem_inter]
+    rintro x ⟨xg,xl⟩
+    rw [incidenceFinset_eq_filter, mem_filter, mem_edgeFinset] at *
+    apply h_adj
+    rw [adj_iff_exists_edge]
+    exact ⟨h_neq,⟨x,xg.1,xg.2,xl.2 ⟩⟩
+
+lemma edge_mem_iff {v w : α} : G.Adj v w ↔ ∃ e ∈ G.edgeSet, e = Sym2.mk (v, w) := by
+  constructor
+  · intro h
+    use Sym2.mk (v, w)
+    simp [h]
+  · rintro ⟨e, he, rfl⟩
+    simp at he
+    exact he
+
+lemma incidenceFinset_subset (v : α) : G.incidenceFinset v ⊆ G.edgeFinset := by
+  intro e he
+  simp [incidenceFinset] at he
+  rw [mem_edgeFinset]
+  exact he.1
+
+lemma Improve_does_its_thing_part_1 (W : FunToMax G) (loose gain : α)
+  (h_neq : gain ≠ loose) (h_adj : ¬ G.Adj gain loose) :
+  let changed :=
+    disjUnion
+      (G.incidenceFinset gain)
+      (G.incidenceFinset loose)
+      (Improve_does_its_thing_part_0 G h_neq h_adj)
+  G.edgeFinset = disjUnion changed (G.edgeFinset \ changed) (disjoint_sdiff) := by
+  intro changed
+  have h_disj_union : changed = G.incidenceFinset gain ∪ G.incidenceFinset loose :=
+    Finset.disjUnion_eq_union _ _ _
+  ext e
+  simp only [Finset.mem_disjUnion, Finset.mem_union, Finset.mem_sdiff, h_disj_union, Finset.mem_coe]
+  apply Iff.intro
+  · intro he
+    by_cases h' : e ∈ G.incidenceFinset gain ∨ e ∈ G.incidenceFinset loose
+    · exact Or.inl h'
+    · exact Or.inr ⟨he, h'⟩
+  · intro h
+    rcases h with (h_left | h_right)
+    rcases h_left with (h_gain | h_loose)
+    · apply incidenceFinset_subset at h_gain
+      exact h_gain
+    · apply incidenceFinset_subset at h_loose
+      exact h_loose
+    · exact h_right.left
+
+#check Finset.disjUnion_eq_union
+#check Finset.sdiff_union_of_subset
+
 
 lemma Improve_does_its_thing_part_2 (W : FunToMax G) (loose gain : α)
   (h_neq : gain ≠ loose) (h_adj : ¬ G.Adj gain loose) :
@@ -354,17 +284,192 @@ lemma Improve_does_its_thing_part_2 (W : FunToMax G) (loose gain : α)
     ∑ e in G.incidenceFinset gain, vp W.w e +
     ∑ e in G.incidenceFinset loose, vp W.w e +
     ∑ e in (G.edgeFinset \ changed), vp W.w e := by
-  let changed :=
-  disjUnion
-    (G.incidenceFinset gain)
-    (G.incidenceFinset loose)
-    (Improve_does_its_thing_part_0 G h_neq h_adj)
+  intro changed
   have h_disj_union : changed = G.incidenceFinset gain ∪ G.incidenceFinset loose := by
     apply Finset.disjUnion_eq_union
   have h_disj_sdiff : Disjoint changed (G.edgeFinset \ changed) := Finset.disjoint_sdiff
--- Define decidable instance for Sym2.Mem gain e
+  have h_changed_sub : changed ⊆ G.edgeFinset := by
+    intro e he
+    rw [Finset.mem_disjUnion] at he
+    cases he with
+    | inl hg =>
+      exact incidenceFinset_subset G gain hg
+    | inr hl =>
+      exact incidenceFinset_subset G loose hl
   calc
-    ∑ e in G.edgeFinset, vp W.w e = ∑ e in changed ∪ (G.edgeFinset \ changed), vp W.w e := by
-      rw [Finset.union_sdiff_self_eq_union]
-      -- ⊢ edgeFinset G = changed ∪ (edgeFinset G \ changed)
-      rw [Finset.union_comm]
+    ∑ e in G.edgeFinset, vp W.w e
+      = ∑ e in changed ∪ (G.edgeFinset \ changed), vp W.w e
+        := by rw [Finset.union_sdiff_of_subset h_changed_sub]
+    _ = ∑ e in changed, vp W.w e + ∑ e in (G.edgeFinset \ changed), vp W.w e
+        := Finset.sum_union h_disj_sdiff
+    _ = ∑ e in (G.incidenceFinset gain ∪ G.incidenceFinset loose), vp W.w e
+        + ∑ e in (G.edgeFinset \ changed), vp W.w e
+        := by rw [h_disj_union]
+    _ = (∑ e in G.incidenceFinset gain, vp W.w e
+        + ∑ e in G.incidenceFinset loose, vp W.w e)
+        + ∑ e in (G.edgeFinset \ changed), vp W.w e
+        := by rw [Finset.sum_union (Improve_does_its_thing_part_0 G h_neq h_adj)]
+    _ = ∑ e in G.incidenceFinset gain, vp W.w e
+        + ∑ e in G.incidenceFinset loose, vp W.w e
+        + ∑ e in (G.edgeFinset \ changed), vp W.w e
+        := by rw [add_assoc]
+
+-- use
+#check sum_disjUnion
+
+@[simp]
+lemma Improve_w_eq (W : FunToMax G) (loose gain : α) (h_neq : gain ≠ loose) :
+  (Improve G W loose gain h_neq).w = (fun i => if i = loose then 0 else if i = gain then W.w gain + W.w loose else W.w i) :=
+by rfl
+
+lemma Improve_does_its_thing_part_3 (W : FunToMax G) (loose gain : α)
+  (h_neq : gain ≠ loose) (h_adj : ¬ G.Adj gain loose) :
+    ∑ e in G.incidenceFinset gain, vp (Improve G W loose gain h_neq).w e =
+    ∑ e in G.incidenceFinset gain, vp W.w e
+    + (W.w loose)
+      * ∑ e in (G.incidenceFinset gain).attach, W.w (Sym2.Mem.other (mini_help G e.val e.prop)) := by
+    rw [mul_sum, ← sum_attach]
+    nth_rewrite 2 [← sum_attach]
+    rw [← sum_add_distrib]
+    apply sum_congr
+    · rfl
+    · intro x xdef
+      have tec := Subtype.prop x
+      revert tec
+      have tec2 : (↑x ∈ G.incidenceFinset gain → vp (Improve G W loose gain h_neq).w ↑x = vp W.w ↑x + W.w loose * W.w (Sym2.Mem.other (mini_help G (↑x) (Subtype.prop x))))
+        = ((P : ↑x ∈ G.incidenceFinset gain) → vp (Improve G W loose gain h_neq).w ↑x = vp W.w ↑x + W.w loose * W.w (Sym2.Mem.other (mini_help G (↑x) (P)))) :=
+          by exact rfl
+      rw [tec2]
+      apply @Sym2.inductionOn _ (fun X => ∀ (P : X ∈ G.incidenceFinset gain),
+  vp (Improve G W loose gain h_neq).w X = vp W.w X + W.w loose * W.w (Sym2.Mem.other (mini_help G X P )))
+      intro y z Pyz
+      dsimp [vp,Quot.liftOn, Improve]
+      have help := Sym2.mk_eq_mk_iff.mp (Sym2.other_spec (mini_help _ _ Pyz))
+      match help with
+      | Or.inl h_eq => sorry
+        -- let ⟨h1, h2⟩ := Prod.ext_iff.mp h_eq
+        -- have eq_y : y = gain := Eq.symm h1
+        -- have eq_z : z = Sym2.Mem.other (mini_help G (Sym2.mk (y, z)) Pyz) := Eq.symm h2
+        -- split_ifs
+      | Or.inr h_eq => sorry
+      -- sorry
+      -- rcases help with (h1 | h2)
+      -- ·
+      --   let hy : y = gain := Eq.symm (congrArg (fun p : α × α => p.1) h1)
+      --   let hz : Sym2.Mem.other (mini_help G (Sym2.mk (y, z)) Pyz) = z :=
+      --     congrArg (fun p : α × α => p.2) h1
+      --   rw [hy, hz] at *
+      --   have left_factor : (if gain = loose then 0 else if gain = gain then W.w gain + W.w loose else W.w gain)
+      --                     = (W.w gain + W.w loose) :=
+      --     by
+      --       split_ifs with hcond1
+      --       · exfalso; exact h_neq hcond1
+      --       · rfl
+      --   rw [left_factor] at *
+      --   by_cases hz_loose : z = loose
+      --   · rw [if_pos hz_loose]
+      --     simp
+      --     have hImp_loose : (Improve G W loose gain h_neq).w loose = 0 :=
+      --       by dsimp [Improve] at *; rw [if_pos (by rfl)]
+      --     rw[hz_loose]
+      --     dsimp[Improve] at hImp_loose
+      --     have hWloose : W.w loose = 0 := sorry
+      --     rw [hWloose, mul_zero, mul_zero, add_zero]
+      --   · sorry
+      -- · sorry
+
+-- and use ↓ after disjoining on `help`
+#check Prod.ext_iff
+
+@[simp]
+lemma vp_sym2_mk (w : α → NNReal) (a b : α) :
+    vp w (Sym2.mk (a, b)) = w a * w b := by
+  dsimp [vp]
+
+lemma Improve_loose_weight_zero (W : FunToMax G) (loose gain : α) (h_neq : gain ≠ loose) :
+  (Improve G W loose gain h_neq).w loose = 0 := by
+  dsimp [Improve]
+  simp only [if_pos rfl]
+  split_ifs
+  · rfl
+  · rfl
+
+lemma Improve_does_its_thing_part_4 (W : FunToMax G) (loose gain : α)
+  (h_neq : gain ≠ loose) :
+    ∑ e in G.incidenceFinset loose, vp (Improve G W loose gain h_neq).w e = 0 := by
+  let newW := (Improve G W loose gain h_neq).w
+  have hl : newW loose = 0 := Improve_loose_weight_zero G W loose gain h_neq
+  apply Finset.sum_eq_zero
+  intro e he
+  have h_mem : loose ∈ e := by
+    exact mini_help G e he
+  rcases Sym2.mem_iff_exists.mp h_mem with ⟨x, h_or⟩
+  rcases h_or with rfl | rfl
+  rw [vp_sym2_mk newW loose x, hl]
+  simp
+
+lemma Improve_does_its_thing_part_5 (W : FunToMax G) (loose : α) :
+  ∑ e in G.incidenceFinset loose, vp W.w e =
+  (W.w loose)
+    * ∑ e in (G.incidenceFinset loose).attach, (W.w (Sym2.Mem.other (mini_help G e.val e.prop))) := by
+  apply Improve_does_its_thing_part_help_1
+  -- is just a name change
+
+variable {α : Type*} [Fintype α] [DecidableEq α]
+variable (G : SimpleGraph α) [DecidableRel G.Adj]
+
+
+lemma Improve_does_its_thing_part_6 (W : FunToMax G) (loose gain : α)
+  (h_neq : gain ≠ loose) (h_adj : ¬ G.Adj gain loose)
+  (h : ∑ e in (G.incidenceFinset gain).attach, W.w (Sym2.Mem.other (mini_help G e.val e.prop))
+         ≥ ∑ e in (G.incidenceFinset loose).attach, W.w (Sym2.Mem.other (mini_help G e.val e.prop))) :
+    ∑ e in G.incidenceFinset gain, vp W.w e +
+      ((Improve G W loose gain h_neq).w loose) *
+      ∑ e in (G.incidenceFinset gain).attach, W.w (Sym2.Mem.other (mini_help G e.val e.prop))
+    ≥ ∑ e in G.incidenceFinset gain, vp W.w e +
+      ∑ e in G.incidenceFinset loose, vp W.w e :=
+by
+  rw [Improve_does_its_thing_part_help_1]
+  rw [Improve_does_its_thing_part_5]
+  -- rw [add_sub_cancel_left]
+  sorry
+
+
+#check Sym2.Rel α
+
+--
+lemma Improve_does_its_thing_part_7 (W : FunToMax G) (loose gain : α)
+  (h_neq : gain ≠ loose) (h_adj : ¬ G.Adj gain loose) :
+  let changed :=
+    disjUnion
+    (G.incidenceFinset gain)
+    (G.incidenceFinset loose)
+    (Improve_does_its_thing_part_0 G h_neq h_adj)
+  ∑ e in (G.edgeFinset \ changed), vp (Improve G W loose gain h_neq).w e
+  = ∑ e in (G.edgeFinset \ changed), vp W.w e :=
+by
+  intro changed
+  simp [vp, Quot.liftOn]
+  apply Finset.sum_congr rfl
+  intro e he_diff
+  have h_e_not_gain_loose : e ∉ G.incidenceFinset gain ∧ e ∉ G.incidenceFinset loose := by
+    constructor <;> simp_all [Finset.mem_sdiff, Finset.mem_disjUnion]
+    <;> aesop
+  sorry
+
+
+lemma Improve_does_its_thing (W : FunToMax G) (loose gain : α)
+  (h : ∑ e in (G.incidenceFinset gain).attach, (W.w (Sym2.Mem.other (mini_help G e.val e.prop))) ≥
+    ∑ e in (G.incidenceFinset loose).attach, (W.w (Sym2.Mem.other (mini_help G e.val e.prop))))
+  (h_neq : gain ≠ loose) (h_adj : ¬ G.Adj gain loose) :
+  (Improve G W loose gain h_neq).fw ≥ W.fw := by
+  simp_rw [FunToMax.fw]
+  rw [Improve_does_its_thing_part_2 G (Improve G W loose gain h_neq) loose gain h_neq h_adj]
+  rw [Improve_does_its_thing_part_2 G W loose gain h_neq h_adj]
+  rw [Improve_does_its_thing_part_7 G W loose gain h_neq h_adj]
+  apply add_le_add_right
+  rw [Improve_does_its_thing_part_3 G W loose gain h_neq h_adj, Improve_does_its_thing_part_4 G W loose gain h_neq]
+  rw [add_zero]
+  apply add_le_add_left
+  rw [Improve_does_its_thing_part_5]
+  apply mul_le_mul_of_nonneg_left h (by exact zero_le (W.w loose))
