@@ -24,7 +24,6 @@ structure FunToMax (G : SimpleGraph α) [Fintype α] where
 
 namespace FunToMax
 
--- Definition of fw using the graph’s edge finset.
 def fw {G : SimpleGraph α} [DecidableRel G.Adj] (W : FunToMax G) : NNReal :=
   ∑ e in G.edgeFinset, vp W.w e
 
