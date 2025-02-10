@@ -1,12 +1,16 @@
+
+
 import Mathlib
 
-variable {α : Type*} (G : SimpleGraph α)
+variable {α : Type*} [Fintype α](G : SimpleGraph α)
 variable [Fintype α] [DecidableEq α] [DecidableRel G.Adj]
 
 -- Vertice Set (V), Edge Set (E), Graphs order (n)
 local notation "V" => @Finset.univ α _
 local notation "E" => G.edgeFinset
 local notation "n" => Fintype.card α
+
+set_option linter.unusedSectionVars false
 
 open Finset SimpleGraph
 
@@ -18,24 +22,16 @@ def vp (w : α → NNReal) (e : Sym2 α) :=
         · apply mul_comm)
 
 -- f(w) in the informal proof
-structure FunToMax where
-  w : α → NNReal
-  h_w : ∑ v in V, w v = 1
-  fw := ∑ e in G.edgeFinset, vp w e
+structure FunToMax (G : SimpleGraph α) [Fintype α] where
+  w   : α → NNReal
+  h_w : ∑ v in (Finset.univ : Finset α), w v = 1
 
+namespace FunToMax
 
-#check FunToMax.mk.inj
+def fw {G : SimpleGraph α} [DecidableRel G.Adj] (W : FunToMax G) : NNReal :=
+  ∑ e in G.edgeFinset, vp W.w e
 
-lemma FunToMax.fw_def (W : FunToMax G) : W.fw = ∑ e ∈ G.edgeFinset, vp W.w e := by
-  -- exact rfl --fails
-  unfold FunToMax.fw
-  --unfold FunToMax.3
-  sorry 
-  -- This is almost certainly a bug ; don't try to fill out this sorry
-  
-
-
-
+end FunToMax
 
 -- help: Assures that for any weight function W there exists an m and another weight function "better" with the following properties
 theorem help (W : FunToMax G) : ∃ m : ℕ, (fun m =>
@@ -195,9 +191,8 @@ lemma Improve_does_its_thing_part_help_0 (W : FunToMax G) (gain : α)
   -- I'm not expecting you to come up with ↓ ; If you get stuck, tell me
   apply @Eq.ndrec _ (s(gain, Sym2.Mem.other (mini_help G s(x, y) he))) (fun X =>
     Quot.liftOn X (fun pair => W.w pair.1 * W.w pair.2) (vp.proof_1 W.w) = W.w gain * W.w (Sym2.Mem.other (mini_help G s(x, y) he))
-    ) _ s(x,y) help 
+    ) _ s(x,y) help
   rw [Quot.liftOn_mk]
-  
 
 
 #check vp
@@ -206,7 +201,6 @@ lemma Improve_does_its_thing_part_help_0 (W : FunToMax G) (gain : α)
 #check Sym2.mk_eq_mk_iff
 
 -- sum of vp W.w e = W.w gain * sum
--- Note added he
 lemma Improve_does_its_thing_part_help_1 (W : FunToMax G) (gain : α) :
     ∑ e in G.incidenceFinset gain, vp W.w e =
     (W.w gain) * ∑ e in (G.incidenceFinset gain).attach, W.w (Sym2.Mem.other (mini_help G e.val e.prop)) := by
@@ -216,7 +210,6 @@ lemma Improve_does_its_thing_part_help_1 (W : FunToMax G) (gain : α) :
   · rfl
   · intro x _
     apply Improve_does_its_thing_part_help_0 _ _ gain _ x.prop
-  
 
 #check sum_bij
 #check incidenceSetEquivNeighborSet
@@ -226,7 +219,6 @@ lemma Improve_does_its_thing_part_help_1 (W : FunToMax G) (gain : α) :
 #check mem_incidence_iff_neighbor
 #check mem_attach
   --
-
 
 lemma Improve_does_its_thing_part_0 {loose gain : α}
   (h_neq : gain ≠ loose) (h_adj : ¬ G.Adj gain loose) :
@@ -247,7 +239,13 @@ lemma edge_mem_iff {v w : α} : G.Adj v w ↔ ∃ e ∈ G.edgeSet, e = Sym2.mk (
     simp at he
     exact he
 
-lemma Improve_does_its_thing_part_1 (W : FunToMax G) (loose gain : α)
+lemma incidenceFinset_subset (v : α) : G.incidenceFinset v ⊆ G.edgeFinset := by
+  intro e he
+  simp [incidenceFinset] at he
+  rw [mem_edgeFinset]
+  exact he.1
+
+lemma Improve_does_its_thing_part_1 (loose gain : α)
   (h_neq : gain ≠ loose) (h_adj : ¬ G.Adj gain loose) :
   let changed :=
     disjUnion
@@ -256,36 +254,27 @@ lemma Improve_does_its_thing_part_1 (W : FunToMax G) (loose gain : α)
       (Improve_does_its_thing_part_0 G h_neq h_adj)
   G.edgeFinset = disjUnion changed (G.edgeFinset \ changed) (disjoint_sdiff) := by
   intro changed
-  -- let changed :=
-  --   disjUnion
-  --     (G.incidenceFinset gain)
-  --     (G.incidenceFinset loose)
-  --     (Improve_does_its_thing_part_0 G h_neq h_adj)
-  have h_disj_union : changed = G.incidenceFinset gain ∪ G.incidenceFinset loose := by
-    apply Finset.disjUnion_eq_union
+  have h_disj_union : changed = G.incidenceFinset gain ∪ G.incidenceFinset loose :=
+    Finset.disjUnion_eq_union _ _ _
   ext e
-  simp only [mem_disjUnion, mem_union, mem_sdiff, h_disj_union, mem_edgeFinset]
-  by_cases he : e ∈ G.incidenceFinset gain ∨ e ∈ G.incidenceFinset loose <;>
-  simp [he]
-  constructor
-  · sorry -- exact?
-  · sorry
-  sorry
-  -- have h1_subset : G.incidenceFinset gain ⊆ G.edgeFinset := by
-  --   sorry
-  -- have h2_subset : G.incidenceFinset loose ⊆ G.edgeFinset := by
-  --   sorry
-  -- by_cases he : e ∈ G.incidenceFinset gain ∨ e ∈ G.incidenceFinset loose <;> simp [he, h1_subset, h2_subset]
+  simp only [Finset.mem_disjUnion, Finset.mem_union, Finset.mem_sdiff, h_disj_union, Finset.mem_coe]
+  apply Iff.intro
+  · intro he
+    by_cases h' : e ∈ G.incidenceFinset gain ∨ e ∈ G.incidenceFinset loose
+    · exact Or.inl h'
+    · exact Or.inr ⟨he, h'⟩
+  · intro h
+    rcases h with (h_left | h_right)
+    rcases h_left with (h_gain | h_loose)
+    · apply incidenceFinset_subset at h_gain
+      exact h_gain
+    · apply incidenceFinset_subset at h_loose
+      exact h_loose
+    · exact h_right.left
 
-  -- you may use
 #check Finset.disjUnion_eq_union
 #check Finset.sdiff_union_of_subset
 
-lemma incidenceFinset_subset (v : α) : G.incidenceFinset v ⊆ G.edgeFinset := by
-  intro e he
-  simp [incidenceFinset] at he
-  rw [mem_edgeFinset]
-  exact he.1
 
 lemma Improve_does_its_thing_part_2 (W : FunToMax G) (loose gain : α)
   (h_neq : gain ≠ loose) (h_adj : ¬ G.Adj gain loose) :
@@ -299,11 +288,6 @@ lemma Improve_does_its_thing_part_2 (W : FunToMax G) (loose gain : α)
     ∑ e in G.incidenceFinset loose, vp W.w e +
     ∑ e in (G.edgeFinset \ changed), vp W.w e := by
   intro changed
-  -- let changed :=
-  --   disjUnion
-  --     (G.incidenceFinset gain)
-  --     (G.incidenceFinset loose)
-  --     (Improve_does_its_thing_part_0 G h_neq h_adj)
   have h_disj_union : changed = G.incidenceFinset gain ∪ G.incidenceFinset loose := by
     apply Finset.disjUnion_eq_union
   have h_disj_sdiff : Disjoint changed (G.edgeFinset \ changed) := Finset.disjoint_sdiff
@@ -336,11 +320,16 @@ lemma Improve_does_its_thing_part_2 (W : FunToMax G) (loose gain : α)
 -- use
 #check sum_disjUnion
 
+@[simp]
+lemma Improve_w_eq (W : FunToMax G) (loose gain : α) (h_neq : gain ≠ loose) :
+  (Improve G W loose gain h_neq).w = (fun i => if i = loose then 0 else if i = gain then W.w gain + W.w loose else W.w i) :=
+by rfl
+
 lemma Improve_does_its_thing_part_3 (W : FunToMax G) (loose gain : α)
   (h_neq : gain ≠ loose) (h_adj : ¬ G.Adj gain loose) :
     ∑ e in G.incidenceFinset gain, vp (Improve G W loose gain h_neq).w e =
     ∑ e in G.incidenceFinset gain, vp W.w e
-    + (W.w loose) 
+    + (W.w loose)
       * ∑ e in (G.incidenceFinset gain).attach, W.w (Sym2.Mem.other (mini_help G e.val e.prop)) := by
     rw [mul_sum, ← sum_attach]
     nth_rewrite 2 [← sum_attach]
@@ -350,19 +339,70 @@ lemma Improve_does_its_thing_part_3 (W : FunToMax G) (loose gain : α)
     · intro x xdef
       have tec := Subtype.prop x
       revert tec
-      have tec2 : (↑x ∈ G.incidenceFinset gain → vp (Improve G W loose gain h_neq).w ↑x = vp W.w ↑x + W.w loose * W.w (Sym2.Mem.other (mini_help G (↑x) (Subtype.prop x)))) 
-        = ((P : ↑x ∈ G.incidenceFinset gain) → vp (Improve G W loose gain h_neq).w ↑x = vp W.w ↑x + W.w loose * W.w (Sym2.Mem.other (mini_help G (↑x) (P)))) := 
+      have tec2 : (↑x ∈ G.incidenceFinset gain → vp (Improve G W loose gain h_neq).w ↑x = vp W.w ↑x + W.w loose * W.w (Sym2.Mem.other (mini_help G (↑x) (Subtype.prop x))))
+        = ((P : ↑x ∈ G.incidenceFinset gain) → vp (Improve G W loose gain h_neq).w ↑x = vp W.w ↑x + W.w loose * W.w (Sym2.Mem.other (mini_help G (↑x) (P)))) :=
           by exact rfl
       rw [tec2]
+      clear tec2
       apply @Sym2.inductionOn _ (fun X => ∀ (P : X ∈ G.incidenceFinset gain),
   vp (Improve G W loose gain h_neq).w X = vp W.w X + W.w loose * W.w (Sym2.Mem.other (mini_help G X P )))
       intro y z Pyz
       dsimp [vp,Quot.liftOn, Improve]
       have help := Sym2.mk_eq_mk_iff.mp (Sym2.other_spec (mini_help _ _ Pyz))
-      sorry
--- and use ↓ after disjoining on `help`
-#check Prod.ext_iff
+      rw [mem_incidenceFinset, mk'_mem_incidenceSet_iff] at Pyz
+      cases' help with help help
+      · rw [Prod.ext_iff] at help
+        dsimp at help
+        simp_rw [← help.1]
+        rw [if_neg h_neq]
+        rw [if_pos True.intro]
+        rw [if_neg]
+        swap
+        · intro con
+          apply h_adj
+          rw [help.1, ← con]
+          exact Pyz.1
+        · rw [if_neg]
+          swap
+          · intro con
+            rw [← help.2] at con
+            apply Sym2.other_ne _ _ con
+            dsimp [Sym2.IsDiag]
+            apply G.ne_of_adj Pyz.1
+          · rw [add_mul]
+            congr
+            convert help.2.symm 
+            -- use convert when patterns don't really exactly match, but morally match
+            exact help.1
+      · dsimp! [Prod.swap] at help
+        rw [Prod.ext_iff] at help
+        dsimp at help
+        rw [if_neg]
+        swap
+        · intro con
+          apply h_adj
+          rw [help.1, ← con]
+          exact Pyz.1.symm
+        · rw [if_neg]
+          swap
+          · apply G.ne_of_adj 
+            rw [help.1]
+            exact Pyz.1
+          · rw [if_neg]
+            swap
+            · intro con
+              apply h_neq
+              rw [help.1, ← con]
+            · rw [if_pos help.1.symm]
+              rw [mul_add]
+              congr 1
+              · rw [help.1]
+              · rw [mul_comm]
+                congr
+                convert help.2.symm
 
+        
+     
 
 @[simp]
 lemma vp_sym2_mk (w : α → NNReal) (a b : α) :
@@ -393,50 +433,65 @@ lemma Improve_does_its_thing_part_4 (W : FunToMax G) (loose gain : α)
 
 lemma Improve_does_its_thing_part_5 (W : FunToMax G) (loose : α) :
   ∑ e in G.incidenceFinset loose, vp W.w e =
-  (W.w loose) 
+  (W.w loose)
     * ∑ e in (G.incidenceFinset loose).attach, (W.w (Sym2.Mem.other (mini_help G e.val e.prop))) := by
   apply Improve_does_its_thing_part_help_1
   -- is just a name change
 
-lemma Improve_does_its_thing_part_6 (W : FunToMax G) (loose gain : α)
-  (h_neq : gain ≠ loose) (h_adj : ¬ G.Adj gain loose)
-  (h : ∑ e in (G.incidenceFinset gain).attach, (W.w (Sym2.Mem.other (mini_help G e.val e.prop)))
-          ≥ ∑ e in (G.incidenceFinset loose).attach, (W.w (Sym2.Mem.other (mini_help G e.val e.prop))))  :
-    ∑ e in G.incidenceFinset gain, vp W.w e
-    + ((Improve G W loose gain h_neq).w loose) * ∑ e in (G.incidenceFinset gain).attach, (W.w (Sym2.Mem.other (mini_help G e.val e.prop)))
-    ≥ ∑ e in G.incidenceFinset gain, vp W.w e + ∑ e in G.incidenceFinset loose, vp W.w e := by
-  sorry
+
+
+
+
+
+#check Sym2.Rel α
+
 --
 lemma Improve_does_its_thing_part_7 (W : FunToMax G) (loose gain : α)
   (h_neq : gain ≠ loose) (h_adj : ¬ G.Adj gain loose) :
   let changed :=
     disjUnion
-      (G.incidenceFinset gain)
-      (G.incidenceFinset loose)
-      (Improve_does_its_thing_part_0 G h_neq h_adj)
+    (G.incidenceFinset gain)
+    (G.incidenceFinset loose)
+    (Improve_does_its_thing_part_0 G h_neq h_adj)
   ∑ e in (G.edgeFinset \ changed), vp (Improve G W loose gain h_neq).w e
-  = ∑ e in (G.edgeFinset \ changed), vp W.w e := by
+  = ∑ e in (G.edgeFinset \ changed), vp W.w e :=
+by
   intro changed
+  simp [vp, Quot.liftOn]
   apply Finset.sum_congr rfl
-  intro e he
-  have e_in_E : e ∈ G.edgeFinset := by
-    simp only [Finset.mem_sdiff] at he
-    exact he.1
-  have h_changed : e ∉ changed := by
-    simp only [Finset.mem_sdiff] at he
-    exact he.2
-  -- have h_disj_union : changed = G.incidenceFinset gain ∪ G.incidenceFinset loose := by
-  --   apply Finset.disjUnion_eq_union
-  dsimp [Improve]
+  intro e 
+  apply @Sym2.inductionOn α (fun e => e ∈ G.edgeFinset \ changed →
+    Quot.lift
+        (fun pair =>
+          if pair.2 = loose then 0
+          else
+            if pair.2 = gain then
+              if pair.1 = loose then 0
+              else
+                if pair.1 = gain then (W.w gain + W.w loose) * (W.w gain + W.w loose)
+                else W.w pair.1 * (W.w gain + W.w loose)
+            else
+              if pair.1 = loose then 0
+              else if pair.1 = gain then (W.w gain + W.w loose) * W.w pair.2 else W.w pair.1 * W.w pair.2)
+        _ e =
+      Quot.lift (fun pair => W.w pair.1 * W.w pair.2) _ e)
+  intro x y he_diff
+  dsimp
   sorry
+  -- proceed similarly to `Improve_does_its_thing_part_3`
+  -- show that x and y can't be loose or gain, or else the other one would be in the inicidence set, 
+  -- hence in `changed`, contradicting `he_diff`
 
+
+
+--#exit
 
 lemma Improve_does_its_thing (W : FunToMax G) (loose gain : α)
-  (h : ∑ e in (G.incidenceFinset gain).attach, (W.w (Sym2.Mem.other (mini_help G e.val e.prop))) ≥ 
+  (h : ∑ e in (G.incidenceFinset gain).attach, (W.w (Sym2.Mem.other (mini_help G e.val e.prop))) ≥
     ∑ e in (G.incidenceFinset loose).attach, (W.w (Sym2.Mem.other (mini_help G e.val e.prop))))
   (h_neq : gain ≠ loose) (h_adj : ¬ G.Adj gain loose) :
   (Improve G W loose gain h_neq).fw ≥ W.fw := by
-  simp_rw [FunToMax.fw_def]
+  simp_rw [FunToMax.fw]
   rw [Improve_does_its_thing_part_2 G (Improve G W loose gain h_neq) loose gain h_neq h_adj]
   rw [Improve_does_its_thing_part_2 G W loose gain h_neq h_adj]
   rw [Improve_does_its_thing_part_7 G W loose gain h_neq h_adj]
@@ -447,10 +502,7 @@ lemma Improve_does_its_thing (W : FunToMax G) (loose gain : α)
   rw [Improve_does_its_thing_part_5]
   apply mul_le_mul_of_nonneg_left h (by exact zero_le (W.w loose))
 
-
-
-#exit
-
+--#exit
 
 lemma ImproveReducesSupport (W : FunToMax G) (loose gain : α)
   (h_neq : gain ≠ loose) (h_supp : 0 < W.w gain) : -- will be `xdef` in `BetterFormsClique`
@@ -465,6 +517,9 @@ lemma ImproveReducesSupport (W : FunToMax G) (loose gain : α)
     apply lt_irrefl 0 h_supp
   · exact h_zero
 
+
+
+--#exit
 
 lemma ImproveReducesSupportSize (W : FunToMax G) (loose gain : α)
   (h_neq : gain ≠ loose) (h_supp1 : 0 < W.w gain) -- will be `xdef` in `BetterFormsClique`
@@ -485,25 +540,151 @@ lemma ImproveReducesSupportSize (W : FunToMax G) (loose gain : α)
         exact ImproveReducesSupport G W loose gain h_neq h_supp1 x xmem
 
 
-
-
 lemma BetterFormsClique (W : FunToMax G) : G.IsClique ((Finset.univ : Finset α).filter (fun i => (Better G W).w i > 0)) := by
   by_contra con
   dsimp [IsClique, Set.Pairwise] at con
   push_neg at con
   obtain ⟨x,xdef,y,ydef,xny,xyAdj⟩ := con
-  wlog wlog : ∑ e in (G.incidenceFinset x).attach, (W.w (Sym2.Mem.other (mini_help G e.val e.prop)))
-                ≥ ∑ e in (G.incidenceFinset y).attach, (W.w (Sym2.Mem.other (mini_help G e.val e.prop)))  with SymCase
+  wlog wlog : ∑ e in (G.incidenceFinset x).attach, ((Better G W).w (Sym2.Mem.other (mini_help G e.val e.prop)))
+                ≥ ∑ e in (G.incidenceFinset y).attach, ((Better G W).w (Sym2.Mem.other (mini_help G e.val e.prop)))  with SymCase
   · push_neg at wlog
-    specialize SymCase G W y ydef x xdef (ne_comm.mp xny) -- ...
+    specialize SymCase G W y ydef x xdef (ne_comm.mp xny) (by rw [G.adj_comm] ; exact xyAdj)
     sorry
-  · sorry
+    -- use `le_of_lt`
+  · have con :
+      (fun X => ∃ even_better : FunToMax G,
+        (∀ i, W.w i = 0 → even_better.w i = 0) ∧ 
+        (((Finset.univ : Finset α).filter (fun i => even_better.w i > 0)).card = X) ∧ 
+        (W.fw ≤ even_better.fw))
+        (#(filter (fun i => (Improve G (Better G W) y x xny).w i > 0) univ)) :=
+        by
+        use (Improve G (Better G W) y x xny)
+        constructor
+        · intro i wi
+          apply ImproveReducesSupport
+          · sorry -- xdef
+          · apply BetterSupportIncluded _ _ _ wi
+        · constructor
+          · rfl
+          · apply le_trans (BetterHigher _ W)
+            exact Improve_does_its_thing G (Better G W) y x wlog xny xyAdj
+    have ohoh := @Nat.find_le (#(filter (fun i => (Improve G (Better G W) y x xny).w i > 0) univ)) _ _ (help G W) con
+    have nono := ImproveReducesSupportSize G (Better G W) y x xny sorry sorry
+    rw [BetterSupportSize G W] at nono
+    apply not_lt_of_le ohoh nono
+
+-- Part 2 of the proof starts here: we show that the weights are all equal, on the clique
+  
+-- We'll use a similar workarround as before, because using the existent notions of compacity 
+-- to justify the existence of a max are a pain in the ass. For a given W who's support forms a k-clique,
+-- we'll consider the largest number for which there is a FunToMax with same support who's
+-- number of nodes at weight 1/k is that number.
+-- Such numbers exist (possibly 0 if `(Better G W)` has no weights equal to 1/k)
+-- We will then show that this number must be the size of the support:
+-- if it weren't, we'll have to argue that the minimum weight w_min and the maximum
+-- weight w_max satisfy w_min < 1/k < w_max (else, take sum and contradict W.h_w).
+-- With them we'll use the improving argument from the book, with ε = w_max - 1/k
+-- (it satisfies > 0 and < w_max-w_min), so that in the new wieghts, there will be
+-- one more node with weight 1/k, namely the one that had weight w_max.
+-- This will contradict maximality of number of nodes with weight 1/k
+
+--#exit
+
+#check Nat.findGreatest
+
+
+lemma supportSizeNotZero (W : FunToMax G) : ((Finset.univ : Finset α).filter (fun i => W.w i > 0)).card ≠ 0 := by
+  sorry
+  -- else we'd contradict W.h_w
+
+@[reducible]
+def help3 (W : FunToMax G) :=
+  (fun m =>
+    ∃ better : FunToMax G,
+      (∀ i, W.w i = 0 ↔ better.w i = 0) ∧ -- support same
+      (G.IsClique ((Finset.univ : Finset α).filter (fun i => better.w i > 0))) ∧ -- support also forms clique
+      (((Finset.univ : Finset α).filter (fun i => better.w i = 1 / ((Finset.univ : Finset α).filter (fun i => W.w i > 0)).card)).card = m) ∧ -- number of weights being 1/k is m
+      (W.fw ≤ better.fw) -- has better weights
+      )
+
+open Classical
+
+noncomputable
+-- Largest number m, such that there is a FunToMax that has support in that of W,
+-- has a support that forms a k-clique, has better total weight,
+-- and has m weights that evaluate to 1/k
+def S (W : FunToMax G) := 
+  Nat.findGreatest (help3 G W) ((Finset.univ : Finset α).filter (fun i => W.w i > 0)).card
+
+lemma help4 (W : FunToMax G) 
+  (hW : G.IsClique ((Finset.univ : Finset α).filter (fun i => W.w i > 0))) :
+  (fun m =>
+    ∃ better : FunToMax G,
+      (∀ i, W.w i = 0 ↔ better.w i = 0) ∧ -- support same
+      (G.IsClique ((Finset.univ : Finset α).filter (fun i => better.w i > 0))) ∧ -- support also forms clique
+      (((Finset.univ : Finset α).filter (fun i => better.w i = 1 / ((Finset.univ : Finset α).filter (fun i => W.w i > 0)).card)).card = m) ∧ -- number of weights being 1/k is m
+      (W.fw ≤ better.fw) -- has better weights
+      ) (S G W)
+    :=
+    @Nat.findGreatest_spec ((Finset.univ : Finset α).filter (fun i => W.w i = 1 / ((Finset.univ : Finset α).filter (fun i => W.w i > 0)).card)).card (help3 G W) _ 
+      ((Finset.univ : Finset α).filter (fun i => W.w i > 0)).card 
+      (by 
+        apply card_le_card
+        sorry
+        ) 
+      (by 
+        dsimp [help3]
+        use W
+        sorry
+        )
+    
+    
+noncomputable
+def EvenBetter (W : FunToMax G) (hW : G.IsClique ((Finset.univ : Finset α).filter (fun i => W.w i > 0))) : FunToMax G := Classical.choose (help4 G W hW)
+
+lemma EvenBetterSupportIncluded (W : FunToMax G) (hW : G.IsClique ((Finset.univ : Finset α).filter (fun i => W.w i > 0))) (i : α) : W.w i = 0 ↔ (EvenBetter G W hW).w i = 0 :=
+  (Classical.choose_spec (help4 G W hW)).1 i
+
+lemma EvenBetterSupportSize (W : FunToMax G) (hW : G.IsClique ((Finset.univ : Finset α).filter (fun i => W.w i > 0))) : ((Finset.univ : Finset α).filter (fun i => (EvenBetter G W hW).w i = 1 / ((Finset.univ : Finset α).filter (fun i => W.w i > 0)).card)).card = (S G W) :=
+  (Classical.choose_spec (help4 G W hW)).2.2.1
+
+lemma EvenBetterHigher (W : FunToMax G) (hW : G.IsClique ((Finset.univ : Finset α).filter (fun i => W.w i > 0))) : W.fw ≤ (EvenBetter G W hW).fw :=
+  (Classical.choose_spec (help4 G W hW)).2.2.2
+
+lemma EvenBetterClique (W : FunToMax G) (hW : G.IsClique ((Finset.univ : Finset α).filter (fun i => W.w i > 0))) : G.IsClique ((Finset.univ : Finset α).filter (fun i => (EvenBetter G W hW).w i > 0)) :=
+  (Classical.choose_spec (help4 G W hW)).2.1
 
 
 
+def Enhance (W : FunToMax G) 
+  (loose gain : α) (h_neq : gain  ≠ loose) (ε : NNReal) : FunToMax G where
+  w := fun i =>
+          if i = loose
+          then W.w loose - ε
+          else if i = gain
+               then W.w gain + ε 
+               else W.w i
+  h_w := by
+    sorry
 
 
+lemma EnhanceSupport (W : FunToMax G) (loose gain : α) (h_neq : gain ≠ loose) (ε : NNReal)
+  (h_wei : W.w loose < W.w gain) (epos : 0 < ε) (elt : ε < W.w gain - W.w loose) : 
+  ∀ i, W.w i = 0 ↔ (Improve G W loose gain h_neq).w i = 0 := by
+    sorry
 
+lemma EnhanceClique (W : FunToMax G) (loose gain : α) (h_neq : gain ≠ loose) (ε : NNReal)
+  (h_wei : W.w loose < W.w gain) (epos : 0 < ε) (elt : ε < W.w gain - W.w loose) 
+  (hc : G.IsClique ((Finset.univ : Finset α).filter (fun i => W.w i > 0))) : 
+  G.IsClique ((Finset.univ : Finset α).filter (fun i => (Enhance G W loose gain h_neq ε).w i > 0)) := by
+    sorry
+
+
+-- eventually
+#check Nat.le_findGreatest 
+#check Nat.findGreatest_le
+
+#exit
 
 -- Turan
 
