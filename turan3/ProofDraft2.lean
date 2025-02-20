@@ -799,8 +799,7 @@ lemma help4 (W : FunToMax G)
         rw [Finset.mem_filter] at *
         constructor
         · exact hi.1
-        ·
-          rw [hi.2]
+        · rw [hi.2]
           let j := (#(filter (fun i => W.w i > 0) univ))
           have j_nonzero : j ≠ 0 :=
             @supportSizeNotZero α (inferInstance : Fintype α) G (inferInstance : Fintype α)
@@ -808,15 +807,23 @@ lemma help4 (W : FunToMax G)
           have j_pos : j > 0 := Nat.pos_of_ne_zero j_nonzero
           rw [div_eq_mul_inv]
           rw [one_mul]
-          have hj : (j : NNReal) > 0 := Nat.cast_pos.mpr j_pos
-          have hjnz : (j : NNReal) ≠ 0 := ne_of_gt (by exact_mod_cast hj)
-          have hjR : (j : ℝ) > 0 := Nat.cast_pos.mpr j_pos
-          sorry
+          have h1 : ((j : NNReal)⁻¹) = 1 / (j : NNReal) := by rw [inv_eq_one_div]
+          rw [h1]
+          have h_j_pos : (j : NNReal) > 0 := by exact_mod_cast j_pos
+          have h1_real : (1 : ℝ) / ((j : NNReal) : ℝ) > 0 := div_pos zero_lt_one (by exact_mod_cast j_pos)
+          exact_mod_cast h1_real
         )
       (by
         dsimp [help3]
         use W
-        sorry
+        constructor
+        · intro i
+          exact Iff.rfl
+        constructor
+        · exact hW
+        constructor
+        · rfl
+        · exact le_refl W.fw
         )
 
 noncomputable
