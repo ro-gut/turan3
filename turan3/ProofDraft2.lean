@@ -418,7 +418,6 @@ lemma Improve_does_its_thing_part_5 (W : FunToMax G) (loose : α) :
 
 #check Sym2.Rel α
 
-
 lemma Improve_does_its_thing_part_7 (W : FunToMax G) (loose gain : α)
   (h_neq : gain ≠ loose) (h_adj : ¬ G.Adj gain loose) :
   let changed :=
@@ -448,47 +447,193 @@ by
     Quot.lift (fun pair => W.w pair.1 * W.w pair.2) _ e)
   intro x y he_diff
   dsimp
+  have h_edge : s(x,y) ∈ G.edgeFinset := by
+    rw[Finset.mem_sdiff] at he_diff
+    exact he_diff.1
+  /- Case: y = loose -/
   by_cases h_y_loose : y = loose
-  ·
-    have h_y_in : y ∈ s(x,y) := by
-      simp[h_y_loose]
-    have h_edge : s(x,y) ∈ G.edgeFinset := by
-      rw[Finset.mem_sdiff] at he_diff
-      exact he_diff.1
+  have h_y_in : y ∈ s(x,y) := by
+    simp[h_y_loose]
+  have h_loose : loose ∈ s(x,y) := by
+    rw[← h_y_loose]
+    exact h_y_in
+  have h_inc : s(x,y) ∈ G.incidenceFinset loose := by
+    rw[mem_incidenceFinset]
+    rw[h_y_loose]
+    rw[mk'_mem_incidenceSet_iff]
+    constructor
+    · rw[edge_mem_iff]
+      rw[h_y_loose] at h_edge
+      use s(x, loose)
+      constructor
+      · rw [mem_edgeFinset] at h_edge
+        exact h_edge
+      · rfl
+    · exact Or.inr rfl
+  · exfalso
+    rw [Finset.mem_sdiff] at he_diff
+    have h_not_in_changed : s(x,y) ∉ changed := he_diff.2
+    have h_changed_eq : changed = G.incidenceFinset gain ∪ G.incidenceFinset loose := by
+      apply Finset.ext
+      intro e
+      simp only [Finset.mem_union, SimpleGraph.incidenceFinset, Finset.mem_image]
+      apply Iff.intro
+      · intro h
+        have h_union : e ∈ G.incidenceFinset gain ∨ e ∈ G.incidenceFinset loose :=
+          Finset.mem_disjUnion.mp h
+        cases h_union with
+        | inl h_gain => exact Or.inl h_gain
+        | inr h_loose => exact Or.inr h_loose
+      · intro h_disj
+        cases h_disj with
+        | inl h_gain =>
+            rw [Finset.mem_disjUnion]; left; exact h_gain
+        | inr h_loose =>
+            rw [Finset.mem_disjUnion]; right; exact h_loose
+    have h_in_changed : s(x,y) ∈ changed := by
+      rw[h_changed_eq]
+      apply Finset.mem_union_right
+      exact h_inc
+    contradiction
+  /- Case: y = gain -/
+  by_cases h_y_gain : y = gain
+  have h_y_in : y ∈ s(x,y) := by
+    simp[h_y_gain]
+  have h_gain : gain ∈ s(x,y) := by
+    rw[← h_y_gain]
+    exact h_y_in
+  have h_inc : s(x,y) ∈ G.incidenceFinset gain := by
+    rw[mem_incidenceFinset]
+    rw[h_y_gain]
+    rw[mk'_mem_incidenceSet_iff]
+    constructor
+    · rw[edge_mem_iff]
+      rw[h_y_gain] at h_edge
+      use s(x, gain)
+      constructor
+      · rw [mem_edgeFinset] at h_edge
+        exact h_edge
+      · rfl
+    · exact Or.inr rfl
+  · exfalso
+    rw [Finset.mem_sdiff] at he_diff
+    have h_not_in_changed : s(x,y) ∉ changed := he_diff.2
+    have h_changed_eq : changed = G.incidenceFinset gain ∪ G.incidenceFinset loose := by
+      apply Finset.ext
+      intro e
+      simp only [Finset.mem_union, SimpleGraph.incidenceFinset, Finset.mem_image]
+      apply Iff.intro
+      · intro h
+        have h_union : e ∈ G.incidenceFinset gain ∨ e ∈ G.incidenceFinset loose :=
+          Finset.mem_disjUnion.mp h
+        cases h_union with
+        | inl h_gain => exact Or.inl h_gain
+        | inr h_loose => exact Or.inr h_loose
+      · intro h_disj
+        cases h_disj with
+        | inl h_gain =>
+            rw [Finset.mem_disjUnion]; left; exact h_gain
+        | inr h_loose =>
+            rw [Finset.mem_disjUnion]; right; exact h_loose
+    have h_in_changed : s(x,y) ∈ changed := by
+      rw[h_changed_eq]
+      apply Finset.mem_union_left
+      exact h_inc
+    contradiction
+  /- Case: x = loose -/
+  by_cases h_x_loose : x = loose
+  · have h_x_in : x ∈ s(x,y) := by
+      simp[h_x_loose]
     have h_loose : loose ∈ s(x,y) := by
-      rw[← h_y_loose]
-      exact h_y_in
+      rw[← h_x_loose]
+      exact h_x_in
     have h_inc : s(x,y) ∈ G.incidenceFinset loose := by
       rw[mem_incidenceFinset]
-      rw[h_y_loose]
+      rw[h_x_loose]
       rw[mk'_mem_incidenceSet_iff]
       constructor
       · rw[edge_mem_iff]
-        rw[h_y_loose] at h_edge
-        use s(x, loose)
+        rw[h_x_loose] at h_edge
+        use s(loose, y)
         constructor
-        · 
-          -- exact Finset.mem_coe.mp h_edge
-          sorry
+        · rw [mem_edgeFinset] at h_edge
+          exact h_edge
         · rfl
-      · exact Or.inr rfl
+      · exact Or.inl rfl
+    · exfalso
+      rw [Finset.mem_sdiff] at he_diff
+      have h_not_in_changed : s(x,y) ∉ changed := he_diff.2
+      have h_changed_eq : changed = G.incidenceFinset gain ∪ G.incidenceFinset loose := by
+        apply Finset.ext
+        intro e
+        simp only [Finset.mem_union, SimpleGraph.incidenceFinset, Finset.mem_image]
+        apply Iff.intro
+        · intro h
+          have h_union : e ∈ G.incidenceFinset gain ∨ e ∈ G.incidenceFinset loose :=
+            Finset.mem_disjUnion.mp h
+          cases h_union with
+          | inl h_gain => exact Or.inl h_gain
+          | inr h_loose => exact Or.inr h_loose
+        · intro h_disj
+          cases h_disj with
+          | inl h_gain =>
+              rw [Finset.mem_disjUnion]; left; exact h_gain
+          | inr h_loose =>
+              rw [Finset.mem_disjUnion]; right; exact h_loose
+      have h_in_changed : s(x,y) ∈ changed := by
+        rw[h_changed_eq]
+        apply Finset.mem_union_right
+        exact h_inc
+      contradiction
+  /- Case: x = gain -/
+  by_cases h_x_gain : x = gain
+  · have h_x_in : x ∈ s(x,y) := by
+      simp[h_x_gain]
+    have h_gain : gain ∈ s(x,y) := by
+      rw[← h_x_gain]
+      exact h_x_in
+    have h_inc : s(x,y) ∈ G.incidenceFinset gain := by
+      rw[mem_incidenceFinset]
+      rw[h_x_gain]
+      rw[mk'_mem_incidenceSet_iff]
+      constructor
+      · rw[edge_mem_iff]
+        rw[h_x_gain] at h_edge
+        use s(gain, y)
+        constructor
+        · rw [mem_edgeFinset] at h_edge
+          exact h_edge
+        · rfl
+      · exact Or.inl rfl
     exfalso
     rw [Finset.mem_sdiff] at he_diff
     have h_not_in_changed : s(x,y) ∉ changed := he_diff.2
     have h_changed_eq : changed = G.incidenceFinset gain ∪ G.incidenceFinset loose := by
       apply Finset.ext
       intro e
-      simp [Finset.mem_disjUnion, Finset.mem_union]
-      sorry
+      simp only [Finset.mem_union, SimpleGraph.incidenceFinset, Finset.mem_image]
+      apply Iff.intro
+      · intro h
+        have h_union : e ∈ G.incidenceFinset gain ∨ e ∈ G.incidenceFinset loose :=
+          Finset.mem_disjUnion.mp h
+        cases h_union with
+        | inl h_gain => exact Or.inl h_gain
+        | inr h_loose => exact Or.inr h_loose
+      · intro h_disj
+        cases h_disj with
+        | inl h_gain =>
+            rw [Finset.mem_disjUnion]; left; exact h_gain
+        | inr h_loose =>
+            rw [Finset.mem_disjUnion]; right; exact h_loose
+    have h_in_changed : s(x,y) ∈ changed := by
+      rw[h_changed_eq]
+      apply Finset.mem_union_left
+      exact h_inc
+    contradiction
+  simp [if_neg h_y_loose, if_neg h_y_gain, if_neg h_x_loose, if_neg h_x_gain]
+  exact he
 
-    sorry
 
-  · sorry
-  sorry
-#check edge_mem_iff
-
-  -- proceed similarly to `Improve_does_its_thing_part_3`
-  -- show that x and y can't be loose or gain, or else the other one would be in the inicidence set, hence in `changed`, contradicting `he_diff`
 
 lemma Improve_does_its_thing (W : FunToMax G) (loose gain : α)
   (h : ∑ e in (G.incidenceFinset gain).attach, (W.w (Sym2.Mem.other (mini_help G e.val e.prop))) ≥
