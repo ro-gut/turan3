@@ -1794,12 +1794,29 @@ lemma FunToMax.sum_supp_eq_one (W : FunToMax G) :
 lemma FunToMax.sum_supp_le_max  (W : FunToMax G) :
   ∑ v∈((Finset.univ : Finset α).filter (fun i => W.w i > 0)), W.w v
     ≤ (((Finset.univ : Finset α).filter (fun i => W.w i > 0)).card) * W.max_weight G := by
-  sorry
+  let S := ((Finset.univ : Finset α).filter (fun i => W.w i > 0))
+  have bound : ∀ v ∈ S, W.w v ≤ W.max_weight G := by
+    intro v hv
+    exact W.max_weight_max G v
+  calc
+    ∑ v in S, W.w v
+      ≤ ∑ v in S, W.max_weight G := Finset.sum_le_sum bound
+    _ = (S.card : NNReal) * W.max_weight G := by
+      simp [Finset.sum_const, nsmul_eq_mul]
 
 lemma FunToMax.min_le_sum_supp  (W : FunToMax G) :
   ∑ v∈((Finset.univ : Finset α).filter (fun i => W.w i > 0)), W.w v
     ≥ (((Finset.univ : Finset α).filter (fun i => W.w i > 0)).card) * W.min_weight G := by
-  sorry
+  let S := (Finset.univ : Finset α).filter (fun i => W.w i > 0)
+  have bound : ∀ v ∈ S, W.min_weight G ≤ W.w v := by
+    intro v hv
+    exact W.min_weight_min G v hv
+  calc
+    ∑ v in S, W.w v
+      ≥ ∑ v in S, W.min_weight G :=
+        Finset.sum_le_sum (fun v hv => bound v hv)
+    _ = (S.card : NNReal) * W.min_weight G := by
+      simp [Finset.sum_const, nsmul_eq_mul]
 
 lemma FunToMax.avg_le_max  (W : FunToMax G) :
   W.max_weight G ≥ 1 / (((Finset.univ : Finset α).filter (fun i => W.w i > 0)).card) := by
@@ -1807,6 +1824,11 @@ lemma FunToMax.avg_le_max  (W : FunToMax G) :
 
 lemma FunToMax.min_le_avg  (W : FunToMax G) :
   W.min_weight G ≤ 1 / (((Finset.univ : Finset α).filter (fun i => W.w i > 0)).card) := by
+  let S := (Finset.univ : Finset α).filter (fun i => W.w i > 0)
+  obtain ⟨x, hx⟩ := FunToMax.supp_nonempty G W
+  let hS_nonempty : Nonempty { x : α // x ∈ S } := ⟨⟨x, hx⟩⟩
+  have hS_pos : 0 < (S.card : NNReal) := Nat.cast_pos.mpr (Finset.card_pos.mpr ⟨x, hx⟩)
+  have h_sum : ∑ v in ((Finset.univ : Finset α).filter (fun i => W.w i > 0)), W.w v = 1 := sorry
   sorry
 
 lemma FunToMax.sum_supp_lt_max  (W : FunToMax G) (h : W.min_weight G < W.max_weight G) :
@@ -1816,7 +1838,12 @@ lemma FunToMax.sum_supp_lt_max  (W : FunToMax G) (h : W.min_weight G < W.max_wei
   rw [sum_insert]
   swap
   · apply not_mem_erase
-  · sorry
+  ·
+    have h_bound : ∀ x ∈ (filter (fun i => W.w i > 0) univ).erase (W.argmin G),
+      W.w x ≤ W.max_weight G := λ x hx => W.max_weight_max G x
+    have h_sum_bound : ∑ x in (filter (fun i => W.w i > 0) univ).erase (W.argmin G), W.w x
+      ≤ ((filter (fun i => W.w i > 0) univ).erase (W.argmin G)).card * W.max_weight G := sorry
+    sorry
 
 #check Finset.card_erase_lt_of_mem
 #check Nat.lt_iff_add_one_le
