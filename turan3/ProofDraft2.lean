@@ -1538,7 +1538,7 @@ lemma EnhanceIsBetter_part_8 (W : FunToMax G) (loose gain : α) (h_lt : W.w gain
 
   nth_rewrite 2 [← sum_attach]
   rw [← sum_tsub_distrib _ (EnhanceIsBetter_part_8_help_help G W loose gain h_lt ε epos elt)]
-  
+
   sorry -- as in EnhanceIsBetter_part_7
 /-
 For ↑ use ↓
@@ -1647,10 +1647,10 @@ lemma the_bij_inj (W : FunToMax G) (loose gain : α) (h_lt : W.w gain < W.w loos
     have h_snd : Sym2.Mem.other (the_bij.proof_1 G W loose gain ⟨e₁, he₁⟩) =
                 Sym2.Mem.other (the_bij.proof_1 G W loose gain ⟨e₂, he₂⟩) :=
       congrArg Prod.snd h_eq
-    exact congrArg (fun w => (loose, w)) h_snd    
+    exact congrArg (fun w => (loose, w)) h_snd
   | inr swapped =>
     right
-    let h_fst : Sym2.Mem.other (the_bij.proof_1 G W loose gain ⟨e₁, he₁⟩) = 
+    let h_fst : Sym2.Mem.other (the_bij.proof_1 G W loose gain ⟨e₁, he₁⟩) =
       Sym2.Mem.other (the_bij.proof_1 G W loose gain ⟨e₂, he₂⟩) :=
       sorry
     sorry
@@ -1722,15 +1722,15 @@ lemma EnhanceIsBetter_part_10 (W : FunToMax G) (loose gain : α) (h_lt : W.w gai
         dsimp[InciLooseGainFull]
         rw[disjUnion_eq_union]
         exact Finset.mem_union_right _ (Finset.mem_singleton_self (s(loose, gain)))
-      · 
-        
+      ·
+
 
         sorry
     exfalso
     exact h_not_in_full h_in_full
   ·
     by_cases h_gain: gain ∈ e
-    ·  
+    ·
       sorry
     ·
       sorry
@@ -1792,7 +1792,7 @@ lemma EnhanceIsBetter_part_12 (W : FunToMax G) (loose gain : α) (h_lt : W.w gai
   rw [mul_tsub]
   rw [lt_tsub_comm] at elt
   apply @lt_of_eq_of_lt _ _ (W.w gain * W.w loose - W.w gain * ε + W.w gain * ε)
-  · 
+  ·
     have := @tsub_add_cancel_iff_le _ _ _ _ _ _ (W.w gain * ε ) (W.w gain * W.w loose)
     rw [mul_comm, eq_comm]
     apply this.mpr
@@ -1800,7 +1800,7 @@ lemma EnhanceIsBetter_part_12 (W : FunToMax G) (loose gain : α) (h_lt : W.w gai
   · apply add_lt_add_left
     apply mul_lt_mul_of_pos_right
     · exact elt
-    · exact epos  
+    · exact epos
 
 
 
@@ -1821,7 +1821,7 @@ lemma EnhanceIsBetter (W : FunToMax G) (loose gain : α) (h_lt : W.w gain < W.w 
   rw [EnhanceIsBetter_part_4_and_a_half G W, EnhanceIsBetter_part_3 G W loose gain h_adj h_supp]
   simp [Enhance]
   sorry
-    
+
 
 #check Finset.image
 #check Finset.max'_mem
@@ -1992,7 +1992,7 @@ lemma FunToMax.avg_le_max (W : FunToMax G) :
   let c := (S.card : NNReal)
   have cpos : 0 < c := Nat.cast_pos.mpr (Finset.card_pos.mpr (FunToMax.supp_nonempty G W))
   have : 1 / c ≤ W.max_weight G := by
-    
+
     sorry
   exact this
 
@@ -2071,7 +2071,7 @@ lemma Enhanced_unaffceted (W : FunToMax G) (h_con : W.w (W.argmin G) <  W.w (W.a
   set M := FunToMax.argmax G W
   set m := FunToMax.argmin G W
   split_ifs with hL hM
-  · 
+  ·
     set c : NNReal := 1 / ↑(#(filter (fun i => W.w i > 0) univ)) with  hc
     rw [← hL, hv.2] at h_con
     rw [hc] at h_con
@@ -2083,33 +2083,32 @@ lemma Enhanced_unaffceted (W : FunToMax G) (h_con : W.w (W.argmin G) <  W.w (W.a
     have zero_eps : the_ε G W = 0 := by
       dsimp [the_ε]
       rw [eqMax, hc]
-      exact tsub_self c      
+      exact tsub_self c
     rw[zero_eps, tsub_zero]
-  · 
-    set c : NNReal := 1 / ↑(#(filter (fun i => W.w i > 0) univ)) with hc
-    rw [← hM, hv.2] at h_con
-    rw [hc] at h_con
-    have wm_eq_c : W.w m = c := by rw [← hM, hv.2]
-    rw [wm_eq_c] at *
-    let max_val : NNReal := W.w M
-    have h_max : c < max_val := h_con
-    have eps_def : the_ε G W = max_val - c :=
-      by dsimp [the_ε]; sorry
-    sorry
-
+  ·
     -- set c : NNReal := 1 / ↑(#(filter (fun i => W.w i > 0) univ)) with hc
     -- rw [← hM, hv.2] at h_con
     -- rw [hc] at h_con
     -- have wm_eq_c : W.w m = c := by rw [← hM, hv.2]
     -- rw [wm_eq_c] at *
-    -- have A : FunToMax.max_weight G W = W.w M :=
-    --   by sorry
-    -- have eps_def : the_ε G W = FunToMax.max_weight G W - c :=
-    --   by dsimp [the_ε]
-    -- rw [A] at eps_def
-    -- have max_gt : W.w M > c := h_con
-    -- have zero_eps : the_ε G W = 0 := by sorry
-    -- rw [zero_eps, add_zero]
+    -- let max_val : NNReal := W.w M
+    -- have h_max : c < max_val := h_con
+    -- have eps_def : the_ε G W = max_val - c :=
+    --   by dsimp [the_ε]; sorry
+    -- sorry
+    set c : NNReal := 1 / ↑(#(filter (fun i => W.w i > 0) univ)) with hc
+    rw [← hM, hv.2] at h_con
+    rw [hc] at h_con
+    have wm_eq_c : W.w m = c := by rw [← hM, hv.2]
+    rw [wm_eq_c] at *
+    have A : FunToMax.max_weight G W = W.w M :=
+      by sorry
+    have eps_def : the_ε G W = FunToMax.max_weight G W - c :=
+      by dsimp [the_ε]
+    rw [A] at eps_def
+    have max_gt : W.w M > c := h_con
+    have zero_eps : the_ε G W = 0 := by sorry
+    rw [zero_eps, add_zero]
   · exact hv.2
 
 lemma Enhanced_effect (W : FunToMax G) (h_con : W.w (W.argmin G) <  W.w (W.argmax G)) :
@@ -2140,11 +2139,29 @@ lemma EvenBetter_has_constant_support (W : FunToMax G)
   have q := le_iff_eq_or_lt.mp ((EvenBetter G W hW).min_weight_le_max_weight G)
   cases' q with q h_con
   · have := (EvenBetter G W hW).min_eq_max G q v
-    sorry -- use `EvenBetterSupportIncluded`
+    have support_subset := EvenBetterSupportIncluded G W hW
+    have h_subset := EvenBetterSupportIncluded G W hW
+    have h_eq : {i | (EvenBetter G W hW).w i > 0} = {i | W.w i > 0} := by
+      ext i
+      simp only [Set.mem_setOf_eq, gt_iff_lt, not_lt]
+      rw [←not_iff_not]
+      simp only [not_lt, le_zero_iff]
+      exact (h_subset i).symm
+    have card_eq : #(filter (fun i => (EvenBetter G W hW).w i > 0) univ) =
+                  #(filter (fun i => W.w i > 0) univ) := by congr
+
+    rw [←card_eq]
+    rw [mem_filter] at hv
+    have hv' : v ∈ filter (fun i => (EvenBetter G W hW).w i > 0) univ := by
+      rw [mem_filter]
+      exact ⟨mem_univ v, (Set.ext_iff.mp h_eq v).mpr hv.2⟩
+    exact this hv'
+     -- use `EvenBetterSupportIncluded`
   · exfalso
     have reminder := EvenBetterSupportSize G W hW
     have problem := EnhanceIncreasesOneOverKVertices G (EvenBetter G W hW) sorry
     dsimp at problem
+
     sorry
     /-
     - apply `Nat.findGreatest_is_greatest`, with field `k` being `#(filter (fun i ↦ (Enhanced G (EvenBetter G W hW) ⋯).w i = 1 / ↑(#(filter (fun i ↦ (EvenBetter G W hW).w i > 0) univ))) univ)`
@@ -2157,6 +2174,12 @@ lemma EvenBetter_has_constant_support_consequence (W : FunToMax G)
   (hW : G.IsClique ((Finset.univ : Finset α).filter (fun i => W.w i > 0))) :
   ∀ e ∈ G.supEdgeFinset W, vp W.w e =
     (1 / ((Finset.univ : Finset α).filter (fun i => W.w i > 0)).card)^2 := by
+  intro e he
+  rw [SimpleGraph.mem_supEdgeFinset] at he
+  obtain ⟨he_adj, he_max⟩ := he
+  rw [SimpleGraph.mem_edgeFinset] at he_adj
+  obtain ⟨v, w⟩ := e.exists_rep
+
   sorry
 
 
@@ -2172,7 +2195,21 @@ lemma clique_size (W : FunToMax G)
   dsimp [supEdgeFinset]
   apply @Sym2.inductionOn _ (fun e => e ∈ filter (Sym2.inSupport G W) G.edgeFinset ↔ e ∈ image Sym2.mk (filter (fun i ↦ W.w i > 0) univ).offDiag)
   intro x y
-  sorry
+  ---------------
+  simp only [mem_filter, mem_edgeFinset, mem_image, Finset.mem_offDiag, Sym2.inSupport]
+  constructor
+  ·
+    rintro ⟨h_adj, hx, hy⟩
+    rw [SimpleGraph.mem_edgeSet] at h_adj
+    use (x, y)
+    simp [hx, hy, h_adj, mem_univ]
+    exact G.ne_of_adj h_adj
+  · rintro ⟨⟨a, b⟩, ⟨⟨a1, ha⟩, ⟨a2, hb⟩, hab⟩, hsym⟩
+    have h_adj : G.Adj a b := hW (Finset.mem_filter.mpr ⟨a1, ha⟩) (Finset.mem_filter.mpr ⟨a2, hb⟩) hab
+    rcases Sym2.eq_iff.mp hsym with ⟨rfl, rfl⟩ | ⟨rfl, rfl⟩
+    exact ⟨h_adj, ha, hb⟩
+    rw [← hsym]
+    exact ⟨h_adj, hb, ha⟩
 
 /-
 We'll cast things to the reals to make computations managable
