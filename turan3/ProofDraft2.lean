@@ -1982,19 +1982,17 @@ lemma FunToMax.min_le_sum_supp  (W : FunToMax G) :
 
 lemma FunToMax.avg_le_max (W : FunToMax G) :
     W.max_weight G ≥ 1 / (↑((Finset.univ.filter (fun i => W.w i > 0)).card)) := by
-  let S := Finset.univ.filter (fun i => W.w i > 0)
-  have sumS : ∑ v in S, W.w v = 1 := W.sum_supp_eq_one
-  have bound : ∀ v ∈ S, W.w v ≤ W.max_weight G := fun v hv => W.max_weight_max G v
-  have key : (1 : NNReal) ≤ ∑ v in S, W.max_weight G := by
-    rw [← sumS]
-    exact Finset.sum_le_sum bound
-  rw [Finset.sum_const, nsmul_eq_mul] at key
-  let c := (S.card : NNReal)
-  have cpos : 0 < c := Nat.cast_pos.mpr (Finset.card_pos.mpr (FunToMax.supp_nonempty G W))
-  have : 1 / c ≤ W.max_weight G := by
-
-    sorry
-  exact this
+  set S := Finset.univ.filter (fun i => W.w i > 0)
+  have h_sum : ∑ v in S, W.w v = 1 := W.sum_supp_eq_one
+  have card_pos : (S.card : ℝ) > 0 := Nat.cast_pos.mpr (Finset.card_pos.mpr (FunToMax.supp_nonempty G W))
+  have bound : ∀ v ∈ S, W.w v ≤ W.max_weight G := fun v _ => W.max_weight_max G v
+  have h_max : 1 ≤ (S.card : ℝ) * W.max_weight G := by
+    calc
+      1 = ((∑ v in S, W.w v : NNReal) : ℝ) := by rw [h_sum]; norm_cast
+      _ = ∑ v in S, (W.w v : ℝ) := by rw [NNReal.coe_sum]
+      _ ≤ ∑ v in S, (W.max_weight G : ℝ) := by exact Finset.sum_le_sum (fun v hv => NNReal.coe_le_coe.mpr (bound v hv))
+      _ = (S.card : ℝ) * W.max_weight G := by rw [Finset.sum_const, nsmul_eq_mul]
+  exact NNReal.div_le_of_le_mul' h_max
 
 lemma FunToMax.min_le_avg  (W : FunToMax G) :
   W.min_weight G ≤ 1 / (((Finset.univ : Finset α).filter (fun i => W.w i > 0)).card) := by
