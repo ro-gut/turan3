@@ -2005,9 +2005,21 @@ lemma FunToMax.min_le_avg  (W : FunToMax G) :
   let S := (Finset.univ : Finset α).filter (fun i => W.w i > 0)
   obtain ⟨x, hx⟩ := FunToMax.supp_nonempty G W
   let hS_nonempty : Nonempty { x : α // x ∈ S } := ⟨⟨x, hx⟩⟩
-  have hS_pos : 0 < (S.card : NNReal) := Nat.cast_pos.mpr (Finset.card_pos.mpr ⟨x, hx⟩)
-  have h_sum : ∑ v in ((Finset.univ : Finset α).filter (fun i => W.w i > 0)), W.w v = 1 := sorry
-  sorry
+  have hS_pos : 0 < (S.card : ℝ) := Nat.cast_pos.mpr (Finset.card_pos.mpr ⟨x, hx⟩)
+  have h_sum : ∑ v in S, W.w v = 1 := W.sum_supp_eq_one
+  have bound : ∀ v ∈ S, (W.min_weight G : ℝ) ≤ (W.w v : ℝ) :=
+    fun v hv => NNReal.coe_le_coe.mpr (W.min_weight_min G v hv)
+  have h_min : (S.card : ℝ) * (W.min_weight G : ℝ) ≤ 1 := by
+    calc
+      (S.card : ℝ) * (W.min_weight G : ℝ)
+          = ∑ v in S, (W.min_weight G : ℝ) := by rw [Finset.sum_const, nsmul_eq_mul]
+      _ ≤ ∑ v in S, (W.w v : ℝ) := Finset.sum_le_sum bound
+      _ = (∑ v in S, W.w v : NNReal) := by norm_cast
+      _ = 1 := by rw [h_sum]; rfl
+  have h_div : (W.min_weight G : ℝ) ≤ 1 / (S.card : ℝ) := by
+    rw [le_div_iff₀' hS_pos] 
+    exact h_min
+  exact h_div  
 
 lemma FunToMax.sum_supp_lt_max  (W : FunToMax G) (h : W.min_weight G < W.max_weight G) :
   ∑ v∈((Finset.univ : Finset α).filter (fun i => W.w i > 0)), W.w v
