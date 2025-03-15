@@ -1893,10 +1893,16 @@ lemma FunToMax.min_weight_le_max_weight (W : FunToMax G) : W.min_weight G ≤  W
   rw [← W.argmin_weight, ← W.argmax_weight] ; apply W.argmin_le_argmax
 
 lemma FunToMax.max_weight_ineq (W : FunToMax G) :
-  (W.max_weight G) * ((Finset.univ : Finset α).filter (fun i => W.w i > 0)).card
-  ≥ ∑ v∈((Finset.univ : Finset α).filter (fun i => W.w i > 0)), W.w v := by
-
-  sorry
+    (W.max_weight G : ℝ) * ((Finset.univ.filter (fun i => W.w i > 0)).card : ℝ)
+    ≥ ∑ v in (Finset.univ.filter (fun i => W.w i > 0)), (W.w v : ℝ) := by
+  let S := Finset.univ.filter (fun i => W.w i > 0)
+  have bound : ∀ v ∈ S, (W.w v : ℝ) ≤ (W.max_weight G : ℝ) :=
+    fun v _ => NNReal.coe_le_coe.mpr (W.max_weight_max G v)
+  calc
+    (W.max_weight G : ℝ) * (S.card : ℝ) 
+        = (S.card : ℝ) * (W.max_weight G : ℝ) := by rw [mul_comm]
+    _ = ∑ v in S, (W.max_weight G : ℝ) := by rw [Finset.sum_const, nsmul_eq_mul]
+    _ ≥ ∑ v in S, (W.w v : ℝ) := Finset.sum_le_sum bound
 
 #check card_eq_sum_ones
 
