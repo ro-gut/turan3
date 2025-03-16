@@ -1802,8 +1802,6 @@ lemma EnhanceIsBetter_part_12 (W : FunToMax G) (loose gain : α) (h_lt : W.w gai
     · exact elt
     · exact epos
 
-
-
 lemma EnhanceIsBetter (W : FunToMax G) (loose gain : α) (h_lt : W.w gain < W.w loose)
   (h_adj : G.Adj gain loose) (h_supp : W.w loose > 0 ∧ W.w gain > 0)
   (ε : NNReal) (epos : 0 < ε) (elt : ε < W.w loose - W.w gain)
@@ -1821,7 +1819,6 @@ lemma EnhanceIsBetter (W : FunToMax G) (loose gain : α) (h_lt : W.w gain < W.w 
   rw [EnhanceIsBetter_part_4_and_a_half G W, EnhanceIsBetter_part_3 G W loose gain h_adj h_supp]
   simp [Enhance]
   sorry
-
 
 #check Finset.image
 #check Finset.max'_mem
@@ -1899,12 +1896,10 @@ lemma FunToMax.max_weight_ineq (W : FunToMax G) :
   have bound : ∀ v ∈ S, (W.w v : ℝ) ≤ (W.max_weight G : ℝ) :=
     fun v _ => NNReal.coe_le_coe.mpr (W.max_weight_max G v)
   calc
-    (W.max_weight G : ℝ) * (S.card : ℝ) 
+    (W.max_weight G : ℝ) * (S.card : ℝ)
         = (S.card : ℝ) * (W.max_weight G : ℝ) := by rw [mul_comm]
     _ = ∑ v in S, (W.max_weight G : ℝ) := by rw [Finset.sum_const, nsmul_eq_mul]
     _ ≥ ∑ v in S, (W.w v : ℝ) := Finset.sum_le_sum bound
-
-#check card_eq_sum_ones
 
 lemma FunToMax.sum_eq_sum_supp (W : FunToMax G) :
   ∑ v∈(Finset.univ : Finset α), W.w v
@@ -2017,9 +2012,9 @@ lemma FunToMax.min_le_avg  (W : FunToMax G) :
       _ = (∑ v in S, W.w v : NNReal) := by norm_cast
       _ = 1 := by rw [h_sum]; rfl
   have h_div : (W.min_weight G : ℝ) ≤ 1 / (S.card : ℝ) := by
-    rw [le_div_iff₀' hS_pos] 
+    rw [le_div_iff₀' hS_pos]
     exact h_min
-  exact h_div  
+  exact h_div
 
 lemma FunToMax.sum_supp_lt_max  (W : FunToMax G) (h : W.min_weight G < W.max_weight G) :
   ∑ v∈((Finset.univ : Finset α).filter (fun i => W.w i > 0)), W.w v
@@ -2042,11 +2037,32 @@ lemma FunToMax.sum_supp_lt_max  (W : FunToMax G) (h : W.min_weight G < W.max_wei
 lemma FunToMax.min_lt_sum_supp  (W : FunToMax G) (h : W.min_weight G < W.max_weight G) :
   ∑ v∈((Finset.univ : Finset α).filter (fun i => W.w i > 0)), W.w v
     > (((Finset.univ : Finset α).filter (fun i => W.w i > 0)).card) * W.max_weight G := by
+  let S := (Finset.univ : Finset α).filter (fun i => W.w i > 0)
+  obtain ⟨x, hx⟩ := FunToMax.supp_nonempty G W
+  let hS_nonempty : Nonempty { x : α // x ∈ S } := ⟨⟨x, hx⟩⟩
+  have hS_pos : 0 < (S.card : ℝ) := Nat.cast_pos.mpr (Finset.card_pos.mpr ⟨x, hx⟩)
+  set CARD := S.card with hn
+  have h_min_le : ∀ v ∈ S, W.min_weight G ≤ W.w v := by
+    intros v hv
+    unfold FunToMax.min_weight
+    apply Finset.min'_le -- Finset.min_le
+    apply Finset.mem_image_of_mem
+    exact hv
   sorry
 
-lemma FunToMax.avg_lt_max  (W : FunToMax G) (h : W.min_weight G < W.max_weight G) :
+lemma FunToMax.avg_lt_max (W : FunToMax G) (h : W.min_weight G < W.max_weight G) :
   W.max_weight G > 1 / (((Finset.univ : Finset α).filter (fun i => W.w i > 0)).card) := by
-  sorry
+  let S := (Finset.univ : Finset α).filter (fun i => W.w i > 0)
+  have hS : S.Nonempty := FunToMax.supp_nonempty G W -- change from before
+  have sum_S : ∑ v in S, W.w v = 1 := W.sum_supp_eq_one
+  let m := S.card
+  have m_pos : 0 < m := Nat.cast_pos.mpr (Finset.card_pos.mpr hS)
+  let avg : ℝ := 1 / (m : ℝ)
+  by_cases H : avg < W.max_weight G
+  · exact H
+  · have H' : (W.max_weight G : ℝ) ≤ avg := not_lt.mp H
+
+    sorry
 
 lemma FunToMax.min_lt_avg  (W : FunToMax G) (h : W.min_weight G < W.max_weight G):
   W.min_weight G ≤ 1 / (((Finset.univ : Finset α).filter (fun i => W.w i > 0)).card) := by
@@ -2057,7 +2073,6 @@ lemma FunToMax.min_eq_max  (W : FunToMax G) (h : W.min_weight G = W.max_weight G
     W.w v = 1 / (((Finset.univ : Finset α).filter (fun i => W.w i > 0)).card) := by
   sorry
 
-
 noncomputable
 def the_ε (W : FunToMax G) :=
   (W.max_weight G) - (1 / ((Finset.univ : Finset α).filter (fun i => W.w i > 0)).card)
@@ -2065,10 +2080,21 @@ def the_ε (W : FunToMax G) :=
 lemma the_ε_pos (W : FunToMax G) (h : W.min_weight G < W.max_weight G) : 0 < the_ε G W := by
   unfold the_ε
   let S := Finset.univ.filter (fun i => W.w i > 0)
-  let as := Finset.card S
-  sorry
+  have hS : S.Nonempty := FunToMax.supp_nonempty G W
+  let m := Finset.card S
+  have m_pos : 0 < m := Finset.card_pos.mpr hS
+  --  W.max_weight G > 1 / m
+  have ineq := @FunToMax.avg_lt_max _ _ _ _ _ W h
+  exact tsub_pos_of_lt ineq
 
 lemma the_ε_lt (W : FunToMax G) (h : W.min_weight G < W.max_weight G) : the_ε G W < W.w (W.argmax G) - W.w (W.argmin G) := by
+  unfold the_ε
+  haveI : DecidableRel G.Adj := Classical.decRel G.Adj
+  let S := Finset.univ.filter (fun i => W.w i > 0)
+  let m := S.card
+  have hS : S.Nonempty := FunToMax.supp_nonempty G W
+  have m_pos : 0 < m := Finset.card_pos.mpr hS
+
   sorry
 
 lemma arg_help {W : FunToMax G} (h_con : W.w (W.argmin G) <  W.w (W.argmax G)) : W.min_weight G < W.max_weight G :=
