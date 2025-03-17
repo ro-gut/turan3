@@ -1538,8 +1538,34 @@ lemma EnhanceIsBetter_part_8 (W : FunToMax G) (loose gain : α) (h_lt : W.w gain
 
   nth_rewrite 2 [← sum_attach]
   rw [← sum_tsub_distrib _ (EnhanceIsBetter_part_8_help_help G W loose gain h_lt ε epos elt)]
+  rw [← sum_attach]
+  apply Finset.sum_congr rfl
+  intro x hx
+  have dummy := x.prop
+  revert dummy
+  have tec : (↑x ∈ G.supIncidenceFinset W loose \ {s(loose, gain)} →
+    vp (Enhance G W loose gain h_lt ε epos elt).w ↑x = vp W.w ↑x - ε * W.w (Sym2.Mem.other (mini_help G (↑x) (small_helpI G (tiny_help (Subtype.prop x))))))
+    = (fun X => ((HX : X ∈ G.supIncidenceFinset W loose \ {s(loose, gain)}) →
+    vp (Enhance G W loose gain h_lt ε epos elt).w X = vp W.w X - ε * W.w (Sym2.Mem.other (mini_help G (X) (small_helpI G (tiny_help (HX)))))))
+      ↑x := by
+    dsimp
+  rw [tec]
+  clear tec
+  dsimp
+  apply @Sym2.inductionOn α (fun X => ∀ (HX : X ∈ G.supIncidenceFinset W loose \ {s(loose, gain)}), 
+    vp (Enhance G W loose gain h_lt ε epos elt).w X = 
+    vp W.w X - ε * W.w (Sym2.Mem.other (mini_help G (X) (small_helpI G (tiny_help HX))))) ↑x
+  intro a b hab
+  dsimp! [vp]
+  rw [mem_sdiff, not_mem_singleton, mem_supIncidenceFinset, mem_incidenceFinset, mk'_mem_incidenceSet_iff] at hab
+  obtain ⟨⟨⟨abAdj, Q⟩, abSupp⟩, abnot⟩ := hab
+  cases' Q with Q Q
+  · dsimp [Enhance]
+    sorry 
+  · dsimp [Enhance]
+    sorry 
 
-  sorry -- as in EnhanceIsBetter_part_7
+-- as in EnhanceIsBetter_part_7
 /-
 For ↑ use ↓
 Will require `∀ e ∈ ((G.supIncidenceFinset W loose) \ {s(loose,gain)}), vp W.w e ≥ ε*W.w (Sym2.Mem.other (mini_help G e.val (G.small_helpI (tiny_help e.prop))))`
