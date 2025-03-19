@@ -1552,18 +1552,61 @@ lemma EnhanceIsBetter_part_8 (W : FunToMax G) (loose gain : α) (h_lt : W.w gain
   rw [tec]
   clear tec
   dsimp
-  apply @Sym2.inductionOn α (fun X => ∀ (HX : X ∈ G.supIncidenceFinset W loose \ {s(loose, gain)}), 
-    vp (Enhance G W loose gain h_lt ε epos elt).w X = 
+  apply @Sym2.inductionOn α (fun X => ∀ (HX : X ∈ G.supIncidenceFinset W loose \ {s(loose, gain)}),
+    vp (Enhance G W loose gain h_lt ε epos elt).w X =
     vp W.w X - ε * W.w (Sym2.Mem.other (mini_help G (X) (small_helpI G (tiny_help HX))))) ↑x
   intro a b hab
   dsimp! [vp]
   rw [mem_sdiff, not_mem_singleton, mem_supIncidenceFinset, mem_incidenceFinset, mk'_mem_incidenceSet_iff] at hab
   obtain ⟨⟨⟨abAdj, Q⟩, abSupp⟩, abnot⟩ := hab
-  cases' Q with Q Q
-  · dsimp [Enhance]
-    sorry 
-  · dsimp [Enhance]
-    sorry 
+  cases' Q with Q1 Q2
+  ·
+    have nb : b ≠ loose := by
+      intro h; subst h; subst Q1; exact (G.ne_of_adj abAdj) rfl
+    have ng : b ≠ gain := by
+      intro h; subst h;
+      rw [Q1] at abnot
+      exact abnot (Eq.refl (s(a, b)))
+    dsimp [Enhance] at *
+    subst Q1
+    simp only [↓reduceIte, mul_ite, Sym2.other_eq_other']
+    rw [if_neg nb, if_neg ng]
+    have tec : Sym2.Mem.other' (mini_help G s(loose, b) (small_helpI G (tiny_help hab))) = b := by
+      have := Sym2.other_spec' (mini_help G s(loose, b) (small_helpI G (tiny_help hab)))
+      rw [Sym2.mk_eq_mk_iff] at this
+      cases' this with q q
+      · rw [Prod.ext_iff] at q
+        exact q.2
+      · rw [Prod.ext_iff] at q
+        dsimp at q
+        exfalso
+        apply G.ne_of_adj abAdj
+        exact q.1
+    rw [tec]; rw [@tsub_mul]
+  · have na : a ≠ loose := by
+      intro h; subst h; subst Q2; exact (G.ne_of_adj abAdj) rfl
+    have ng : a ≠ gain := by
+      intro h; subst h;
+      rw [Q2] at abnot; rw[←Sym2.eq_swap] at abnot
+      exact abnot (Eq.refl (s(b, a)))
+    dsimp [Enhance] at *
+    subst Q2
+    simp only [↓reduceIte, mul_ite, Sym2.other_eq_other']
+    rw [if_neg na, if_neg ng]
+    have tec : Sym2.Mem.other' (mini_help G s(a, loose) (small_helpI G (tiny_help hab))) = a := by
+      have := Sym2.other_spec' (mini_help G s(a, loose) (small_helpI G (tiny_help hab)))
+      rw [Sym2.mk_eq_mk_iff] at this
+      cases' this with q q
+      · rw [Prod.ext_iff] at q
+        simp only [Prod.mk.injEq] at q
+        obtain ⟨h1, h2⟩ := q
+        simp [h1] at h2
+        exact False.elim (na (id (Eq.symm h1))) -- used: apply?
+      · rw [Prod.ext_iff] at q
+        simp only [Prod.mk.injEq] at q
+        obtain ⟨h1, h2⟩ := q
+        exact h2
+    rw [tec]; rw [@mul_tsub]; rw[mul_comm ε  (W.w a)]
 
 -- as in EnhanceIsBetter_part_7
 /-
