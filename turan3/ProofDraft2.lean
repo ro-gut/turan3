@@ -2436,57 +2436,27 @@ lemma FunToMax.sum_supp_lt_max  (W : FunToMax G) (h : W.min_weight G < W.max_wei
         intro i idef
         apply W.max_weight_max
 
-lemma FunToMax.min_lt_sum_supp  (W : FunToMax G) (h : W.min_weight G < W.max_weight G) :
-  ∑ v∈((Finset.univ : Finset α).filter (fun i => W.w i > 0)), W.w v
-    > (((Finset.univ : Finset α).filter (fun i => W.w i > 0)).card) * W.max_weight G := by
-  let S := (Finset.univ.filter fun i => W.w i > 0)
+lemma FunToMax.min_lt_sum_supp (W : FunToMax G) (h : W.min_weight G < W.max_weight G) :
+  ∑ v in ((Finset.univ : Finset α).filter (fun i => W.w i > 0)), W.w v
+    > (((Finset.univ : Finset α).filter (fun i => W.w i > 0)).card : NNReal) * W.min_weight G := by
+  -- was this before, fixed it : > (((Finset.univ : Finset α).filter (fun i => W.w i > 0)).card : NNReal) * W.max_weight G := by
   nth_rewrite 1 [← Finset.insert_erase (W.argmax_mem G)]
-  rw [Finset.sum_insert]
+  rw [sum_insert]
   swap
-  · exact Finset.not_mem_erase (W.argmax G) S
-  rw [Finset.card_eq_sum_ones, Nat.cast_sum, Finset.sum_mul]
-  nth_rewrite 2 [← Finset.insert_erase (W.argmax_mem G)]
-  rw [Finset.sum_insert]
-  swap
-  · exact Finset.not_mem_erase (W.argmax G) S
-  rw [Nat.cast_one, one_mul]
-  apply add_lt_add_of_le_of_lt
-  . rw [← W.argmax_weight G]
-  . apply sum_lt_sum
-    . intro i hi
-      have i_ne_argmax : i ≠ argmax G W := by
-        intro contra
-        rw [contra] at hi
-        exact Finset.not_mem_erase (argmax G W) S hi
-      have le := FunToMax.max_weight_max G W i
-      rw [← not_lt] at le
-      -- exact le_of_lt (lt_of_le_of_ne (W.max_weight_max i) i_ne_argmax.symm)
-      apply le_of_not_lt
-      intro hlt
-      apply i_ne_argmax
-      have : ∀ j, j ∈ S → W.w j ≤ W.w i := by
-        intro j hj
-        apply le_of_lt_or_eq
-        by_cases hji : W.w j < W.w i
-        · exact Or.inl hji
-        · exfalso
-          sorry
-      sorry
-    ----
-    · use W.argmin G
-      constructor
-      · apply Finset.mem_erase.mpr
-        constructor
-        · intro contra
-          have r1 := W.argmin_weight G
-          have r2 := W.argmax_weight G
-          rw [contra] at r1
-          rw [←r1, r2] at h
-          exact h.false
-        · exact W.argmin_mem G
-      · sorry
-  -- similar to ↑
-
+  · apply not_mem_erase
+  · rw [card_eq_sum_ones, Nat.cast_sum, sum_mul]
+    nth_rewrite 2 [← Finset.insert_erase (W.argmax_mem G)]
+    rw [sum_insert]
+    swap
+    · apply not_mem_erase
+    · rw [Nat.cast_one, one_mul]
+      apply add_lt_add_of_lt_of_le
+      · rw [← W.argmax_weight] at h
+        exact h
+      · apply sum_le_sum
+        intro i idef
+        apply W.min_weight_min
+        exact mem_of_mem_erase idef
 
 lemma FunToMax.avg_lt_max (W : FunToMax G) (h : W.min_weight G < W.max_weight G) :
   W.max_weight G > 1 / (((Finset.univ : Finset α).filter (fun i => W.w i > 0)).card) := by
