@@ -2401,15 +2401,13 @@ lemma FunToMax.min_lt_avg (W : FunToMax G) (h : W.min_weight G < W.max_weight G)
   have card_pos : 0 < S.card := by
     apply Finset.card_pos.mpr
     use x
-
-  have bound : W.w x * ↑(S.card) ≤ ∑ v in S, W.w v := by
-    sorry
-
-  have : W.w x ≤ 1 / S.card := by
-    apply (le_div_iff₀ (Nat.cast_pos.mpr card_pos)).mpr
-    rw [← sum_eq]
-    exact bound
-  exact lt_of_lt_of_le x_gt this
+  have m_pos : (↑(S.card) : NNReal) > 0 := by exact_mod_cast card_pos
+  have tec : ∑ v ∈ univ, W.w v = ∑ v ∈ filter (fun i ↦ W.w i > 0) univ, W.w v := by
+    exact sum_eq_sum_supp G W
+  have := W.min_lt_sum_supp
+  rw [← tec , W.h_w] at this
+  have final : W.min_weight G < 1 / ↑(S.card) := by exact (lt_div_iff₀' m_pos).mpr (this h)
+  exact final
 
 lemma FunToMax.min_eq_max  (W : FunToMax G) (h : W.min_weight G = W.max_weight G):
   ∀ v ∈ ((Finset.univ : Finset α).filter (fun i => W.w i > 0)),
