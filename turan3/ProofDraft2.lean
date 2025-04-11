@@ -2072,14 +2072,15 @@ lemma EnhanceIsBetter_part_12 (W : FunToMax G) (loose gain : α) (h_lt : W.w gai
   rw [mul_tsub]
   rw [lt_tsub_comm] at elt
   apply @lt_of_eq_of_lt _ _ (W.w gain * W.w loose - W.w gain * ε + W.w gain * ε)
-  ------
-  · have := @tsub_add_cancel_iff_le _ _ _ _ _ _ (W.w gain * ε ) (W.w gain * W.w loose)
-    rw [mul_comm, eq_comm]
-    apply this.mpr
-    rw [mul_le_mul_left h_supp.2]
-    · rw [← lt_tsub_comm] at elt
-
-      sorry -- elt !
+  · rw [mul_comm (W.w loose) (W.w gain)]
+    have hle : W.w gain * ε ≤ W.w gain * W.w loose := by
+      apply mul_le_mul_of_nonneg_left
+      · have A : W.w gain + ε < W.w loose := by exact lt_tsub_iff_right.mp elt
+        have B : ε ≤ W.w gain + ε := by
+          exact le_add_self
+        exact le_trans B (le_of_lt A)
+      · exact NNReal.coe_nonneg _
+    exact Eq.symm (tsub_add_cancel_of_le hle)
   · apply add_lt_add_left
     apply mul_lt_mul_of_pos_right
     · exact elt
