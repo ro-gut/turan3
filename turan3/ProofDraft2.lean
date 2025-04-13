@@ -2451,18 +2451,28 @@ lemma the_ε_pos (W : FunToMax G) (h : W.min_weight G < W.max_weight G) : 0 < th
 
 lemma the_ε_lt (W : FunToMax G) (h : W.min_weight G < W.max_weight G) :
   the_ε G W < W.w (W.argmax G) - W.w (W.argmin G) := by
-  unfold the_ε
   let S := Finset.univ.filter (fun i => W.w i > 0)
-  have hS : S.Nonempty := FunToMax.supp_nonempty G W
-  let m := Finset.card S
-  have m_pos : 0 < m := Finset.card_pos.mpr hS
-  have ineq : (W.max_weight G) > 1 / (↑m : ℝ) := @FunToMax.avg_lt_max _ _ _ _ _ W h
-  have coe_ineq : ↑(FunToMax.max_weight G W) > (1 / ↑m : NNReal) := NNReal.coe_lt_coe.mpr ineq
-  have h : (W.max_weight G) - 1 / ↑m < W.w (W.argmax G) - W.w (W.argmin G) := by
-    rw [@natCast_card_filter]; sorry
-  calc
-    FunToMax.max_weight G W - 1 / ↑m
-        < W.w (W.argmax G) - W.w (W.argmin G) := by exact h
+  let m := S.card
+  have eq_argmin : W.w (W.argmin G) = W.min_weight G :=
+    (Classical.choose_spec (FunToMax.argmin_pre G W)).2
+  rw [eq_argmin]
+  have key : W.min_weight G < 1/↑m := FunToMax.min_lt_avg G W h
+  have key_r : (W.min_weight G : ℝ) < 1/((↑m : NNReal) : ℝ) :=
+    NNReal.coe_lt_coe.mp key
+  have goal_r : (W.max_weight G : ℝ) - 1/((↑m : NNReal) : ℝ) < (W.max_weight G : ℝ) - (W.min_weight G : ℝ) :=
+    by rw [@sub_lt_sub_iff] ; exact (Real.add_lt_add_iff_left ↑(FunToMax.max_weight G W)).mpr key
+  have goal_r1 : (W.max_weight G : ℝ) - (1 / (m : ℝ)) < (W.max_weight G : ℝ) - (W.min_weight G : ℝ) := by norm_cast
+  have ineq_real : (W.max_weight G : ℝ) > 1/(m : ℝ) := @FunToMax.avg_lt_max _ _ _ _ _ W h
+  have coe_ineq : W.max_weight G > 1/↑m := NNReal.coe_lt_coe.mpr ineq_real
+  have sub1 : ↑(W.max_weight G - 1/↑m) = (W.max_weight G : ℝ) - (1/(m : ℝ)) := NNReal.coe_sub (le_of_lt coe_ineq)
+  have sub2 : ↑(W.max_weight G - W.min_weight G) = (W.max_weight G : ℝ) - (W.min_weight G : ℝ) := NNReal.coe_sub (le_of_lt h)
+  rw [← sub1, ← sub2] at goal_r1
+  have goal_NN : W.max_weight G - 1/↑m < W.max_weight G - W.min_weight G := by exact goal_r1
+  have argmax_eq : W.w (W.argmax G) = W.max_weight G :=
+    (Classical.choose_spec (FunToMax.argmax_pre G W)).2
+  exact
+    lt_of_lt_of_eq goal_NN
+      (congrFun (congrArg HSub.hSub (id (Eq.symm argmax_eq))) (FunToMax.min_weight G W))
 
 
 lemma arg_help {W : FunToMax G} (h_con : W.w (W.argmin G) <  W.w (W.argmax G)) : W.min_weight G < W.max_weight G :=
