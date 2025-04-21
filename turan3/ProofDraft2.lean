@@ -2751,7 +2751,6 @@ lemma EvenBetter_has_constant_support (W : FunToMax G)
       rw [mem_filter]
       exact ⟨mem_univ v, (Set.ext_iff.mp h_eq v).mpr hv.2⟩
     exact this hv'
-     -- use `EvenBetterSupportIncluded`
   · exfalso
     have reminder := EvenBetterSupportSize G W hW
     simp_rw [EvenBetterSupportIncluded' G W hW] at reminder
@@ -2773,17 +2772,16 @@ lemma EvenBetter_has_constant_support (W : FunToMax G)
         (FunToMax.argmax G (EvenBetter G W hW))
         (FunToMax.argmin G (EvenBetter G W hW))
         (by rw [@FunToMax.argmin_weight]; rw [@FunToMax.argmax_weight]; exact h_con)
-        (by rw [@FunToMax.argmin_weight];
-            apply lt_of_le_of_lt
-            · refine zero_le ?_
-              exact the_ε G (EvenBetter G W hW)
-            ·
-              sorry)
+        (by 
+          have h_gain_pos : 0 < (EvenBetter G W hW).w (FunToMax.argmin G (EvenBetter G W hW)) := by        
+            have hmem : (FunToMax.argmin G (EvenBetter G W hW)) ∈ ((Finset.univ : Finset α).filter
+                      (fun i => (EvenBetter G W hW).w i > 0)) := FunToMax.argmin_mem (G := G) (W := EvenBetter G W hW)
+            exact (Finset.mem_filter.1 hmem).2
+          exact h_gain_pos            )
         (the_ε G (EvenBetter G W hW))
         (by exact the_ε_pos G (EvenBetter G W hW) h_con)
         (by exact the_ε_lt G (EvenBetter G W hW) h_con)
       rw [this, xdef.2]
-      -------
       exact one_div_pos.mpr (Nat.cast_pos.mpr (card_pos.mpr ⟨v, by
         simp only [mem_filter, mem_univ, true_and]
         have hv_pos : W.w v > 0 := by rcases Finset.mem_filter.1 hv with ⟨-, hv_pos⟩; exact hv_pos
@@ -2800,22 +2798,22 @@ lemma EvenBetter_has_constant_support (W : FunToMax G)
         FunToMax.argmin_mem (G:=G) (W:=eW)
         exact (Finset.mem_filter.1 this).2
       let ε   : NNReal := the_ε G eW
-      have h_lt : eW.w gain < eW.w loose := by
+      have h_lt : eW.w gain < eW.w loose := by 
         dsimp [gain, loose] at *; simpa [FunToMax.argmin_weight, FunToMax.argmax_weight] using h_con
       have epos : 0 < ε := by exact the_ε_pos G eW h_con
       have elt  : ε < eW.w loose - eW.w gain := by exact the_ε_lt G eW h_con
-      have h_equiv := (EnhanceSupport (G:=G) (W:=eW) (loose:=loose) (gain:=gain) h_lt gain_pos ε epos elt) i
       have hc : G.IsClique ((Finset.univ : Finset α).filter (fun i => eW.w i > 0)) := (EvenBetterClique (G:=G) (W:=W) (hW:=hW))
       split_ands
       · intro i
+        have h_equiv := (EnhanceSupport (G:=G) (W:=eW) (loose:=loose) (gain:=gain) h_lt gain_pos ε epos elt) i    
         constructor
         · intro i0
           have heW0 : eW.w i = 0 := by exact (EvenBetterSupportIncluded G W hW i).mp i0
           have : (Enhanced G eW h_lt).w i = 0 := by
             dsimp [Enhanced, loose, gain] at *
             have h' : (Enhance G eW loose gain h_lt ε epos elt).w i = 0 := (h_equiv).mp heW0
-            simpa using h'
-          simpa [Enhanced, loose, gain] using this
+            exact h'
+          exact this
         · intro i0'
           have heW0 : eW.w i = 0 := (h_equiv).mpr i0'
           exact (EvenBetterSupportIncluded G W hW i).mpr heW0
@@ -2823,24 +2821,26 @@ lemma EvenBetter_has_constant_support (W : FunToMax G)
           (loose:=loose) (gain:=gain)
           (h_lt:=h_lt) (ah:=gain_pos)
           (ε:=ε) (epos:=epos) (elt:=elt) (hc:=hc)
-      ·
-        have h_den : (1 / ((Finset.univ : Finset α).filter (fun i : α => W.w i > 0)).card : NNReal) = 1 / ((Finset.univ : Finset α).filter (fun i : α => eW.w i > 0)).card := by
-
-          sorry
-        sorry
-      · sorry
-    /-
-    - apply `Nat.findGreatest_is_greatest`, with field `k` being `#(filter (fun i ↦ (Enhanced G (EvenBetter G W hW) ⋯).w i = 1 / ↑(#(filter (fun i ↦ (EvenBetter G W hW).w i > 0) univ))) univ)`
-      and `hk` being `problem`, rewritten using `reminder`
-    - it'll remain to show that the above `k` field argument satisfies the `help3` predicate
-    - this will follow from `EnhanceSupport`, `EnhanceClique`  and `EnhanceIsBetter`
-    -/
-
-#check Nat.findGreatest_is_greatest
-
-#check EvenBetterSupportIncluded
-#check EvenBetterHigher
-#check Enhanced
+      · let S  := (Finset.univ : Finset α).filter (fun i : α => W.w  i  > 0)
+        let S' := (Finset.univ : Finset α).filter (fun i : α => eW.w i  > 0)
+        have hS : S = S' := by
+          apply Finset.ext ; intro i
+          simp [S, S', EvenBetterSupportIncluded' (G:=G) (W:=W) (hW:=hW) i]
+          exact gt_iff_lt
+        have h_card : S.card = S'.card := by simp [hS]
+        rw [h_card]
+      · have h1 : W.fw ≤ eW.fw := EvenBetterHigher (G:=G) (W:=W) hW
+        have h_loose_pos : 0 < eW.w loose := by 
+          have hmem := (FunToMax.argmax_mem (G:=G) (W:=eW))
+          exact (Finset.mem_filter.1 hmem).2
+        have h_gain_pos : 0 < eW.w gain := gain_pos
+        have h_supp : eW.w loose > 0 ∧ eW.w gain > 0 := ⟨h_loose_pos, h_gain_pos⟩
+        have h_neq : gain ≠ loose := by exact neq_of_W_lt G h_lt   
+        have h_adj : G.Adj gain loose := EnhanceCliquePractical (G:=G) (W:=eW) hc gain loose h_gain_pos h_loose_pos h_neq
+        have h2 : eW.fw ≤ (Enhanced G eW h_lt).fw := by
+          have hE := EnhanceIsBetter (G:=G) (W:=eW) (loose:=loose) (gain:=gain) h_lt h_adj h_supp ε epos elt hc
+          exact hE      
+        exact le_trans h1 h2
 
 /-- Shows that after `EvenBetter` every edge connecting vertices in the support has edge value equal to
 the square of the uniform weight. -/
@@ -2928,7 +2928,6 @@ lemma bound_real (k p : ℕ) (hk : 0 < k) (hkp : k ≤ p) :
 #check EvenBetterSupportIncluded'
 #check EvenBetterHigher
 #check EvenBetterClique
-
 
 lemma Finale (h0 : p ≥ 2) (h1 : G.CliqueFree p) (W : FunToMax G) :
   W.fw ≤ ((p-1) * ((p-1) - 1) / 2 ) * (1/(p-1))^2 := by
