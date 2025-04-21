@@ -41,21 +41,21 @@ def fw {G : SimpleGraph α} [DecidableRel G.Adj] (W : FunToMax G) : NNReal :=
 end FunToMax
 
 -- section Section_1
-/-! 
+/-!
 ## Section 1: Concentrating weight on a clique
 
 Starting from any weight function `W`, we gradually “improve” it without decreasing `fw`
 until its support is a clique.
 
-1. We have an improved wegith function `Better` with  
-   • zeros preserved  
-   • support size = m  
+1. We have an improved wegith function `Better` with
+   • zeros preserved
+   • support size = m
    • Better.fw ≥ W.fw
 
 2. `K` finds the minimal support size (for `Better`) we can achieve without decreasing the total edge weight `Better.fw ≥ W.fw`.
 
-3. Defining a function `Improve` we move all weight from one vertex `loose` to another `gain` (non adjacent).  
-   • `Improve_does_its_thing`: shoes the total value `fw` is equal or greater  
+3. Defining a function `Improve` we move all weight from one vertex `loose` to another `gain` (non adjacent).
+   • `Improve_does_its_thing`: shoes the total value `fw` is equal or greater
    • `ImproveReducesSupportSize`: support size strictly decreases under `Improve`
 
 4. By minimality of `K`, `BetterFormsClique` shows the final support forms a clique.
@@ -716,7 +716,7 @@ applies `Improve` to move all the weight from `loose` to `gain`.  By
 - `Improve_does_its_thing`: `fw` does not decrease, and
 - `ImproveReducesSupportSize`: the support strictly shrinks,
 
-this contradicts the minimality of `Better`’s support size `K`.  
+this contradicts the minimality of `Better`’s support size `K`.
 Therefore no such non‑adjacent pair exists.
 -/
 lemma BetterFormsClique (W : FunToMax G) : G.IsClique ((Finset.univ : Finset α).filter (fun i => (Better G W).w i > 0)) := by
@@ -2186,19 +2186,19 @@ lemma EnhanceIsBetter_part_13 (W : FunToMax G) (loose gain : α) (h_lt : W.w gai
 /-- Combining previous lemmas, shows that the total edge weight increases or remains the same under `Enhance`.
 
 Notes:
-- `part_4_and_a_half` : Assures that the total whole edge value of the Graph is the same as the total edge value of the 
-edges in the support 
+- `part_4_and_a_half` : Assures that the total whole edge value of the Graph is the same as the total edge value of the
+edges in the support
 - `part_13` : assures the supported subset of edges is the same under `Enhance`
 - `part_3` : Partitions the total edge contribution of the clique (and whole Graph) into:
   + `InciLooseGainFull` (edged incident to loose, edges incident to gain and {gain,loose})
   + `InciLooseGainFull`'s complement
 
-Now we show the change for each: 
+Now we show the change for each:
 - with `part_11` we show that edges in the support but not in `InciLooseGainFull`
 
 - with `part_7`, `part_8` the lemma quantifies the gain from edges incident to gain and the loss from edges
-incident to loose, then with  `part_9`, since the support is a clique and there is a bijection between edged inci. 
-to loose to edges incid. to gain, we show that the change is 0 or greater. 
+incident to loose, then with  `part_9`, since the support is a clique and there is a bijection between edged inci.
+to loose to edges incid. to gain, we show that the change is 0 or greater.
 Therefore concluding that `Enhance` forms an equal or greater weight distribution, since the increase at gain cancels OR exceeds
 the drecrease at loose
 -/
@@ -2245,7 +2245,7 @@ Section 3 : Equalizing weights on the clique
 
 Given any weight function `W` whose support is a clique here we:
 
- 1. show the support is nonempty and define
+ 1. define
     - `W.max_weight` and `W.min_weight` as the extremal vertex weights,
     - `W.argmax` and `W.argmin` as vertices attaining them;
 
@@ -2253,7 +2253,7 @@ Given any weight function `W` whose support is a clique here we:
     - `avg ≤ max`, `min ≤ avg`,
     - strictly showing `min < max ↔ avg < max` and `min < avg`
 
- 3. set `ε := max_weight − (1/|support|) > 0` (when `min < max`), and define
+ 3. set `the_ε := max_weight − (1/|support|) > 0` (when `min < max`), and define
     another improved weight function `Enhanced` that moves `ε` from `argmax` to `argmin`
 
  4. show `Enhanced` preserves total weight, support, and clique structure,
@@ -2786,17 +2786,48 @@ lemma EvenBetter_has_constant_support (W : FunToMax G)
       -------
       exact one_div_pos.mpr (Nat.cast_pos.mpr (card_pos.mpr ⟨v, by
         simp only [mem_filter, mem_univ, true_and]
-        sorry
-        ⟩))
+        have hv_pos : W.w v > 0 := by rcases Finset.mem_filter.1 hv with ⟨-, hv_pos⟩; exact hv_pos
+        have : (EvenBetter G W hW).w v > 0 := (EvenBetterSupportIncluded' (G:=G) (W:=W) (hW:=hW) v).mp hv_pos
+        exact this⟩))
     · clear ohoh -- clear bug
       dsimp [help3]
       use (Enhanced G (EvenBetter G W hW) (by rw [@FunToMax.argmin_weight, @FunToMax.argmax_weight]; exact h_con))
+      let eW : FunToMax G := EvenBetter G W hW
+      let loose : α := FunToMax.argmax G eW
+      let gain  : α := FunToMax.argmin G eW
+      have gain_pos : 0 < eW.w gain := by
+        have : gain ∈ ((Finset.univ : Finset α).filter (fun j => eW.w j > 0)) :=
+        FunToMax.argmin_mem (G:=G) (W:=eW)
+        exact (Finset.mem_filter.1 this).2
+      let ε   : NNReal := the_ε G eW
+      have h_lt : eW.w gain < eW.w loose := by
+        dsimp [gain, loose] at *; simpa [FunToMax.argmin_weight, FunToMax.argmax_weight] using h_con
+      have epos : 0 < ε := by exact the_ε_pos G eW h_con
+      have elt  : ε < eW.w loose - eW.w gain := by exact the_ε_lt G eW h_con
+      have h_equiv := (EnhanceSupport (G:=G) (W:=eW) (loose:=loose) (gain:=gain) h_lt gain_pos ε epos elt) i
+      have hc : G.IsClique ((Finset.univ : Finset α).filter (fun i => eW.w i > 0)) := (EvenBetterClique (G:=G) (W:=W) (hW:=hW))
       split_ands
+      · intro i
+        constructor
+        · intro i0
+          have heW0 : eW.w i = 0 := by exact (EvenBetterSupportIncluded G W hW i).mp i0
+          have : (Enhanced G eW h_lt).w i = 0 := by
+            dsimp [Enhanced, loose, gain] at *
+            have h' : (Enhance G eW loose gain h_lt ε epos elt).w i = 0 := (h_equiv).mp heW0
+            simpa using h'
+          simpa [Enhanced, loose, gain] using this
+        · intro i0'
+          have heW0 : eW.w i = 0 := (h_equiv).mpr i0'
+          exact (EvenBetterSupportIncluded G W hW i).mpr heW0
+      · exact EnhanceClique (G:=G) (W:=eW)
+          (loose:=loose) (gain:=gain)
+          (h_lt:=h_lt) (ah:=gain_pos)
+          (ε:=ε) (epos:=epos) (elt:=elt) (hc:=hc)
       ·
+        have h_den : (1 / ((Finset.univ : Finset α).filter (fun i : α => W.w i > 0)).card : NNReal) = 1 / ((Finset.univ : Finset α).filter (fun i : α => eW.w i > 0)).card := by
+
+          sorry
         sorry
-      ·
-        sorry
-      · sorry
       · sorry
     /-
     - apply `Nat.findGreatest_is_greatest`, with field `k` being `#(filter (fun i ↦ (Enhanced G (EvenBetter G W hW) ⋯).w i = 1 / ↑(#(filter (fun i ↦ (EvenBetter G W hW).w i > 0) univ))) univ)`
@@ -2990,6 +3021,7 @@ lemma Finale (h0 : p ≥ 2) (h1 : G.CliqueFree p) (W : FunToMax G) :
   have RHS_eq : ((q : ℝ) * (q - 1) / 2) * ((1 / q : ℝ) ^ 2) = (1 / 2) * (1 - (1 / q : ℝ)) :=
     computation q hq_pos
   have bound_real : (1 : ℝ) / 2 * (1 - 1 / ↑k) ≤ 1 / 2 * (1 - 1 / ↑(p - 1)) := by exact_mod_cast bound k (p - 1) hk_pos h_le
+
   sorry
 
 #check EnhanceIsBetter
