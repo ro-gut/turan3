@@ -98,7 +98,7 @@ def K (W : FunToMax G) := Nat.find (help G W)
 
 /-- Guarantees that for a distribution W, an "improved" one `better` exist where :
 - vertices with weight 0 remain 0,
-- Support size (vertices with positive weight) is equal to `K`
+- Support size (vertices with positive weight) is equal to `K` (smallest possible "m" satisfying `help` for a weight function `W)
 - Has non decreasing total weight (`fw`) than the original distribution. -/
 lemma help2 (W : FunToMax G):
   ∃ better : FunToMax G,
@@ -107,7 +107,10 @@ lemma help2 (W : FunToMax G):
     (W.fw ≤ better.fw) -- has better weights
     := Nat.find_spec (help G W)
 
-/-- Returns an improved weight function under the conditions of `help2`.--/
+/-- Returns an improved weight function under the conditions of `help2`
+- vertices with weight 0 remain 0,
+- Support size (vertices with positive weight) is equal to `K`
+- Has non decreasing total weight (`fw`) than the original distribution..-/
 noncomputable
 def Better (W : FunToMax G) : FunToMax G := Classical.choose (help2 G W)
 
@@ -2772,8 +2775,8 @@ lemma EvenBetter_has_constant_support (W : FunToMax G)
         (FunToMax.argmax G (EvenBetter G W hW))
         (FunToMax.argmin G (EvenBetter G W hW))
         (by rw [@FunToMax.argmin_weight]; rw [@FunToMax.argmax_weight]; exact h_con)
-        (by 
-          have h_gain_pos : 0 < (EvenBetter G W hW).w (FunToMax.argmin G (EvenBetter G W hW)) := by        
+        (by
+          have h_gain_pos : 0 < (EvenBetter G W hW).w (FunToMax.argmin G (EvenBetter G W hW)) := by
             have hmem : (FunToMax.argmin G (EvenBetter G W hW)) ∈ ((Finset.univ : Finset α).filter
                       (fun i => (EvenBetter G W hW).w i > 0)) := FunToMax.argmin_mem (G := G) (W := EvenBetter G W hW)
             exact (Finset.mem_filter.1 hmem).2
@@ -2798,14 +2801,14 @@ lemma EvenBetter_has_constant_support (W : FunToMax G)
         FunToMax.argmin_mem (G:=G) (W:=eW)
         exact (Finset.mem_filter.1 this).2
       let ε   : NNReal := the_ε G eW
-      have h_lt : eW.w gain < eW.w loose := by 
+      have h_lt : eW.w gain < eW.w loose := by
         dsimp [gain, loose] at *; simpa [FunToMax.argmin_weight, FunToMax.argmax_weight] using h_con
       have epos : 0 < ε := by exact the_ε_pos G eW h_con
       have elt  : ε < eW.w loose - eW.w gain := by exact the_ε_lt G eW h_con
       have hc : G.IsClique ((Finset.univ : Finset α).filter (fun i => eW.w i > 0)) := (EvenBetterClique (G:=G) (W:=W) (hW:=hW))
       split_ands
       · intro i
-        have h_equiv := (EnhanceSupport (G:=G) (W:=eW) (loose:=loose) (gain:=gain) h_lt gain_pos ε epos elt) i    
+        have h_equiv := (EnhanceSupport (G:=G) (W:=eW) (loose:=loose) (gain:=gain) h_lt gain_pos ε epos elt) i
         constructor
         · intro i0
           have heW0 : eW.w i = 0 := by exact (EvenBetterSupportIncluded G W hW i).mp i0
@@ -2830,16 +2833,16 @@ lemma EvenBetter_has_constant_support (W : FunToMax G)
         have h_card : S.card = S'.card := by simp [hS]
         rw [h_card]
       · have h1 : W.fw ≤ eW.fw := EvenBetterHigher (G:=G) (W:=W) hW
-        have h_loose_pos : 0 < eW.w loose := by 
+        have h_loose_pos : 0 < eW.w loose := by
           have hmem := (FunToMax.argmax_mem (G:=G) (W:=eW))
           exact (Finset.mem_filter.1 hmem).2
         have h_gain_pos : 0 < eW.w gain := gain_pos
         have h_supp : eW.w loose > 0 ∧ eW.w gain > 0 := ⟨h_loose_pos, h_gain_pos⟩
-        have h_neq : gain ≠ loose := by exact neq_of_W_lt G h_lt   
+        have h_neq : gain ≠ loose := by exact neq_of_W_lt G h_lt
         have h_adj : G.Adj gain loose := EnhanceCliquePractical (G:=G) (W:=eW) hc gain loose h_gain_pos h_loose_pos h_neq
         have h2 : eW.fw ≤ (Enhanced G eW h_lt).fw := by
           have hE := EnhanceIsBetter (G:=G) (W:=eW) (loose:=loose) (gain:=gain) h_lt h_adj h_supp ε epos elt hc
-          exact hE      
+          exact hE
         exact le_trans h1 h2
 
 /-- Shows that after `EvenBetter` every edge connecting vertices in the support has edge value equal to
@@ -2944,52 +2947,24 @@ lemma Finale (h0 : p ≥ 2) (h1 : G.CliqueFree p) (W : FunToMax G) :
     intro a b
     rw [Sym2.inSupport_explicit, Sym2.inSupport_explicit]
     rw [← EvenBetterSupportIncluded',← EvenBetterSupportIncluded']
-  have snd : G.supEdgeFinset W ⊆ G.supEdgeFinset (Better G W) := by
-    intro x
-    dsimp [supEdgeFinset]
-    have : Sym2.inSupport G W x → Sym2.inSupport G (Better G W) x := by
-      contrapose
-      apply @Sym2.inductionOn α (fun x =>¬Sym2.inSupport G (Better G W) x → ¬Sym2.inSupport G W x)
-      intro a b
-      dsimp [Sym2.inSupport]
-      intro H con
-      rw [not_and_or] at H
-------
-      have not_zero_a : (Better G W).w a > 0 := by
-        by_cases h : a = FunToMax.argmin G W
-        · rw [h]
-          dsimp [Better]
-          set gain := FunToMax.argmax G W
-          set loose := FunToMax.argmin G W
-          let W' := Classical.choose (help2 G W)
-          let key := Classical.choose_spec (help2 G W)
-          have Wloose_pos : W.w loose > 0 := by rw [← h]; exact con.left
-          have support_eq : (Finset.filter (fun i => W'.w i > 0) Finset.univ).card = K G W :=
-            (Classical.choose_spec (help2 G W)).2.1
-          have loose_in_support : loose ∈ Finset.filter (fun i => W'.w i > 0) Finset.univ := by
-            have : loose ∈ Finset.filter (fun i => W.w i > 0) Finset.univ := by
-              rw [Finset.mem_filter]
-              rw[h] at con
-              exact ⟨Finset.mem_univ _, con.left⟩
-            by_contra! h'
-            sorry
-          rw [Finset.mem_filter] at loose_in_support
-          exact loose_in_support.2
-        · dsimp [Better]
-
-          sorry
-      have not_zero_b : (Better G W).w b > 0 := by sorry
-      cases' H with ha hb
-      · exact ha not_zero_a
-      · exact hb not_zero_b
-       -- annoying rewrites about nonegativity of NNReal, then use BetterSupportIncluded
-    intro hx
-    rw [Finset.mem_filter] at hx
-    cases' hx with hx_edge hx_in_support
-    rw [Finset.mem_filter]
-    constructor
-    · exact hx_edge
-    · exact this hx_in_support
+-- Was this before, I believe it was the other direction since Better could theoretically set one weight
+-- to 0 so as its commented here below it wouldndt always be possible
+  -- have snd : G.supEdgeFinset W ⊆ G.supEdgeFinset (Better G W) := by
+  have snd : G.supEdgeFinset (Better G W) ⊆ G.supEdgeFinset W := by
+    intro e
+    apply @Sym2.inductionOn α
+      (fun e => e ∈ G.supEdgeFinset (Better G W) → e ∈ G.supEdgeFinset W) e
+    intro a b h
+    dsimp [supEdgeFinset] at h
+    simp only [Finset.mem_filter, Sym2.inSupport_explicit] at h
+    rcases h with ⟨h_edge, ha, hb⟩
+    exact Finset.mem_filter.mpr ⟨h_edge, by
+        dsimp [Sym2.inSupport] at *
+        have ha_ne : (Better G W).w a ≠ 0 := pos_iff_ne_zero.mp ha
+        have wa_ne : W.w a ≠ 0             := mt (BetterSupportIncluded G W a) ha_ne
+        have hb_ne : (Better G W).w b ≠ 0 := pos_iff_ne_zero.mp hb
+        have wb_ne : W.w b ≠ 0             := mt (BetterSupportIncluded G W b) hb_ne
+        exact ⟨pos_iff_ne_zero.mpr wa_ne, pos_iff_ne_zero.mpr wb_ne⟩⟩  
   have thd := EvenBetter_has_constant_support_consequence G _ (BetterFormsClique G W)
   have four := EvenBetterClique G _ (BetterFormsClique G W)
   simp_rw [← EvenBetterSupportIncluded' G _ (BetterFormsClique G W)] at four
@@ -3020,8 +2995,15 @@ lemma Finale (h0 : p ≥ 2) (h1 : G.CliqueFree p) (W : FunToMax G) :
   have RHS_eq : ((q : ℝ) * (q - 1) / 2) * ((1 / q : ℝ) ^ 2) = (1 / 2) * (1 - (1 / q : ℝ)) :=
     computation q hq_pos
   have bound_real : (1 : ℝ) / 2 * (1 - 1 / ↑k) ≤ 1 / 2 * (1 - 1 / ↑(p - 1)) := by exact_mod_cast bound k (p - 1) hk_pos h_le
-
+  ------
+  have help : ↑(k * (k - 1) / 2) = ↑k * (↑k - 1) / 2 := by exact rfl
+  calc
+    ↑(k * (k - 1) / 2) * ((1 : NNReal) / ↑k) ^ 2
+      = 1 / 2 * (1 - 1 / ↑k)                             := by sorry
+    _ ≤ 1 / 2 * (1 - 1 / ↑(p - 1))                       := by sorry
+    _ = (↑p - 1) * (↑p - 1 - 1) / 2 * ((1 : NNReal) / ↑(p - 1)) ^ 2  := by sorry
   sorry
+
 
 #check EnhanceIsBetter
 #check Enhanced
@@ -3056,8 +3038,8 @@ lemma UnivFun_weight [Inhabited α] : (UnivFun G).fw = #E * (1/#(univ : Finset �
 
 -- # Turan
 
-/-- The final theorem providing an upper bound on the total edge weight
-of a p-clique-free graph in terms of p.-/
+/-- The final theorem. Let p ≥ 2, and G be a p-Clique free Graph then we find the desired upper bound
+on the number of edges.-/
 theorem turan [Inhabited α]  (h0 : p ≥ 2) (h1 : G.CliqueFree p):
   (#E : ℝ) ≤ (1/2)* (1 -  1 / (p - 1)) * (#(univ : Finset α))^2 := by
   have := Finale G h0 h1 (UnivFun G)
