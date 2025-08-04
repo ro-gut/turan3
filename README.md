@@ -6,7 +6,7 @@ Formalisation of (the 3rd) Turan's Theorem Proof from The Book (6th Edition)
    
    Then: |E| ≤ (1 – (1 / (p–1))) · n²/2
 
-## Informal Proof (Sketch)
+## Sketch of the proof
 
 **Setup:** 
 - Let w : V → ℝ≥0 be an arbitrary weight distribution on the vertice Set with : ∑_{i∈V} w(i) = 1
