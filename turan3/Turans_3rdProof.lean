@@ -1,9 +1,3 @@
-/-
-Copyright (c) 2025. All rights reserved.
-Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Rodrigo Gutierrez, Yves Jäckle
--/
-
 import Mathlib.Topology.Basic
 
 import Mathlib
@@ -2327,7 +2321,7 @@ lemma FunToMax.min_weight_min (W : FunToMax G) : ∀ v ∈ ((Finset.univ : Finse
 lemma FunToMax.argmin_le_argmax (W : FunToMax G) : W.w (W.argmin G) ≤  W.w (W.argmax G) := by
   rw [W.argmin_weight] ; apply W.min_weight_min ; apply W.argmax_mem
 
-/-- Assures that minimum weight is at most the maximum weight -/
+/-- Using the lemma above, assures that minimum weight is at most the maximum weight -/
 lemma FunToMax.min_weight_le_max_weight (W : FunToMax G) : W.min_weight G ≤  W.max_weight G := by
   rw [← W.argmin_weight, ← W.argmax_weight] ; apply W.argmin_le_argmax
 
@@ -2924,13 +2918,7 @@ lemma bound_real (k p : Nat) (hk : 0 < k) (hkp : k ≤ p) :
     (1 : ℝ) / 2 * (1 - 1 / ↑k) ≤ 1 / 2 * (1 - 1 / ↑p) :=
   by exact_mod_cast bound k p hk hkp
 
-#check Better_non_decr
-#check Better_forms_clique
-#check UniformBetter_support_zero
-#check UniformBetter_support_equiv
-#check UniformBetter_clique
-
-theorem castStuff : @Nat.cast ℝ Real.instNatCast = fun x => (@Nat.cast NNReal AddMonoidWithOne.toNatCast x).val := by
+theorem cast_help : @Nat.cast ℝ Real.instNatCast = fun x => (@Nat.cast NNReal AddMonoidWithOne.toNatCast x).val := by
   apply funext
   intro x
   induction' x with x ih
@@ -2938,11 +2926,13 @@ theorem castStuff : @Nat.cast ℝ Real.instNatCast = fun x => (@Nat.cast NNReal 
   · simp only [Nat.cast_add, Nat.cast_one, NNReal.val_eq_coe, NNReal.coe_add, NNReal.coe_natCast,
     NNReal.coe_one]
 
+#check Better
+
 lemma finale_bound (h0 : p ≥ 2) (h1 : G.CliqueFree p) (W : FunToMax G) : W.fw ≤ ((p-1) * ((p-1) - 1) / 2 ) * (1/(p-1))^2 := by
   apply le_trans (Better_non_decr G W)
   apply le_trans (UniformBetter_fw_ge G _ (Better_forms_clique G W))
   -- f(w) in a uniform distributino is the sum of all vp of edges
-  have fst : (UniformBetter G _ (Better_forms_clique G W)).fw = ∑ e ∈ G.supEdgeFinset (Better G W), vp (UniformBetter G _ (Better_forms_clique G W)).w e := by
+  have sum_clique : (UniformBetter G _ (Better_forms_clique G W)).fw = ∑ e ∈ G.supEdgeFinset (Better G W), vp (UniformBetter G _ (Better_forms_clique G W)).w e := by
     rw [FunToMax.fw]
     rw [sum_over_support]
     congr 1
@@ -2953,36 +2943,17 @@ lemma finale_bound (h0 : p ≥ 2) (h1 : G.CliqueFree p) (W : FunToMax G) : W.fw 
     intro a b
     rw [Sym2.inSupport_explicit, Sym2.inSupport_explicit]
     rw [← UniformBetter_support_equiv,← UniformBetter_support_equiv]
--- Was this before, I believe it was the other direction since Better could theoretically set one weight
--- to 0 so as its commented here below it wouldndt always be possible
-  -- have snd : G.supEdgeFinset W ⊆ G.supEdgeFinset (Better G W) := by
-  -- edges still suported after Better
-  have snd : G.supEdgeFinset (Better G W) ⊆ G.supEdgeFinset W := by
-    intro e
-    apply @Sym2.inductionOn α
-      (fun e => e ∈ G.supEdgeFinset (Better G W) → e ∈ G.supEdgeFinset W) e
-    intro a b h
-    dsimp [supEdgeFinset] at h
-    simp only [Finset.mem_filter, Sym2.inSupport_explicit] at h
-    rcases h with ⟨h_edge, ha, hb⟩
-    exact Finset.mem_filter.mpr ⟨h_edge, by
-        dsimp [Sym2.inSupport] at *
-        have ha_ne : (Better G W).w a ≠ 0 := pos_iff_ne_zero.mp ha
-        have wa_ne : W.w a ≠ 0             := mt (Better_support_included G W a) ha_ne
-        have hb_ne : (Better G W).w b ≠ 0 := pos_iff_ne_zero.mp hb
-        have wb_ne : W.w b ≠ 0             := mt (Better_support_included G W b) hb_ne
-        exact ⟨pos_iff_ne_zero.mpr wa_ne, pos_iff_ne_zero.mpr wb_ne⟩⟩
   -- every supported edge has value 1/k^2
-  have thd := UniformBetter_edges_value G _ (Better_forms_clique G W)
+  have edge_value := UniformBetter_edges_value G _ (Better_forms_clique G W)
   -- shows support really is a clique
-  have four := UniformBetter_clique G _ (Better_forms_clique G W)
-  simp_rw [← UniformBetter_support_equiv G _ (Better_forms_clique G W)] at four
+  have supp_is_clique := UniformBetter_clique G _ (Better_forms_clique G W)
+  simp_rw [← UniformBetter_support_equiv G _ (Better_forms_clique G W)] at supp_is_clique
   --recalls number of edges in the clique (clique_size)
-  have five := clique_size G _ four
-  rw [fst]
-  replace thd := fun e ed => le_of_eq (thd e ed)
-  apply le_trans (sum_le_card_nsmul _ _ _ thd)
-  rw [five]
+  have size_clique := clique_size G _ supp_is_clique
+  rw [sum_clique]
+  replace edge_value := fun e ed => le_of_eq (edge_value e ed)
+  apply le_trans (sum_le_card_nsmul _ _ _ edge_value)
+  rw [size_clique]
   rw [nsmul_eq_mul]
   have tec : #(filter (fun i ↦ (Better G W).w i > 0) univ) < p := by
     by_contra! con
@@ -2990,10 +2961,9 @@ lemma finale_bound (h0 : p ≥ 2) (h1 : G.CliqueFree p) (W : FunToMax G) : W.fw 
     replace ohoh := ohoh ↑(filter (fun i ↦ (Better G W).w i > 0) univ)
     apply ohoh
     constructor
-    · exact four
+    · exact supp_is_clique
     · dsimp [supEdgeFinset]
-  -- computations from here on ; try to use `computation` and `bound` maybe
-  -- simp [Nat.cast_mul, Nat.cast_sub, Nat.cast_one, Nat.cast_div] at *
+--------------------------
   set k := #(filter (fun i => 0 < (Better G W).w i) univ) with hkdef
   have hk_pos : 0 < k := by
     have hne := support_size_nonempty (G := G) (W := Better G W)
@@ -3027,69 +2997,111 @@ lemma finale_bound (h0 : p ≥ 2) (h1 : G.CliqueFree p) (W : FunToMax G) : W.fw 
       using
         (computation (p - 1) hp1_pos)
   --
-  simp [div_eq_mul_inv, inv_pow, Nat.cast_mul, Nat.cast_sub, Nat.cast_div] at h_lhs
+  rw [cast_help] at h_lhs
+  dsimp at h_lhs
+  let inner := @Nat.cast NNReal AddMonoidWithOne.toNatCast
+  have h_lhs' : NNReal.toReal ((inner (k * (k - 1) / 2)) * (1 / (inner k) ^ 2)) = NNReal.toReal (1 / 2 * (1 - 1 / (inner k))) := by
+    simp only [NNReal.coe_mul, NNReal.coe_pow, NNReal.coe_div, NNReal.coe_ofNat, NNReal.coe_one]
+    rw [NNReal.coe_sub]
+    · rw [NNReal.coe_one, NNReal.coe_div, NNReal.coe_one]
+      exact h_lhs
+    · simp only [one_div]
+      rw [inv_le_one₀]
+      · dsimp [inner]
+        simp only [Nat.one_le_cast, inner]
+        rw [Nat.succ_le]
+        exact hk_pos
+      · dsimp [inner]
+        simp only [Nat.cast_pos, inner]
+        exact hk_pos
+  rw [NNReal.coe_inj] at h_lhs'
+  dsimp [inner] at h_lhs'
+  rw [div_pow, one_pow]
+  rw [h_lhs']
+  rw [cast_help] at h_rhs
+  dsimp at h_rhs
+  have h_rhs' : NNReal.toReal (((inner p) - 1) * ((inner p) - 1 - 1) / 2 * (1 / ((inner p) - 1)) ^ 2) = NNReal.toReal (1 / 2 * (1 - 1 / ((inner p) - 1)) ) := by
+    simp only [NNReal.coe_mul, NNReal.coe_div, NNReal.coe_ofNat, NNReal.coe_inv, NNReal.coe_pow]
+    rw [NNReal.coe_sub]
+    · rw [NNReal.coe_sub]
+      · rw [NNReal.coe_sub]
+        · rw [NNReal.coe_sub]
+          · rw [NNReal.coe_div]
+            rw [NNReal.coe_sub]
+            · simp only [NNReal.coe_one]
+              exact h_rhs
+            · simp only [Nat.one_le_cast, inner]
+              rw [Nat.succ_le]
+              exact lt_trans hk_pos tec
+          · simp only [one_div]
+            rw [inv_le_one₀]
+            · dsimp [inner]
+              rw [le_tsub_iff_left]
+              · rw [show (1 : NNReal) + 1 = 2 by norm_num]
+                simp only [Nat.ofNat_le_cast, inner]
+                exact h0
+              · simp only [Nat.one_le_cast, inner]
+                rw [Nat.succ_le]
+                exact lt_trans hk_pos tec
+            · rw [tsub_pos_iff_lt]
+              simp only [Nat.one_lt_cast, inner]
+              rw [← Nat.succ_le]
+              exact h0
+        · simp only [Nat.one_le_cast, inner]
+          rw [Nat.succ_le]
+          exact lt_trans hk_pos tec
+      · rw [le_tsub_iff_left]
+        · rw [show (1 : NNReal) + 1 = 2 by norm_num]
+          simp only [Nat.ofNat_le_cast, inner]
+          exact h0
+        · simp only [Nat.one_le_cast, inner]
+          rw [Nat.succ_le]
+          exact lt_trans hk_pos tec
+    · simp only [Nat.one_le_cast, inner]
+      rw [Nat.succ_le]
+      exact lt_trans hk_pos tec
+  rw [NNReal.coe_inj] at h_rhs'
+  dsimp [inner] at h_rhs'
+  rw [h_rhs']
   rw [← NNReal.coe_le_coe]
-  simp only [NNReal.coe_mul, NNReal.coe_inv, NNReal.coe_pow, NNReal.coe_div, NNReal.coe_natCast, inv_pow, one_div]
-  simp only [castStuff] at h_lhs
-  simp only [castStuff]
-  rw[h_lhs]
-  simp only [NNReal.val_eq_coe]
-  --
-  have hp1_real1 : (0 : ℝ) < ↑(p - 1) := by
-    exact_mod_cast hp1_pos
-  have hp1_real2 : (0 : ℝ) < (↑p : ℝ) - 1 := by
-    have hp : (1 : ℕ) ≤ p := by exact Nat.one_le_of_lt h0
-    simpa [Nat.cast_sub hp, Nat.cast_one] using hp1_real1
-  have hp1 : (1 : ℕ) ≤ p       := by exact Nat.one_le_of_lt tec
-  have hp2 : (1 : ℕ) ≤ p - 1   := by exact (Nat.le_sub_one_iff_lt hp1).mpr h0
-  have h_rhs' :
-      (↑p - 1 - 1 : ℝ) = ↑p - 2 := by
-    simp [sub_sub, one_add_one_eq_two]
-  have rhs_eq :
-      ((p : ℝ) - 1) * ((p : ℝ) - 2) / 2 * (((p : ℝ) - 1) ^ 2)⁻¹
-        = (1 / 2 : ℝ) * (1 - 1 / ((p : ℝ) - 1)) := by
-    have h₁ : ((p : ℝ) - 1) ≠ 0 := by
-      have : (1 : ℝ) < p := by
-        exact Nat.one_lt_cast.mpr h0
-      linarith
-    field_simp [h₁]
-    ring_nf
+  simp only [NNReal.coe_mul, NNReal.coe_div, NNReal.coe_ofNat, NNReal.coe_one]
+  rw [NNReal.coe_sub]
+  · simp only [NNReal.coe_div, NNReal.coe_one]
+    rw [NNReal.coe_sub]
+    · simp only [NNReal.coe_div, NNReal.coe_one]
+      rw [NNReal.coe_sub]
+      · rw [NNReal.coe_one]
+        rw [Nat.cast_sub] at h_bound
+        · rw [Nat.cast_one] at h_bound
+          simp only [cast_help] at h_bound
+          exact h_bound
+        · rw [Nat.succ_le]
+          exact lt_trans hk_pos tec
+      · simp only [Nat.one_le_cast]
+        rw [Nat.succ_le]
+        exact lt_trans hk_pos tec
+    · simp only [one_div]
+      rw [inv_le_one₀]
+      · rw [le_tsub_iff_left]
+        · rw [show (1 : NNReal) + 1 = 2 by norm_num]
+          simp only [Nat.ofNat_le_cast, inner]
+          exact h0
+        · simp only [Nat.one_le_cast]
+          rw [Nat.succ_le]
+          exact lt_trans hk_pos tec
+      · rw [tsub_pos_iff_lt]
+        simp only [Nat.one_lt_cast]
+        rw [← Nat.succ_le]
+        exact h0
+  · simp only [one_div]
+    rw [inv_le_one₀]
+    · simp only [Nat.one_le_cast]
+      rw [Nat.succ_le]
+      exact hk_pos
+    · simp only [Nat.cast_pos]
+      exact hk_pos
 
-  rw [← NNReal.coe_mul]
-
-  -- simp only [castStuff]
-  -- have sub_eq : (p : ℝ) - 1 - 1 = (p : ℝ) - 2 := by ring
-  -- have h_cast :
-  --   ↑((↑p : ℝ) - 1 - 1) = ↑((↑p : ℝ) - 2) := by
-  --   simp [sub_eq]
-  -- conv_rhs =>
-  --   simp [sub_eq]
-
-
-
-
-
-  sorry
-#check Nat.cast_pred
-
-
-  -- h_rhs : (↑↑p - 1) * (↑↑p - 1 - 1) * 2⁻¹ * ((↑↑p - 1) * (↑↑p - 1))⁻¹
-  -- goal: ↑(↑p - 1) * ↑(↑p - 1 - 1) * (↑2)⁻¹ * (↑(↑p - 1) ^ 2)⁻¹
-
-  -- 2⁻¹ * (1 - (↑↑k)⁻¹) ≤
-  -- after h_rhs: = 2⁻¹ * (1 - (↑↑p - 1)⁻¹)
-
-
-#check castStuff
-#check Enhance_total_weight_nondec
-#check Enhanced
-#check UniformBetter_support_zero
-
-
-#check sum_le_sum_of_subset
-#check sum_le_card_nsmul
-
-/-- Defines the universal vertex weight function that asisngs all vertices the same weight 1 /|V| -/
+/-- Defines the uniform vertex weight function that asisngs all vertices the same weight 1 /|V| -/
 noncomputable
 def UnivFun [Inhabited α] : FunToMax G where
   w := fun _ => 1 / #univ
@@ -3099,7 +3111,7 @@ def UnivFun [Inhabited α] : FunToMax G where
     rw [mul_inv_cancel₀]
     simp only [card_univ, ne_eq, Nat.cast_eq_zero, Fintype.card_ne_zero, not_false_eq_true])
 
-/-- Computes the total edge weight of the universal weight function. Shows that the total edge weight is equal to
+/-- Computes the total edge weight of the un weight function. Shows that the total edge weight is equal to
 the number of edges times the square of the uniform vertex weight.-/
 lemma UnivFun_weight [Inhabited α] : (UnivFun G).fw = #E * (1/#(univ : Finset α))^2 := by
   dsimp [UnivFun, FunToMax.fw]
@@ -3137,9 +3149,9 @@ theorem turans [Inhabited α]  (h0 : p ≥ 2) (h1 : G.CliqueFree p):
       · rw [NNReal.coe_sub] at this
         · rw [NNReal.coe_one] at this
           rw [NNReal.coe_sub] at this
-          · rw [castStuff]
+          · rw [cast_help]
             dsimp
-            rw [castStuff] at this
+            rw [cast_help] at this
             dsimp at this
             apply this
           · rw [← Nat.cast_one]
@@ -3157,3 +3169,5 @@ theorem turans [Inhabited α]  (h0 : p ≥ 2) (h1 : G.CliqueFree p):
         rw [Nat.cast_le]
         linarith
   · exact Nat.le_of_lt (Nat.lt_of_lt_of_le (by norm_num) h0)
+
+#print axioms turans
