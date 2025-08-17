@@ -1,0 +1,7 @@
+#!/Users/ro_solocode/Documents/UNI/BA/turan3/.venv/bin/python
+import sys
+from plasTeX.client import plastex
+if __name__ == '__main__':
+    if sys.argv[0].endswith('.exe'):
+        sys.argv[0] = sys.argv[0][:-4]
+    sys.exit(plastex())
