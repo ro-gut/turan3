@@ -5,3 +5,1255 @@
 % If you want to split the blueprint content into several files then
 % the current file can be a simple sequence of \input. Otherwise It
 % can start with a \section or \chapter for instance.
+
+\newcommand{\supp}{\operatorname{supp}}
+\newcommand{\vp}{\operatorname{vp}}
+\newcommand{\Inc}{\mathrm{Inc}}
+\newcommand{\other}{\operatorname{other}}
+\newcommand{\fw}{f} 
+
+\section{Overvieww}\label{sec:overview}
+
+\begin{theorem}[Turán's Theorem]\label{thm:turan}
+If a graph $G=(V,E)$ on $n$ vertices has no $p$-clique ($p\ge 2$), then
+\[
+|E| \;\le\; \Bigl(1-\frac{1}{p-1}\Bigr)\,\frac{n^2}{2}.
+\]
+\end{theorem}
+
+\paragraph{Set–up.}
+Fix a probability distribution $w=(w_1,\dots,w_n)$ on the vertices:
+$w_i\ge 0$ and $\sum_i w_i=1$.  Define the objective
+\[
+  f(w)\;=\; \sum_{v_iv_j\in E} w_i w_j,
+\]
+the total “edge weight’’ of $G$ under $w$.  Our goal is to find the maximal possible
+value of $f(w)$ subject to $\sum_i w_i=1$ and $w_i\ge 0$.
+
+\paragraph{1. Concentrate positive weight on a clique.}
+Take any distribution $w$ and two \emph{nonadjacent} vertices $v_i,v_j$
+with positive weights.  Let $s_i$ be the sum of the weights of the
+neighbors of $v_i$, and define $s_j$ similarly.  Assume $s_i\ge s_j$ and
+move the whole weight of $v_j$ onto $v_i$, obtaining $w'$ with
+$w'_i=w_i+w_j$ and $w'_j=0$.  A direct calculation gives
+\[
+  f(w') \;=\; f(w) + w_j(s_i-s_j)\;\ge\; f(w),
+\]
+so this operation never decreases $f$.  Repeating the move eliminates one
+positive entry each time until no two positive–weight vertices are
+nonadjacent; i.e. in an \emph{optimal} distribution the support of $w$ is a
+clique.
+
+\paragraph{2. Equalize weights inside the clique.}
+Suppose the support is a $k$–clique and the positive weights are not all
+equal; say $w_1>w_2>0$.  Choose $0<\varepsilon<w_1-w_2$ and shift
+$\varepsilon$ from $v_1$ to $v_2$: the new distribution $w'$ satisfies
+\[
+  f(w') \;=\; f(w) + \varepsilon (w_1-w_2) - \varepsilon^2 \;>\; f(w).
+\]
+Thus $f$ is strictly improved until all positive weights on the $k$–clique
+are equal, $w_i=\tfrac1k$ there and $0$ elsewhere.  For that distribution,
+\[
+  f(w)\;=\; \frac{\binom{k}{2}}{k^2}
+  \;=\; \frac12\Bigl(1-\frac1k\Bigr),
+\]
+which is increasing in $k$.  Since $G$ has no $p$–clique, we must have
+$k\le p-1$, so the best possible value is
+$\frac12(1-\frac1{p-1})$.
+
+\paragraph{3. Conclude the edge bound.}
+For the uniform distribution $w_i=\tfrac1n$, we have
+$f(w)=|E|/n^2$.  Hence
+\[
+  \frac{|E|}{n^2} \;\le\; \frac12\Bigl(1-\frac1{p-1}\Bigr),
+\]
+which is exactly the desired inequality.
+\qedhere
+
+\begin{definition}\label{def:weight_fn}
+A weight function $w: V \to \mathbb{R}_{\ge 0}$ with $\sum_{v\in V} w(v)=1$.
+\lean{Turans_3rdProof.weightFn}
+\end{definition}
+
+\begin{theorem}\label{thm:main}
+Main goal statement goes here.
+\lean{Turans_3rdProof.mainTheorem}
+\uses{def:weight_fn}
+\end{theorem}
+
+\begin{proof}
+Sketch the argument here. When fully formal:
+\leanok
+\end{proof}
+
+\section{Preliminaries and notation}
+
+Throughout, fix a finite simple graph \(G=(V,E)\) with \(|V|=n\).
+We write \(\operatorname{supp}(w):=\{v\in V\mid w(v)>0\}\).
+
+\begin{definition}[Weight distributions]\label{def:weight_distribution}
+A \emph{weight distribution} on \(G\) is a function
+\[
+  w:V\to \mathbb{R}_{\ge 0}
+  \qquad\text{such that}\qquad
+  \sum_{v\in V} w(v)=1.
+\]
+In Lean this is the structure \(\texttt{FunToMax}\;G\) with fields \(w:\alpha\to\mathbb{R}_{\ge0}\) and
+\(\sum_{v\in V} w(v)=1\).
+\lean{FunToMax}
+\leanok
+\end{definition}
+
+\begin{definition}[Edge contribution]\label{def:edge_contribution}
+For a distribution \(w\), the contribution of an (unordered) edge
+\(\{u,v\}\in E\) is
+\[
+  \operatorname{vp}(\{u,v\}) := w(u)\,w(v).
+\]
+In Lean this is defined on \(\mathrm{Sym}^2(\alpha)\) via the quotient lift.
+\lean{vp}
+\leanok
+\end{definition}
+
+\begin{definition}[Total edge weight]\label{def:total_edge_weight}
+Given a distribution \(w\), the total edge weight is
+\[
+  f(w) \;:=\; \sum_{e\in E} \operatorname{vp}(e)
+  \;\;=\;\; \sum_{\{u,v\}\in E} w(u)\,w(v).
+\]
+\lean{FunToMax.fw}
+\uses{def:weight_distribution,def:edge_contribution}
+\leanok
+\end{definition}
+
+\section{Minimal–support maximizers (what the code proves)}
+
+\begin{theorem}[Existence of a non‐decreasing distribution with controlled support]
+\label{thm:exists_better_distribution}
+For every distribution \(w\) there exist a natural number \(m\in\mathbb N\) and a
+distribution \(w^*\) such that
+\begin{enumerate}
+  \item \(\forall i\in V,\; w(i)=0 \Rightarrow w^*(i)=0\) \quad (zeros are preserved);
+  \item \(|\{i\in V\mid w^*(i)>0\}| = m\) \quad (the support has size \(m\));
+  \item \(f(w)\le f(w^*)\) \quad (the total edge weight does not decrease).
+\end{enumerate}
+\lean{exists_better_distribution}
+\end{theorem}
+
+\begin{definition}[Minimal support size \(m\)]
+\label{def:m}
+Let \(m\) be the least natural number \(m\) for which a distribution
+\(w^*\) as in Theorem~\ref{thm:exists_better_distribution} exists with
+\(|\operatorname{supp}(w^*)|=m\) and \(f(w)\le f(w^*)\).
+(Implemented as \(\texttt{Nat.find}\) of the existence statement.)
+\lean{m}
+\uses{thm:exists_better_distribution}
+\leanok
+\end{definition}
+
+\begin{definition}[A chosen minimizer \(\mathrm{Better}(W)\)]
+\label{def:Better}
+Fix one such distribution \(w^*\) with
+\(|\operatorname{supp}(w^*)|=m\) and \(f(W)\le f(\mathrm{Better}(w^*))\).
+\lean{Better}
+\uses{def:m}
+\leanok
+\end{definition}
+
+\begin{lemma}[Properties of \(\mathrm{Better} w^*\)]
+\label{lem:Better_props}
+\leavevmode
+\begin{enumerate}
+  \item \textbf{Zeros preserved:} If \(w(i)=0\) then \(w^*(i)=0\).
+        \hfill(Lean: \texttt{Better\_support\_included})
+  \item \textbf{Same support size:}
+        \(|\operatorname{supp}(w^*)|=m\).
+        \hfill(Lean: \texttt{Better\_support\_size})
+  \item \textbf{Non‐decreasing:}
+        \(f(w)\le f(w^*\).
+        \hfill(Lean: \texttt{Better\_non\_decr})
+\end{enumerate}
+\lean{Better_support_included Better_support_size Better_non_decr}
+\uses{def:Better,def:m}
+\leanok
+\end{lemma}
+
+\section{Inducing a clique: the $w'$ move}
+
+In this section we formalize the first weight–moving step from the proof:
+given two non–adjacent support vertices, we move all weight from one to the
+other.  This does not decrease the objective and strictly reduces the support
+size, which will eventually force the support to be a clique.
+
+\begin{definition}\label{def:Improve}
+Let $W$ be a weight function (Definition~\ref{def:weight_distribution}), and let $v_j$ (\emph{loose}) and $v_i$ (\emph{gain}) be distinct vertices. Define the transferred weight function $w'$ by
+\[
+  w'(x)
+  \;:=\;
+  \begin{cases}
+    0, & x=v_j,\\
+    w(v_i)+w(v_j), & x=v_i,\\
+    w(x), & \text{otherwise}.
+  \end{cases}
+\]
+We write $w'=\texttt{Improve}$ (\emph{Lean name} \texttt{Improve}, with parameters \textit{loose}=$v_j$ and \textit{gain}=$v_i$).
+\lean{Improve}
+\leanok
+\uses{}
+\end{definition}
+
+\begin{lemma}[\(v_i\) lies in each incident edge]\label{lem:helper-gain-mem}
+If $e\in \mathrm{Inc}(v_i)$ then $v_i\in e$.
+\lean{helper_gain_mem}
+\leanok
+\uses{}
+\end{lemma}
+
+\begin{lemma}[Edge value factorization at a fixed endpoint]\label{lem:gain-edge-decomp}
+For $e\in \mathrm{Inc}(v_i)$,
+\[
+  \operatorname{vp}(e) \;=\; w(v_i)\cdot
+  w(v_j)).
+\]
+\lean{gain_edge_decomp}
+\leanok
+\uses{lem:helper-gain-mem,def:vp}
+\end{lemma}
+
+\begin{lemma}[Summing over the incidence set of \(v_i\)]\label{lem:gain-edge-sum}
+\[
+  \sum_{e\in \mathrm{Inc}(v_i)}\operatorname{vp}(e)
+  \;=\;
+  w(v_i)\cdot
+  \sum_{e\in \mathrm{Inc}(v_i)}
+  w\!\bigl(\operatorname{other}_e(v_i)\bigr).
+\]
+\lean{gain_edge_sum}
+\leanok
+\uses{lem:gain-edge-decomp,def:vp}
+\end{lemma}
+
+\begin{lemma}\label{lem:loose-edge-sum}
+The analogous identity holds with \emph{loose} in place of \emph{gain}.
+\lean{loose_edge_sum}
+\leanok
+\uses{lem:gain-edge-sum}
+\end{lemma}
+
+\begin{lemma}[Adjacency vs.\ edge membership]\label{lem:edge-mem-iff}
+For any $v,w\in V$,
+\[
+  v\sim w \quad\Longleftrightarrow\quad
+  \exists e\in E,\; e=\{v,w\}.
+\]
+\lean{edge_mem_iff}
+\leanok
+\uses{}
+\end{lemma}
+
+\begin{lemma}[Incidence is contained in the edge set]\label{lem:incidence-subset}
+$\mathrm{Inc}(v)\subseteq E$ for all $v\in V$.
+\lean{incidenceFinset_subset}
+\leanok
+\uses{}
+\end{lemma}
+
+\begin{lemma}[Effect at \(v_j\)]\label{lem:Improve-loose-zero}
+After the transfer, the new weight at \(v_j\) is $w'(v_j)=0$.
+\lean{Improve_loose_weight_zero}
+\leanok
+\uses{def:Improve}
+\end{lemma}
+
+\begin{lemma}[Disjoint incidences when nonadjacent]\label{lem:Improve-inc-disjoint}
+If $v_i \ne v_j$ and $v_i \not\sim v_j$, then
+$\Inc(v_i)$ and $\Inc(v_j)$ are disjoint.
+\lean{Improve_gain_loose_disjoint}
+\leanok
+\uses{lem:edge-mem-iff}
+\end{lemma}
+
+\begin{lemma}[Partition of edges by changed vs.\ unchanged]\label{lem:Improve-partition}
+Let
+\[
+  \mathrm{changed}\;:=\;\mathrm{Inc}(v_i)\;\uplus\;
+  \mathrm{Inc}(v_j)
+\]
+(the disjoint union, by Lemma~\ref{lem:Improve-inc-disjoint}).
+Then
+\[
+  E \;=\; \mathrm{changed}\;\uplus\; \bigl(E\setminus \mathrm{changed}\bigr).
+\]
+\lean{Improve_edgeFinset_partition}
+\leanok
+\uses{lem:Improve-inc-disjoint,lem:incidence-subset}
+\end{lemma}
+
+\begin{lemma}[Sum split across the partition]\label{lem:Improve-sum-split}
+\[
+  \sum_{e\in E}\operatorname{vp}(W,e)
+  \;=\;
+  \sum_{e\in \mathrm{Inc}(v_i)}\operatorname{vp}(e)
+  \;+\;
+  \sum_{e\in \mathrm{Inc}(v_j)}\operatorname{vp}(e)
+  \;+\;
+  \sum_{e\in E\setminus \mathrm{changed}}\operatorname{vp}(e).
+\]
+\lean{Improve_partition_sum_split}
+\leanok
+\uses{lem:Improve-partition,def:vp}
+\end{lemma}
+
+\begin{lemma}[Gain’s contribution increases]\label{lem:Improve-gain-increase}
+\[
+  \sum_{e\in \mathrm{Inc}(v_i)}\operatorname{vp}(w')
+  \;=\;
+  \sum_{e\in \mathrm{Inc}(v_i)}\operatorname{vp}(w)
+  \;+\;
+  w(v_j) \cdot
+  \sum_{e\in \mathrm{Inc}(v_i)}
+  w\!\bigl(\operatorname{other}_e(v_i)\bigr).
+\]
+\lean{Improve_gain_contribution_increase}
+\leanok
+\uses{def:Improve,lem:helper-gain-mem,def:vp}
+\end{lemma}
+
+\begin{lemma}[Loose’s contribution vanishes]\label{lem:Improve-loose-zero-sum}
+\[
+  \sum_{e\in \mathrm{Inc}(\textit{loose})}\operatorname{vp}(w',e) \;=\; 0.
+\]
+\lean{Improve_loose_contribution_zero}
+\leanok
+\uses{lem:Improve-loose-zero,def:vp}
+\end{lemma}
+
+\begin{lemma}[Unchanged outside the changed part]\label{lem:Improve-unchanged-outside}
+\[
+  \sum_{e\in E\setminus \mathrm{changed}}\operatorname{vp}(w')
+  \;=\;
+  \sum_{e\in E\setminus \mathrm{changed}}\operatorname{vp}(w).
+\]
+\lean{Improve_unchanged_edge_sum}
+\leanok
+\uses{lem:Improve-partition,def:vp}
+\end{lemma}
+
+\begin{lemma}[Monotonicity under one transfer]\label{lem:Improve-monotone}
+Assume
+\[
+  \sum_{e\in \mathrm{Inc}(v_i)}
+    w\!\bigl(\operatorname{other}_e(v_i)\bigr)
+  \;\ge\;
+  \sum_{e\in \mathrm{Inc}(v_j)}
+    w\!\bigl(\operatorname{other}_e(v_j)\bigr),
+\]
+and $v_i\not\sim v_j$. Then
+\[
+  \sum_{e\in E}\operatorname{vp}(w')
+  \;\ge\;
+  \sum_{e\in E}\operatorname{vp}(w).
+\]
+Equivalently, $\fw(w')\ge \fw(w)$.
+\leanok
+\uses{lem:Improve-sum-split,lem:Improve-gain-increase,lem:Improve-loose-zero-sum,lem:Improve-unchanged-outside,lem:loose-edge-sum,def:fw}
+\end{lemma}
+
+\begin{lemma}[Zeros stay zero]\label{lem:Improve-zeros-stay-zero}
+If $w(x)=0$ then $w'(x)=0$. 
+\[
+  \{\,v\in V\mid w'(v)>0\,\}\;\subseteq\;
+  \{\,v\in V\mid w(v)>0\,\}.
+\]
+\lean{Improve_support_remains_zero}
+\leanok
+\uses{def:Improve}
+\end{lemma}
+
+\begin{lemma}[Support strictly shrinks]\label{lem:Improve-support-shrinks}
+
+If $w(v_i)>0$ and $w(v_j)>0$, then
+\[
+  \#\{\,i\mid w'(i)>0\,\}
+  \;<\;
+  \#\{\,i\mid w(i)>0\,\}.
+\]
+\lean{Improve_support_strictly_reduced}
+\leanok
+\uses{lem:Improve-zeros-stay-zero,lem:Improve-loose-zero}
+\end{lemma}
+
+\begin{lemma}[Support of \(w^*\) is a clique]\label{lem:Better-forms-clique}
+Let $w$ be any weight function.  
+Then the $\operatorname{supp}(w^*)$ induces a clique:
+
+\lean{Better_forms_clique}
+\leanok
+\uses{lem:Improve-total-weight-nondec,lem:Improve-support-shrinks,
+      lem:Improve-support-remains-zero,lem:Better-support-included,
+      lem:Better-support-size,lem:Better-non-decr}
+\end{lemma}
+
+\begin{proof}
+Assume the contrary. Then two support vertices $v_i,v_j$ are non–adjacent.  
+Without loss of generality assume that the neighbor–sum of $v_i$ is at least as large as that of $v_j$. Applying the $w'$ move:
+
+- By Lemma~\ref{lem:Improve-monotone}, the total weight $\fw(w')$ does not decrease.
+- By Lemma~\ref{lem:Improve-support-shrinks}, the support size strictly decreases.
+
+Thus we obtain an ``even better'' distribution contradicting the minimality of 
+$w^*$’s support size (Lemma~\ref{lem:Better-support-size}).  
+Therefore no such non–adjacent pair can exist, and the support of $w^*$ is a clique.
+\end{proof}
+
+\section{Second weight moving argument: \texttt{Enhance} \(w^+\)}
+\label{sec:second_weight_moving}
+
+Our goal here is to show that unless the weights are already
+uniform, we can improve the distribution further by transferring a small
+amount of weight.
+
+\begin{lemma}[Support nonempty]\label{lem:support-size-nonempty}
+\lean{support_size_nonempty}
+\leanok
+\uses{}
+For any weight distribution $w$, its support is nonempty:
+\[
+  \{ v \in V \mid w(v) > 0 \} \neq \varnothing.
+\]
+\end{lemma}
+
+\begin{definition}[Uniform clique improvement]\label{def:exists-uniform-clique}
+\lean{exists_uniform_clique}
+\leanok
+\uses{lem:support-size-nonempty}
+For any weight distribution $w$, we say \texttt{exists\_uniform\_clique}$(w)(m)$
+if there exists $w' \in \mathcal{W}$ such that:
+- $w(v) = 0 \iff w'(v) = 0$,
+- $\operatorname{supp}(w')$ is a clique,
+- exactly $m$ vertices have weight $1/m$,
+- and $f(w) \le f(w')$.
+\end{definition}
+
+
+\begin{definition}[Maximal uniform support]\label{def:max-uniform-support}
+\lean{max_uniform_support}
+\leanok
+\uses{def:exists-uniform-clique}
+For any $w$:
+\[
+  \texttt{max\_uniform\_support}(w)
+  := \max\{ m \mid \texttt{exists\_uniform\_clique}(w)(m)\}.
+\]
+\end{definition}
+
+
+\begin{lemma}[Existence of best uniform clique]\label{lem:exists-best-uniform}
+\lean{exists_best_uniform}
+\leanok
+\uses{lem:support-size-nonempty,def:exists-uniform-clique,def:max-uniform-support}
+If the support of $w$ is a clique, then
+\[
+  \texttt{exists\_uniform\_clique}(w)\bigl(\texttt{max\_uniform\_support}(w)\bigr)
+\]
+holds. That is, there exists $w'$ with the same support (a clique), all weights uniform, and $f(w) \le f(w')$.
+\end{lemma}
+
+\begin{definition}[UniformBetter]\label{def:uniform-better}
+\lean{UniformBetter}
+\leanok
+\uses{lem:exists-best-uniform}
+Given $w$ with clique support, define
+\[
+  \texttt{UniformBetter}
+\]
+as the uniformizing distribution $w^{mathrm{unif}}$ guaranteed by Lemma~\ref{lem:exists-best-uniform}.
+\end{definition}
+
+
+\begin{lemma}[Support preserved]\label{lem:uniformbetter-support-zero}
+\lean{UniformBetter_support_zero}
+\leanok
+\uses{def:uniform-better}
+For every vertex $v$,
+\[
+  w(v) = 0 \;\;\Longleftrightarrow\;\; w^{mathrm{unif}}(v) = 0.
+\]
+\end{lemma}
+
+\begin{lemma}[Support size uniform]\label{lem:uniformbetter-support-size}
+\lean{UniformBetter_support_size}
+\leanok
+\uses{def:uniform-better,def:max-uniform-support}
+The number of vertices of weight $1/m$ in $\texttt{UniformBetter}(w)$ is exactly
+\[
+  m = \texttt{max\_uniform\_support}(w).
+\]
+\end{lemma}
+
+\begin{lemma}[Edge weight monotonicity]\label{lem:uniformbetter-fw-ge}
+\lean{UniformBetter_fw_ge}
+\leanok
+\uses{def:uniform-better}
+We have
+\[
+  f(w) \le f(w^{mathrm{unif}}).
+\]
+\end{lemma}
+
+\begin{lemma}[Support clique]\label{lem:uniformbetter-clique}
+\lean{UniformBetter_clique}
+\leanok
+\uses{def:uniform-better}
+The support of $w^{mathrm{unif}}$ forms a clique.
+\end{lemma}
+
+\begin{definition}[\texttt{Enhance}: small $\varepsilon$–transfer]\label{def:enhance}
+\lean{Enhance}
+\leanok
+\uses{}
+Given distinct vertices $v_j$ (\emph{loose}) and $v_i$ (\emph{gain}) with
+$w(v_i)<w(v_j)$ and a parameter $\varepsilon$ satisfying
+$0<\varepsilon<w(v_j)-w(v_i)$, define $w^+$ by
+\[
+  w^+(x)=
+  \begin{cases}
+    w(v_j)-\varepsilon,& x=v_j,\\
+    w(v_i)+\varepsilon,& x=v_i,\\
+    w(x),& \text{otherwise.}
+  \end{cases}
+\]
+Then $\sum_x w^+(x)=1$.
+\end{definition}
+
+\begin{lemma}[Different weights $\Rightarrow$ different vertices]\label{lem:neq-of-W-lt}
+\lean{neq_of_W_lt}
+\leanok
+\uses{}
+If $w(v_i)<w(v_j)$ then $v_i\neq v_j$.
+\end{lemma}
+
+\begin{lemma}[Nonpositive $\Rightarrow$ zero in $\mathbb{R}_{\ge0}$]\label{lem:nnreal-eq-zero-of-ne-pos}
+\lean{NNReal.eq_zero_of_ne_pos}
+\leanok
+\uses{}
+For $x\in\mathbb{R}_{\ge0}$, if $\neg(x>0)$ then $x=0$.
+\end{lemma}
+
+\begin{lemma}[Zeros are preserved by \texttt{Enhance}]\label{lem:enhance-nsupport-unchanged}
+\lean{Enhance_nsupport_unchanged}
+\leanok
+\uses{def:enhance}
+For every vertex $u$,
+\[
+  w(u)=0\quad\Longleftrightarrow\quad w^+(u)=0,
+\]
+where $w^+$ is the distribution from Definition~\ref{def:enhance}.
+\end{lemma}
+
+\begin{lemma}[Positivity is preserved by \texttt{Enhance}]\label{lem:enhance-support-unchanged}
+\lean{Enhance_support_unchanged}
+\leanok
+\uses{def:enhance,lem:enhance-nsupport-unchanged,lem:nnreal-eq-zero-of-ne-pos}
+For every vertex $u$,
+\[
+  w(u)>0\quad\Longleftrightarrow\quad w^+(u)>0.
+\]
+\end{lemma}
+
+\begin{lemma}[\texttt{Enhance} keeps the support a clique]\label{lem:enhance-clique}
+\lean{Enhance_clique}
+\leanok
+\uses{def:enhance,lem:enhance-support-unchanged}
+If $\supp(w)$ induces a clique, then $\supp(w^+)$ also induces a clique.
+\end{lemma}
+
+% ========== Sym2, SimpleGraph technicalities ==========
+\subsection{Sym2, SimpleGraph technicalities}
+
+\begin{definition}[Supported edge]\label{def:sym2-insupport}
+\lean{Sym2.inSupport}
+\leanok
+\uses{}
+An edge $e=\{x,y\}\in\\operatorname{Sym^2}(\alpha)$ is in the support of $w$ if and only if both endpoints have positive weight:
+\[
+  e\in\supp(W) \;:\!\iff\; W(x)>0 \;\wedge\; W(y)>0.
+\]
+\end{definition}
+
+\begin{lemma}[Explicit form of supported edges]\label{lem:sym2-insupport-explicit}
+\lean{Sym2.inSupport_explicit}
+\leanok
+\uses{def:sym2-insupport}
+For vertices $x,y$,
+\[
+  (x,y).inSupport(W) \;\iff\; W(x)>0 \wedge W(y)>0.
+\]
+\end{lemma}
+
+\begin{lemma}[Edges outside support vanish]\label{lem:sym2-notinsupport}
+\lean{Sym2.notinSupport}
+\leanok
+\uses{def:sym2-insupport,lem:nnreal-eq-zero-of-ne-pos}
+If $e\notin\supp(W)$, then its contribution is zero:
+\[
+  \mathrm{vp}(W,e)=0.
+\]
+\end{lemma}
+
+\begin{lemma}[Membership $\Rightarrow$ positivity]\label{lem:sym2-insupport-mem}
+\lean{Sym2.inSupport_mem}
+\leanok
+\uses{def:sym2-insupport,lem:sym2-insupport-explicit}
+If $e\in\supp(W)$ and $x\in e$, then $W(x)>0$.
+\end{lemma}
+
+\begin{lemma}[Other endpoint positive]\label{lem:sym2-insupport-other}
+\lean{Sym2.inSupport_other}
+\leanok
+\uses{def:sym2-insupport,lem:sym2-insupport-explicit}
+If $e\in\supp(W)$ and $x\in e$, then the opposite endpoint in $e$ also has positive weight.
+\end{lemma}
+
+\begin{lemma}[Positivity $\Rightarrow$ in-support]\label{lem:sym2-insupport-rec}
+\lean{Sym2.inSupport_rec}
+\leanok
+\uses{def:sym2-insupport}
+If $W(x)>0$ for all $x\in e$, then $e\in\supp(W)$.
+\end{lemma}
+
+\begin{definition}[Supported incidence set]\label{def:supincidencefinset}
+\lean{SimpleGraph.supIncidenceFinset}
+\leanok
+\uses{def:sym2-insupport}
+For a vertex $v$, the supported incidence set is
+\[
+  \!\texttt{supIncidenceFinset}(W,v)
+  := \{ e\in \texttt{incidenceFinset}(v) : e\in\supp(W)\}.
+\]
+\end{definition}
+
+\begin{definition}[Supported edge set]\label{def:supedgefinset}
+\lean{SimpleGraph.supEdgeFinset}
+\leanok
+\uses{def:sym2-insupport}
+The supported edge set is
+\[
+  \!\texttt{}(W)
+  := \{ e\in \texttt{edgeFinset} : e\in\supp(W)\}.
+\]
+\end{definition}
+
+\begin{lemma}[Characterization of supported incidence]\label{lem:mem-supincidencefinset}
+\lean{SimpleGraph.mem_supIncidenceFinset}
+\leanok
+\uses{def:supincidencefinset}
+\[
+  e\in \texttt{supIncidenceFinset}(W,v)
+  \;\iff\; e\in G.\texttt{incidenceFinset}(v)\ \wedge\ e\in\supp(W).
+\]
+\end{lemma}
+
+\begin{lemma}[Characterization of supported edges]\label{lem:mem-supedgefinset}
+\lean{SimpleGraph.mem_supEdgeFinset}
+\leanok
+\uses{def:supedgefinset}
+\[
+  e\in \texttt{supEdgeFinset}(W)
+  \;\iff\; e\in \texttt{supEdgeFinset}\ \wedge\ e\in\supp(W).
+\]
+\end{lemma}
+
+\begin{lemma}[Supported incidence $\subseteq$ incidence]\label{lem:supincidencefinset-subset}
+\lean{supIncidenceFinset_subset}
+\leanok
+\uses{def:supincidencefinset}
+\[
+  \texttt{supIncidenceFinset}(W,v)\subseteq \texttt{incidenceFinset}(v).
+\]
+\end{lemma}
+
+\begin{lemma}[Element of $s\setminus t$ is in $s$]\label{lem:in-sdiff-left}
+\lean{in_sdiff_left}
+\leanok
+\uses{}
+If $a\in s\setminus t$, then $a\in s$.
+\end{lemma}
+
+% ========== INSERTED LEMMAS AND DEFINITIONS ==========
+
+\begin{lemma}[Supported incidences of $v_i$ and $v_j$ are disjoint (ignoring $\{v_i,v_j\}$)]\label{lem:disjoint-supported-incidence}
+If $v_i\neq v_j$, then
+\[
+  \!\texttt{supIncidenceFinset}(w, v_i)\setminus\{\{v_i,v_j\}\}
+  \quad\text{and}\quad
+  \!\texttt{supIncidenceFinset}(w, v_j)\setminus\{\{v_i,v_j\}\}
+  \text{ are disjoint.}
+\]
+\lean{disjoint_supported_incidence}
+\uses{def:supincidencefinset,lem:mem-supincidencefinset,lem:edge-mem-iff}
+\leanok
+\end{lemma}
+
+\begin{definition}[Disjoint union of the two supported incidence sets]\label{def:incidence-loose-gain}
+\lean{incidence_loose_gain}
+\uses{lem:disjoint-supported-incidence,def:supincidencefinset}
+Given $v_i\neq v_j$ define
+\[
+  \texttt{incidence\_loose\_gain}(w;v_j,v_i)
+  := \bigl(\!\texttt{supIncidenceFinset}(w,v_i)\setminus\{\{v_i,v_j\}\}\bigr)
+     \uplus
+     \bigl(\!\texttt{supIncidenceFinset}(w,v_j)\setminus\{\{v_i,v_j\}\}\bigr).
+\]
+\leanok
+\end{definition}
+
+\begin{lemma}[Disjoint from the single edge $\{v_i,v_j\}$]\label{lem:disjoint-inci-singleton}
+\lean{disjoint_inci_singleton}
+\uses{def:incidence-loose-gain}
+We have
+\(
+  \texttt{incidence\_loose\_gain}(w;v_j,v_i)
+  \cap \{\{v_i,v_j\}\} = \varnothing.
+\)
+\leanok
+\end{lemma}
+
+\begin{definition}[Full incidence block]\label{def:inci-loose-gain-full}
+\lean{inci_loose_gain_full}
+\uses{def:incidence-loose-gain,lem:disjoint-inci-singleton}
+Let
+\[
+  \texttt{inci\_loose\_gain\_full}(w;v_j,v_i)
+  := \texttt{incidence\_loose\_gain}(w;v_j,v_i)
+     \uplus \{\{v_i,v_j\}\}.
+\]
+\leanok
+\end{definition}
+
+\begin{lemma}[Partition of supported edges by the $(v_i,v_j)$ block]\label{lem:supported-edge-partition}
+\lean{supported_edge_partition}
+\uses{def:supedgefinset,def:inci-loose-gain-full,lem:mem-supincidencefinset,lem:mem-supedgefinset}
+If $v_i\sim v_j$ and $w(v_i)>0,\ w(v_j)>0$, then
+\[
+  \!\texttt{supEdgeFinset}(w)
+  \;=\;
+  \texttt{inci\_loose\_gain\_full}(w;v_j,v_i)
+  \uplus\Bigl(\!\texttt{supEdgeFinset}(w)\setminus \texttt{inci\_loose\_gain\_full}(w;v_j,v_i)\Bigr).
+\]
+\leanok
+\end{lemma}
+
+\begin{lemma}[Sum split over the partition]\label{lem:supported-sum-split}
+\lean{supported_sum_split}
+\uses{lem:supported-edge-partition,def:supincidencefinset,def:supedgefinset}
+With the hypotheses of Lemma~\ref{lem:supported-edge-partition},
+\begin{align*}
+    \sum_{e\in \texttt{supEdgeFinset}(w)} \vp(e)
+  &= \Bigl(\sum_{e\in \texttt{supIncidenceFinset}(w,v_i)\setminus\{\{v_i,v_j\}\}} \vp(e)
+    + \sum_{e\in \texttt{supIncidenceFinset}(w,v_j)\setminus\{\{v_i,v_j\}\}} \vp(e)\Bigr)
+     + \sum_{e\in\{\{v_i,v_j\}\}} \vp(e)\\
+  &\qquad + \sum_{e\in \texttt{supEdgeFinset}(w)\setminus \texttt{inci\_loose\_gain\_full}(w;v_j,v_i)} \vp(e).
+\end{align*}
+\leanok
+\end{lemma}
+
+\begin{lemma}[Sum over all edges equals sum over supported edges]\label{lem:sum-over-support}
+\lean{sum_over_support}
+\uses{def:supedgefinset,lem:sym2-notinsupport}
+\[\sum_{e\in E} \vp(e)\;=\;\sum_{e\in \!\texttt{supEdgeFinset}(w)} \vp(e).\]
+\leanok
+\end{lemma}
+
+\begin{lemma}[Factorization on the $v_i$–incidence]\label{lem:vp-gain-edge}
+\lean{vp_gain_edge}
+\uses{lem:gain-edge-decomp,def:supincidencefinset}
+If $e\in \!\texttt{supIncidenceFinset}(w,v_i)\setminus\{\text{dummy}\}$, then
+\(\vp(e)=w(v_i)\cdot w(\other_e(v_i)).\)
+\leanok
+\end{lemma}
+
+\begin{lemma}[Aggregated factorization at $v_i$]\label{lem:sum-gain-factor}
+\lean{sum_gain_factor}
+\uses{lem:vp-gain-edge}
+\[
+  \sum_{e\in \!\texttt{supIncidenceFinset}(w,v_i)\setminus\{\text{dummy}\}} \vp(e)
+  = w(v_i)\, \sum_{e\in (\cdots)^{\!\#}} w(\other_e(v_i)).
+\]
+\leanok
+\end{lemma}
+
+\begin{lemma}[Other endpoint unchanged under $w\mapsto w^+$ at $v_i$]\label{lem:enhance-other-gain}
+\lean{Enhance_other_at_gain_unchanged}
+\uses{def:enhance,def:supincidencefinset}
+For every $e\in \!\texttt{supIncidenceFinset}(w,v_i)\setminus\{\{v_i,v_j\}\}$,
+\( w^+(\other_e(v_i))=w(\other_e(v_i)). \)
+\leanok
+\end{lemma}
+
+\begin{lemma}[Other endpoint unchanged under $w\mapsto w^+$ at $v_j$]\label{lem:enhance-other-loose}
+\lean{Enhance_other_at_loose_unchanged}
+\uses{def:enhance,def:supincidencefinset}
+For every $e\in \!\texttt{supIncidenceFinset}(w,v_j)\setminus\{\{v_i,v_j\}\}$,
+\( w^+(\other_e(v_j))=w(\other_e(v_j)). \)
+\leanok
+\end{lemma}
+
+\begin{lemma}[Gain–side sum after $w\mapsto w^+$]\label{lem:enhance-gain-sum}
+\lean{Enhance_gain_sum}
+\uses{def:enhance,lem:sum-gain-factor,lem:enhance-other-gain}
+\[
+  \sum_{e\in \operatorname{supIncidenceFinset}(w,v_i)\setminus\{\{v_i,v_j\}\}} \vp(w^+,e)
+  = \sum_{e\in \operatorname{supIncidenceFinset}(w,v_i)\setminus\{\{v_i,v_j\}\}} \vp(w,e)
+  + \varepsilon \sum_{e\in(\cdots)^{\!\#}} w(\other_e(v_i)).
+\]
+\leanok
+\end{lemma}
+
+\begin{lemma}[Bound for the loose–side "other" weights]\label{lem:epsilon-weight-bound}
+\lean{epsilon_weight_bound}
+\uses{def:enhance,def:supincidencefinset}
+For every $e\in \!\texttt{supIncidenceFinset}(w,v_j)\setminus\{\{v_i,v_j\}\}$,
+\( \varepsilon\, w(\other_e(v_j)) \le \vp(w,e). \)
+\leanok
+\end{lemma}
+
+\begin{lemma}[Loose–side sum after $w\mapsto w^+$]\label{lem:enhance-loose-sum}
+\lean{Enhance_loose_sum}
+\uses{def:enhance,lem:epsilon-weight-bound}
+\[
+  \sum_{e\in \!\texttt{supIncidenceFinset}(w,v_j)\setminus\{\{v_i,v_j\}\}} \vp(w^+,e)
+  = \sum_{e\in \!\texttt{supIncidenceFinset}(w,v_j)\setminus\{\{v_i,v_j\}\}} \vp(w,e)
+  - \varepsilon \sum_{e\in(\cdots)^{\!\#}} w(\other_e(v_j)).
+\]
+\leanok
+\end{lemma}
+
+% ========== Bijection between $v_j$– and $v_i$–incidence sides ==========
+\subsection{A bijection between the $v_j$– and $v_i$–incidence sides}
+
+We now formalize the combinatorial bijection between the supported incidence
+edges at the \emph{loose} vertex $v_j$ and those at the \emph{gain} vertex $v_i$
+(excluding the edge $\{v_i,v_j\}$). Intuitively, a supported edge
+$\{v_j,x\}$ is mapped to $\{v_i,x\}$; the clique hypothesis guarantees the
+latter is indeed an edge of $G$, and the support positivity passes to the ``other''
+endpoint $x$.
+
+\begin{definition}[The map $\mathrm{the\_bij}$]\label{def:the-bij}
+\lean{the_bij}
+\uses{def:supincidencefinset,lem:sym2-insupport-other,lem:uniformbetter-clique}
+Given a clique support and $w(v_j)>0$, $w(v_i)>0$, define
+\[
+  \mathrm{the\_bij}:
+  \bigl(\!\texttt{supIncidenceFinset}(w,v_j)\setminus\{\{v_i,v_j\}\}\bigr)^{\!\#}
+  \longrightarrow
+  \bigl(\!\texttt{supIncidenceFinset}(w,v_i)\setminus\{\{v_i,v_j\}\}\bigr)^{\!\#}
+\]
+by sending an edge $\{v_j,x\}$ to $\{v_i,x\}$ (formally, using
+$\other_e(v_j)$ to refer to $x$).
+\end{definition}
+
+\begin{lemma}[Image lands in the right set]\label{lem:the-bij-maps}
+\lean{the_bij_maps}
+\uses{def:the-bij,def:supincidencefinset,lem:mem-supincidencefinset}
+For every $e$ in the domain, $\mathrm{the\_bij}(e)$ lies in
+$\bigl(\!\texttt{supIncidenceFinset}(w,v_i)\setminus\{\{v_i,v_j\}\}\bigr)^{\!\#}$.
+\end{lemma}
+
+\begin{lemma}[Injectivity]\label{lem:the-bij-inj}
+\lean{the_bij_inj}
+\uses{def:the-bij}
+The map $\mathrm{the\_bij}$ is injective.
+\end{lemma}
+
+\begin{lemma}[Surjectivity]\label{lem:the-bij-surj}
+\lean{the_bij_surj}
+\uses{def:the-bij,def:supincidencefinset,lem:mem-supincidencefinset,lem:sym2-insupport-other}
+The map $\mathrm{the\_bij}$ is surjective.
+\end{lemma}
+
+\begin{lemma}[Preservation of the “other” weight]\label{lem:the-bij-same}
+\lean{the_bij_same}
+\uses{def:the-bij}
+For every $e$ in the domain,
+\[
+  w\bigl(\other_e(v_j)\bigr)
+  \,=\,
+  w\Bigl(\other_{\,\mathrm{the\_bij}(e)}(v_i)\Bigr).
+\]
+\end{lemma}
+
+\begin{lemma}[Equality of $v_j$– and $v_i$–side sums]\label{lem:enhance-sum-loose-gain-equal}
+\lean{Enhance_sum_loose_gain_equal}
+\uses{lem:the-bij-maps,lem:the-bij-inj,lem:the-bij-surj,lem:the-bij-same}
+We have the identity
+\[
+  \sum_{e\in(\!\texttt{supIncidenceFinset}(w,v_j)\setminus\{\{v_i,v_j\}\})^{\!\#}}
+    w\bigl(\other_e(v_j)\bigr)
+  \,=\,
+  \sum_{e\in(\!\texttt{supIncidenceFinset}(w,v_i)\setminus\{\{v_i,v_j\}\})^{\!\#}}
+    w\bigl(\other_e(v_i)\bigr),
+\]
+obtained by summation along the bijection.
+\end{lemma}
+
+\subsection{Conclusion to this section}
+
+\begin{lemma}[Edge values unchanged off the $(v_i,v_j)$ block]\label{lem:enhance-vp-complement-unchanged}
+\lean{Enhance_vp_complement_unchanged}
+\uses{def:enhance,def:supedgefinset,def:inci-loose-gain-full}
+For every
+\(e\in \texttt{supEdgeFinset}(w)\setminus \texttt{inci\_loose\_gain\_full}(w;v_j,v_i)\),
+\[
+  \vp(w^+,e)=\vp(w,e).
+\]
+\leanok
+\end{lemma}
+
+\begin{lemma}[Unchanged sum off the $(v_i,v_j)$ block]\label{lem:enhance-sum-complement-unchanged}
+\lean{Enhance_sum_complement_unchanged}
+\uses{def:enhance,def:supedgefinset,def:inci-loose-gain-full}
+\[
+  \sum_{e\in \texttt{supEdgeFinset}(w)\setminus \texttt{inci\_loose\_gain\_full}(w;v_j,v_i)} \vp(w^+,e)
+  \;=\;
+  \sum_{e\in \texttt{supEdgeFinset}(w)\setminus \texttt{inci\_loose\_gain\_full}(w;v_j,v_i)} \vp(w,e).
+\]
+\leanok
+\end{lemma}
+
+\begin{lemma}[Strict increase on the edge $\{v_i,v_j\}$]\label{lem:enhance-edge-gainloose-increase}
+\lean{Enhance_edge_gainloose_increase}
+\uses{def:enhance}
+If $v_i\sim v_j$ and $w(v_i)>0,\ w(v_j)>0$, then
+\[
+  \vp\bigl(w^+,\{v_i,v_j\}\bigr) \;>\; \vp\bigl(w,\{v_i,v_j\}\bigr).
+\]
+\leanok
+\end{lemma}
+
+\begin{lemma}[Supported edge set is preserved]\label{lem:enhance-support-edges-same}
+\lean{Enhance_support_edges_same}
+\uses{def:enhance,def:supedgefinset}
+\[
+  \texttt{supEdgeFinset}(w) \;=\; \texttt{supEdgeFinset}(w^+).
+\]
+\leanok
+\end{lemma}
+
+\begin{lemma}[Total edge weight is nondecreasing under $w\mapsto w^+$]\label{lem:enhance-total-weight-nondec}
+\lean{Enhance_total_weight_nondec}
+\uses{lem:supported-sum-split,lem:sum-over-support,%
+      lem:enhance-gain-sum,lem:enhance-loose-sum,%
+      lem:enhance-sum-loose-gain-equal,%
+      lem:enhance-sum-complement-unchanged,%
+      lem:enhance-edge-gainloose-increase,%
+      lem:enhance-support-edges-same}
+\[
+  f(w) \;\le\; f(w^+).
+\]
+\leanok
+\end{lemma}
+
+\section{Using \texttt{Enhance} to force uniform weights}
+
+\section{Equalizing weights on a clique}\label{sec:equalizing}
+
+\subsection{Extrema on the support and averages}
+In this subsection we work with a weight function \(W\) whose support induces a clique.
+We:
+(i) define the extremal weights \(W.\max\_weight\) and \(W.\min\_weight\) and choose witnesses
+\(operatorname{argmax}, \operatorname{argmin}\);
+(ii) relate these to the average weight \(1/|\supp(W)|\) via
+\(\text{avg}\le \max\), \(\min\le \text{avg}\), and the strict versions when \(\min<\max\);
+(iii) collect basic sum bounds on the support that will be used to drive a uniformization step later.
+
+\begin{lemma}[Support nonempty]\label{lem:supp-nonempty}
+\lean{FunToMax.supp_nonempty}
+For any weight function \(W\), the support is nonempty:
+\[
+  \bigl\{v\in V:\; W.w(v)>0\bigr\}\neq\varnothing.
+\]
+\leanok
+\end{lemma}
+
+\begin{definition}[Maximum and minimum support weights]\label{def:max-min-weight}
+\lean{FunToMax.max_weight FunToMax.min_weight}
+Let
+\[
+  W.\max\_weight := \max\{\,W.w(v): W.w(v)>0\,\},\qquad
+  W.\min\_weight := \min\{\,W.w(v): W.w(v)>0\,\}.
+\]
+\leanok
+\end{definition}
+
+\begin{lemma}[Witnessing vertices]\label{lem:argmax-argmin}
+\lean{FunToMax.argmax_pre FunToMax.argmin_pre FunToMax.argmax FunToMax.argmin FunToMax.argmax_mem FunToMax.argmin_mem FunToMax.argmax_weight FunToMax.argmin_weight}
+There exist vertices \(\operatorname{argmax}, \operatorname{argmin}\in\supp(W)\) such that
+\[
+  w(\operatorname{argmax})=\max\_weight,\qquad
+  w(\operatorname{argmin})=\min\_weight.
+\]
+\leanok
+\end{lemma}
+
+\begin{lemma}[Pointwise bounds]\label{lem:max-min-pointwise}
+\lean{FunToMax.max_weight_max FunToMax.min_weight_min FunToMax.argmin_le_argmax FunToMax.min_weight_le_max_weight}
+For all \(v\in V\),
+\(w(v)\le W.\max\_weight\).
+For \(v\in\supp(W)\),
+\(\min\_weight\le W.w(v)\).
+In particular \(W.\min\_weight\le W.\max\_weight\).
+\leanok
+\end{lemma}
+
+\begin{lemma}[Sum over support]\label{lem:sum-over-support-ones}
+\lean{FunToMax.sum_eq_sum_supp FunToMax.sum_supp_eq_one}
+\[
+  \sum_{v\in V} W.w(v) \;=\; \sum_{v\in\supp(W)} W.w(v) \;=\; 1.
+\]
+\leanok
+\end{lemma}
+
+\begin{lemma}[Support–sum bounds via extrema]\label{lem:support-sum-bounds}
+\lean{FunToMax.sum_supp_le_max FunToMax.min_le_sum_supp}
+Let \(S:=\supp(W)\) and \(|S|=\#S\). Then
+\[
+  \sum_{v\in S} W.w(v) \;\le\; |S|\, W.\max\_weight,
+  \qquad
+  \sum_{v\in S} W.w(v) \;\ge\; |S|\, W.\min\_weight.
+\]
+\leanok
+\end{lemma}
+
+\begin{lemma}[Average vs.\ extrema]\label{lem:avg-vs-extrema}
+\lean{FunToMax.avg_le_max FunToMax.min_le_avg}
+With \(S=\supp(W)\),
+\[
+  \frac{1}{|S|} \;\le\; W.\max\_weight,
+  \qquad
+  W.\min\_weight \;\le\; \frac{1}{|S|}.
+\]
+\leanok
+\end{lemma}
+
+\begin{lemma}[Strict versions when \(\min<\max\)]\label{lem:strict-avg-vs-extrema}
+\lean{FunToMax.sum_supp_lt_max FunToMax.min_lt_sum_supp FunToMax.avg_lt_max FunToMax.min_lt_avg}
+If \(W.\min\_weight < W.\max\_weight\), then
+\[
+  \frac{1}{|S|} \;<\; W.\max\_weight
+  \quad\text{and}\quad
+  W.\min\_weight \;<\; \frac{1}{|S|}.
+\]
+Equivalently,
+\(\sum_{v\in S}W.w(v) < |S|\,W.\max\_weight\) and
+\(\sum_{v\in S}W.w(v) > |S|\,W.\min\_weight\).
+\leanok
+\end{lemma}
+
+\begin{lemma}[Flat support iff min=max]\label{lem:min-eq-max-uniform}
+\lean{FunToMax.min_eq_max}
+If \(W.\min\_weight = W.\max\_weight\), then every \(v\in\supp(W)\) has
+\[
+  W.w(v) \;=\; \frac{1}{|S|}.
+\]
+\leanok
+\end{lemma}
+
+\subsection{The last weight transfer}\label{sec:last-transfer}
+
+In this final step we adjust weights on a clique support until uniform.
+We define the transfer amount \(\varepsilon\) as the excess of the maximum weight
+over the average \(1/|S|\), and use the \texttt{Enhance} operator (\(w^+\)) from
+Section~\ref{sec:enhance} to move precisely this amount from the
+maximum vertex to the minimum vertex.
+This produces the distribution \texttt{Enhanced}, which has strictly
+larger uniform support.
+
+\paragraph{Notation.}
+In this subsection we set \(v_j :=\operatorname{argmax}\) (the \emph{loose} vertex) and \(v_i := \operatorname{argmin}\) (the \emph{gain} vertex).
+Thereafter we write \(v_i,v_j\) instead of \(\operatorname{argmin},\operatorname{argmax}\).
+
+\begin{definition}[The transfer amount \(\varepsilon\)]\label{def:the-eps}
+\lean{the_ε}
+For a weight function \(W\) with support \(S\),
+\[
+  \varepsilon(W) := W.\max\_weight - \tfrac{1}{|S|}.
+\]
+\leanok
+\end{definition}
+
+\begin{lemma}[Positivity of \(\varepsilon\)]\label{lem:eps-pos}
+\lean{the_ε_pos}
+If \(W.\min\_weight < W.\max\_weight\), then
+\(\varepsilon(W) > 0\).
+\leanok
+\end{lemma}
+
+\begin{lemma}[\(\varepsilon\) bounded by gap]\label{lem:eps-lt-gap}
+\lean{the_ε_lt}
+If \(W.\min\_weight < W.\max\_weight\), then
+\[
+  \varepsilon(W) < W.w(v_j) - W.w(v_i).
+\]
+\leanok
+\end{lemma}
+
+\begin{lemma}[Argmax–argmin gap implies distinct extrema]\label{lem:arg-help}
+\lean{arg_help}
+If \(W.w(v_i) < W.w(v_j)\) (i.e. \(v_i=\operatorname{argmin},\ v_j=\operatorname{argmax}\)), then
+\(W.\min\_weight < W.\max\_weight\).
+\leanok
+\end{lemma}
+
+\begin{definition}[Enhanced distribution]\label{def:Enhanced}
+\lean{Enhanced}
+Given \(W\) with \(W.w(v_i) < W.w(v_j)\),
+\[
+  W^+ := \texttt{Enhance}(W,\, v_j,\, v_i,\, \varepsilon(W)).
+\]
+\leanok
+\end{definition}
+
+\begin{lemma}[Vertices already uniform remain unaffected]\label{lem:Enhanced-unaffected}
+\lean{Enhanced_unaffceted}
+If \(W.w(v)=1/|S|\) then also
+\((W^+).w(v)=1/|S|\).
+\leanok
+\end{lemma}
+
+\begin{lemma}[Effect on argmax]\label{lem:Enhanced-argmax}
+\lean{Enhanced_effect_argmax}
+The argmax vertex in \(W^+\) attains exactly the uniform value:
+\[
+  (W^+).w(v_j) = \tfrac{1}{|S|}.
+\]
+\leanok
+\end{lemma}
+
+\begin{lemma}[Uniform count increases]\label{lem:Enhanced-inc-uniform}
+\lean{Enhanced_inc_uniform_count}
+The number of vertices at uniform weight strictly increases:
+\[
+  \#\{v:\, (W^+).w(v)=1/|S|\} \;>\; \#\{v:\, W.w(v)=1/|S|\}.
+\]
+\leanok
+\end{lemma}
+
+\begin{lemma}[UniformBetter preserves support]\label{lem:UniformBetter-support}
+\lean{UniformBetter_support_equiv}
+If \(\supp(W)\) is a clique, then
+\[
+  W.w(i)>0 \iff (w^{mathrm{unif}})(i)>0.
+\]
+\leanok
+\end{lemma}
+
+\begin{lemma}[Support is a clique]\label{lem:support-clique}
+\lean{clique_support_adjacent}
+If \(\supp(W)\) is a clique, then any two distinct vertices
+\(x,y\in\supp(W)\) are adjacent.
+\leanok
+\end{lemma}
+
+\begin{lemma}[UniformBetter has constant support]\label{lem:UniformBetter-constant}
+\lean{UniformBetter_constant_support}
+If \(\supp(W)\) is a clique, then
+\[
+  \forall v\in\supp(W),\quad w^{mathrm{unif}}(v)=\tfrac{1}{|S|}.
+\]
+\leanok
+\end{lemma}
+
+\begin{lemma}[Uniform edge values]\label{lem:UniformBetter-edges}
+\lean{UniformBetter_edges_value}
+If \(\supp(W)\) is a clique, then for each supported edge \(e\), under the distribution $w^{mathrm{unif}}$
+\[
+  vp(e) = \Bigl(\tfrac{1}{|S|}\Bigr)^2.
+\]
+\leanok
+\end{lemma}
+
+
+\begin{lemma}[Clique size from edges]\label{lem:clique-size}
+\lean{clique_size}
+If \(\supp(W)\) has size \(k\), then
+\[
+  |\,G.\texttt{supEdgeFinset}\,| = \tbinom{k}{2}.
+\]
+\leanok
+\end{lemma}
+
+\subsection{Final bound}
+
+We finish by converting the information we gatehered (uniform weights on a
+clique support and a precise count of supported edges) into the final bound.
+
+\begin{lemma}[Ccomputation]\label{lem:computation}
+\lean{computation}
+\leanok
+If $k\ge 1$, then
+\[
+  \Bigl(\frac{k(k-1)}{2}\Bigr)\,\Bigl(\frac{1}{k}\Bigr)^{\!2}
+  \;=\; \frac12\Bigl(1-\frac1k\Bigr).
+\]
+\end{lemma}
+
+\begin{lemma}[Monotonicity in the parameter]\label{lem:bound}
+\lean{bound}
+\leanok
+For integers $k,q\ge 1$ with $k\le q$,
+\[
+  \frac12\Bigl(1-\frac1k\Bigr)\;\le\;\frac12\Bigl(1-\frac1q\Bigr).
+\]
+\end{lemma}
+
+\begin{lemma}[Real–cast version]\label{lem:bound-real}
+\lean{bound_real}
+\leanok
+For natural numbers $k\le p$ with $k\ge 1$,
+\[
+  \frac12\Bigl(1-\frac1k\Bigr)\;\le\;\frac12\Bigl(1-\frac1p\Bigr)
+  \qquad(\text{as an inequality in } \mathbb R).
+\]
+\end{lemma}
+
+\begin{lemma}[Auxiliary casting identity]\label{lem:cast-help}
+\lean{cast_help}
+\leanok
+\end{lemma}
+
+\begin{lemma}[Final bound for any distribution]\label{lem:finale-bound}
+\lean{finale_bound}
+\uses{lem:UniformBetter-edges,lem:clique-size,lem:computation,lem:bound-real}
+Let $p\ge 2$ and suppose $G$ is $p$–clique–free. Then for every weight distribution $w$,
+\[
+  f(w)\;\le\;\Bigl(\frac{(p-1)\bigl((p-1)-1\bigr)}{2}\Bigr)\,\Bigl(\frac1{p-1}\Bigr)^{\!2}
+  \;=\;\frac12\Bigl(1-\frac1{p-1}\Bigr).
+\]
+\end{lemma}
+
+\begin{definition}[Uniform-on-vertices distribution]\label{def:UnivFun}
+\lean{UnivFun}
+\leanok
+The \emph{uniform vertex distribution} is $u:V\to\mathbb R_{\ge0}$ with $u(v)=1/n$ for all $v$.
+\end{definition}
+
+\begin{lemma}[Total edge weight under the uniform distribution]\label{lem:UnivFun-weight}
+\lean{UnivFun_weight}
+\leanok
+If $u$ is the distribution of Definition~\ref{def:UnivFun}, then
+\[
+  f(u)=\#E\cdot\Bigl(\frac1n\Bigr)^{\!2}.
+\]
+\end{lemma}
+
+\begin{theorem}[Turán’s theorem, weighted proof]\label{thm:turans}
+\lean{turans}
+\uses{lem:finale-bound,lem:UnivFun-weight}
+Let $p\ge 2$ and suppose $G$ has no $p$–clique. Then
+\[
+  |E|
+  \;\le\;
+  \frac12\Bigl(1-\frac1{p-1}\Bigr)\,n^2.
+\]
+\end{theorem}
