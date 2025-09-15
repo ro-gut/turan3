@@ -166,7 +166,8 @@ def Improve (W : FunToMax G) (loose gain : α) (h_neq : gain  ≠ loose) : FunTo
         have loose_filter : filter (fun x => x = loose) univ = {loose} := by
           ext x; simp[Finset.mem_filter, Finset.mem_univ]
         rw[gain_filter, loose_filter, Finset.sum_singleton, Finset.sum_singleton]
-        have compl_eq : ({gain} ∪ {loose})ᶜ = S := by ext x; simp [Finset.mem_compl, Finset.mem_union, Finset.mem_singleton, S]
+        have compl_eq : ({gain} ∪ {loose})ᶜ = S := by ext x; simp [Finset.mem_compl, Finset.mem_singleton, S]; exact
+          And.comm
         rw[compl_eq]
       · rw[Finset.disjoint_left]
         intros x hx h'x
@@ -201,7 +202,8 @@ lemma gain_edge_decomp (W : FunToMax G) (gain : α)
   dsimp [vp]
   have help := (Sym2.other_spec (helper_gain_mem _ _ he))
   apply @Eq.ndrec _ (s(gain, Sym2.Mem.other (helper_gain_mem G s(x, y) he))) (fun X =>
-    Quot.liftOn X (fun pair => W.w pair.1 * W.w pair.2) (vp.proof_1 W.w) = W.w gain * W.w (Sym2.Mem.other (helper_gain_mem G s(x, y) he))
+    Quot.liftOn X (fun pair => W.w pair.1 * W.w pair.2)
+      (by intro x y h; cases h <;> simp [mul_comm]) = W.w gain * W.w (Sym2.Mem.other (helper_gain_mem G s(x, y) he))
     ) _ s(x,y) help
   rw [Quot.liftOn_mk]
 
@@ -250,15 +252,12 @@ lemma vp_sym2_mk (w : α → NNReal) (a b : α) :
 /-- Helper lemma: Shows that the weight at the vertex “loose” is 0 after `Improve`. -/
 lemma Improve_loose_weight_zero (W : FunToMax G) (loose gain : α) (h_neq : gain ≠ loose) :
   (Improve G W loose gain h_neq).w loose = 0 := by
-  dsimp [Improve]; simp only [if_pos rfl]
-  split_ifs
-  · rfl
-  · rfl
+  dsimp [Improve]; simp only [↓reduceIte]
 
 /-- Helper lemma: Shows that the incidence sets of gain and loose are disjoint (Assuming they are not adjacent). -/
 lemma Improve_gain_loose_disjoint {loose gain : α} (h_neq : gain ≠ loose) (h_adj : ¬ G.Adj gain loose) :
   Disjoint (G.incidenceFinset gain) (G.incidenceFinset loose) := by
-    simp_rw [disjoint_iff_inter_eq_empty, eq_empty_iff_forall_not_mem, mem_inter]
+    simp_rw [disjoint_iff_inter_eq_empty, eq_empty_iff_forall_notMem, mem_inter]
     rintro x ⟨xg,xl⟩
     rw [incidenceFinset_eq_filter, mem_filter, mem_edgeFinset] at *
     apply h_adj
@@ -281,7 +280,7 @@ lemma Improve_edgeFinset_partition (loose gain : α)
   have h_disj_union : affectedEdges = G.incidenceFinset gain ∪ G.incidenceFinset loose :=
     Finset.disjUnion_eq_union _ _ _
   ext e
-  simp only [Finset.mem_disjUnion, Finset.mem_union, Finset.mem_sdiff, h_disj_union, Finset.mem_coe]
+  simp only [Finset.mem_disjUnion, Finset.mem_union, Finset.mem_sdiff, h_disj_union]
   apply Iff.intro
   · intro he
     by_cases h' : e ∈ G.incidenceFinset gain ∨ e ∈ G.incidenceFinset loose
@@ -290,9 +289,9 @@ lemma Improve_edgeFinset_partition (loose gain : α)
   · intro h
     rcases h with (h_left | h_right)
     rcases h_left with (h_gain | h_loose)
-    · apply incidenceFinset_subset at h_gain
+    · apply SimpleGraph.incidenceFinset_subset at h_gain
       exact h_gain
-    · apply incidenceFinset_subset at h_loose
+    · apply SimpleGraph.incidenceFinset_subset at h_loose
       exact h_loose
     · exact h_right.left
 
@@ -321,9 +320,9 @@ lemma Improve_partition_sum_split (W : FunToMax G) (loose gain : α)
     rw [Finset.mem_disjUnion] at he
     cases he with
     | inl hg =>
-      exact incidenceFinset_subset G gain hg
+      exact SimpleGraph.incidenceFinset_subset G gain hg
     | inr hl =>
-      exact incidenceFinset_subset G loose hl
+      exact SimpleGraph.incidenceFinset_subset G loose hl
   calc
     ∑ e∈G.edgeFinset, vp W.w e
       = ∑ e∈affectedEdges ∪ (G.edgeFinset \ affectedEdges), vp W.w e
@@ -493,7 +492,7 @@ lemma Improve_unchanged_edge_sum (W : FunToMax G) (loose gain : α)
     have h_affectedEdges_eq : affectedEdges = G.incidenceFinset gain ∪ G.incidenceFinset loose := by
       apply Finset.ext
       intro e
-      simp only [Finset.mem_union, SimpleGraph.incidenceFinset, Finset.mem_image]
+      simp only [Finset.mem_union, SimpleGraph.incidenceFinset]
       apply Iff.intro
       · intro h
         have h_union : e ∈ G.incidenceFinset gain ∨ e ∈ G.incidenceFinset loose :=
@@ -538,7 +537,7 @@ lemma Improve_unchanged_edge_sum (W : FunToMax G) (loose gain : α)
     have h_affectedEdges_eq : affectedEdges = G.incidenceFinset gain ∪ G.incidenceFinset loose := by
       apply Finset.ext
       intro e
-      simp only [Finset.mem_union, SimpleGraph.incidenceFinset, Finset.mem_image]
+      simp only [Finset.mem_union, SimpleGraph.incidenceFinset]
       apply Iff.intro
       · intro h
         have h_union : e ∈ G.incidenceFinset gain ∨ e ∈ G.incidenceFinset loose :=
@@ -583,7 +582,7 @@ lemma Improve_unchanged_edge_sum (W : FunToMax G) (loose gain : α)
       have h_affectedEdges_eq : affectedEdges = G.incidenceFinset gain ∪ G.incidenceFinset loose := by
         apply Finset.ext
         intro e
-        simp only [Finset.mem_union, SimpleGraph.incidenceFinset, Finset.mem_image]
+        simp only [Finset.mem_union, SimpleGraph.incidenceFinset]
         apply Iff.intro
         · intro h
           have h_union : e ∈ G.incidenceFinset gain ∨ e ∈ G.incidenceFinset loose :=
@@ -628,7 +627,7 @@ lemma Improve_unchanged_edge_sum (W : FunToMax G) (loose gain : α)
     have h_affectedEdges_eq : affectedEdges = G.incidenceFinset gain ∪ G.incidenceFinset loose := by
       apply Finset.ext
       intro e
-      simp only [Finset.mem_union, SimpleGraph.incidenceFinset, Finset.mem_image]
+      simp only [Finset.mem_union, SimpleGraph.incidenceFinset]
       apply Iff.intro
       · intro h
         have h_union : e ∈ G.incidenceFinset gain ∨ e ∈ G.incidenceFinset loose :=
@@ -680,7 +679,7 @@ lemma Improve_support_remains_zero (W : FunToMax G) (loose gain : α)
   (h_neq : gain ≠ loose) (h_supp : 0 < W.w gain) :
   ∀ i, W.w i = 0 → (Improve G W loose gain h_neq).w i = 0 := by
   intro i h_zero
-  simp only [Improve, FunToMax.w]
+  simp only [Improve]
   split_ifs with _ H
   · rfl
   · rw [H] at h_zero; rw [h_zero] at h_supp; exfalso; apply lt_irrefl 0 h_supp
@@ -763,7 +762,7 @@ theorem Better_forms_clique (W : FunToMax G) :
     have ohoh := @Nat.find_le (#(filter (fun i => (Improve G (Better G W) y x xny).w i > 0) univ)) _ _ (exists_better_distribution G W) con
     have nono := Improve_support_strictly_reduced G (Better G W) y x xny h_pos_x h_pos_y
     rw [Better_support_size G W] at nono
-    apply not_lt_of_le ohoh nono
+    apply not_lt_of_ge ohoh nono
 
 -- end Section_1
 
@@ -823,13 +822,13 @@ def Enhance
       apply lt_irrefl (W.w loose)
       exact h_lt
     rw [Finset.sum_union disj2, Finset.sum_singleton, Finset.sum_singleton]
-    simp only [if_pos rfl, if_neg (λ h => absurd h (ne_of_lt h_lt))] at *
+    simp only at *
     ring_nf
     have h_ne : gain ≠ loose := by
       intro h_neq
       rw[h_neq] at h_lt
       exact lt_irrefl (W.w loose) h_lt
-    simp only [if_true, if_false] at *
+    simp only [if_true] at *
     have h_simpl : ∀ x ∈ univ \ ({loose} ∪ {gain}),
   (if x = loose then W.w loose - ε else if x = gain then W.w gain + ε else W.w x) = W.w x :=
       by
@@ -908,7 +907,7 @@ lemma Enhance_nsupport_unchanged (W : FunToMax G) (loose gain : α) (h_lt : W.w 
         rw [h] at ah
         apply lt_irrefl _ ah
       · intro h
-        have h_zero : W.w gain = 0 ∧ ε = 0 := by exact AddLeftCancelMonoid.add_eq_zero.mp h
+        have h_zero : W.w gain = 0 ∧ ε = 0 := by exact add_eq_zero.mp h
         exact h_zero.1
     · rfl
 
@@ -920,14 +919,12 @@ lemma Enhance_support_unchanged (W : FunToMax G) (loose gain : α) (h_lt : W.w g
     intro i
     rw [← not_iff_not]
     constructor
-    · intro h
-      intro con
+    · intro h con
       replace h := NNReal.eq_zero_of_ne_pos  h
       rw [Enhance_nsupport_unchanged G W loose gain h_lt ah ε epos elt] at h
       rw [h] at con
       exact lt_irrefl _ con
-    · intro h
-      intro con
+    · intro h con
       replace h := NNReal.eq_zero_of_ne_pos  h
       rw [← Enhance_nsupport_unchanged G W loose gain h_lt ah ε epos elt] at h
       rw [h] at con
@@ -985,14 +982,17 @@ lemma Sym2.inSupport_explicit (W : FunToMax G) {x y : α} : s(x,y).inSupport G W
 lemma Sym2.notinSupport (W : FunToMax G) {e : Sym2 α} (h : ¬ e.inSupport G W ) : vp W.w e = 0 := by
   dsimp [inSupport] at h
   revert h
-  apply @Sym2.inductionOn _ (fun e => ¬ Quot.lift (fun x => W.w x.1 > 0 ∧ W.w x.2 > 0) (inSupport.proof_1 G W) e → vp W.w e = 0) e
+  apply @Sym2.inductionOn _ (fun e => ¬ Sym2.inSupport G W e → vp W.w e = 0) e
   intro x y h
-  dsimp at h
   dsimp [vp]
+  rw [Quot.liftOn_mk]
+  rw [Sym2.inSupport_explicit] at h
   rw [not_and_or] at h
-  cases' h with h h
-  · rw [NNReal.eq_zero_of_ne_pos h, zero_mul]
-  · rw [NNReal.eq_zero_of_ne_pos h, mul_zero]
+  cases' h with hx hy
+  · have hx0 : W.w x = 0 := NNReal.eq_zero_of_ne_pos hx
+    rw [hx0, zero_mul]
+  · have hy0 : W.w y = 0 := NNReal.eq_zero_of_ne_pos hy
+    rw [hy0, mul_zero]
 
 /--  Helper lemma: Shows that if an edge e is in support and a vertex x belongs to e, then x has positive weight -/
 lemma Sym2.inSupport_mem (W : FunToMax G) {x : α} {e : Sym2 α} (hm : x ∈ e) (hs : e.inSupport G W) : W.w x > 0 := by
@@ -1069,7 +1069,7 @@ lemma in_sdiff_left {s t : Finset α} {a : α} (h : a ∈ s \ t) : a ∈ s := by
 (without the edge (gain,loose) are disjoint) -/
 lemma disjoint_supported_incidence (W : FunToMax G) (loose gain : α) (h_neq : gain ≠ loose) :
   Disjoint ((G.supIncidenceFinset W gain) \ {s(loose,gain)}) ((G.supIncidenceFinset W loose) \ {s(loose,gain)}) := by
-  rw [disjoint_iff_inter_eq_empty, eq_empty_iff_forall_not_mem]
+  rw [disjoint_iff_inter_eq_empty, eq_empty_iff_forall_notMem]
   intro x hx
   let h_int := Finset.mem_inter.mp hx
   let h_gain := Finset.mem_sdiff.mp h_int.left
@@ -1097,7 +1097,7 @@ def incidence_loose_gain (W : FunToMax G) (loose gain : α) (h_neq : gain ≠ lo
 /-- shows that the set incidence_loose_gain is disjoint from the singleton s(loose, gain) -/
 lemma disjoint_inci_singleton (W : FunToMax G) (loose gain : α) (h_neq : gain ≠ loose) :
   Disjoint (incidence_loose_gain G W loose gain h_neq) {s(loose,gain)} := by
-  rw [disjoint_iff_inter_eq_empty, eq_empty_iff_forall_not_mem]
+  rw [disjoint_iff_inter_eq_empty, eq_empty_iff_forall_notMem]
   intro x
   rw [Finset.mem_inter]
   rintro ⟨x_in_inci, x_in_singleton⟩
@@ -1127,7 +1127,7 @@ lemma supported_edge_partition (W : FunToMax G) (loose gain : α) (h_adj : G.Adj
   (G.supEdgeFinset W \ (inci_loose_gain_full G W loose gain (G.ne_of_adj h_adj))) (disjoint_sdiff) := by
   rw [Finset.disjUnion_eq_union]
   ext e
-  simp only [Finset.mem_union, Finset.mem_sdiff, Finset.mem_coe]
+  simp only [Finset.mem_union, Finset.mem_sdiff]
   apply Iff.intro
   · intro he
     by_cases hin : e ∈ inci_loose_gain_full G W loose gain (G.ne_of_adj h_adj)
@@ -1145,10 +1145,10 @@ lemma supported_edge_partition (W : FunToMax G) (loose gain : α) (h_adj : G.Adj
       · rcases Finset.mem_disjUnion.mp h_left with (h_gain_branch | h_loose_branch)
         · rcases Finset.mem_sdiff.mp h_gain_branch with ⟨h_gain, h_not⟩
           have h_incid : e ∈ G.incidenceFinset gain := (Finset.mem_filter.mp h_gain).1
-          exact mem_filter.mpr ⟨incidenceFinset_subset G gain h_incid, (Finset.mem_filter.mp h_gain).2⟩
+          exact mem_filter.mpr ⟨SimpleGraph.incidenceFinset_subset G gain h_incid, (Finset.mem_filter.mp h_gain).2⟩
         · rcases Finset.mem_sdiff.mp h_loose_branch with ⟨h_loose, h_not⟩
           have h_incid := (Finset.mem_filter.mp h_loose).1
-          exact mem_filter.mpr ⟨incidenceFinset_subset G loose h_incid, (Finset.mem_filter.mp h_loose).2⟩
+          exact mem_filter.mpr ⟨SimpleGraph.incidenceFinset_subset G loose h_incid, (Finset.mem_filter.mp h_loose).2⟩
       · rw[mem_singleton] at h_rest
         subst h_rest
         apply mem_filter.mpr
@@ -1205,11 +1205,12 @@ lemma Enhance_gain_sum (W : FunToMax G) (loose gain : α) (h_lt : W.w gain < W.w
   dsimp
   apply @Sym2.inductionOn α (fun X => ∀ (HX : X ∈ G.supIncidenceFinset W gain \ {s(loose, gain)}), vp (Enhance G W loose gain h_lt ε epos elt).w X = vp W.w X + ε * W.w (Sym2.Mem.other (helper_gain_mem G (X) (small_helpI G (in_sdiff_left HX))))) ↑x
   intro a b hab
-  dsimp! [vp]
-  rw [mem_sdiff, not_mem_singleton, mem_supIncidenceFinset,mem_incidenceFinset, mk'_mem_incidenceSet_iff] at hab
+  simp [vp]
+  rw [mem_sdiff, notMem_singleton, mem_supIncidenceFinset,mem_incidenceFinset, mk'_mem_incidenceSet_iff] at hab
   obtain ⟨⟨⟨abAdj,Q⟩,abSupp⟩,abnot⟩ := hab
   cases' Q with Q Q
   · dsimp [Enhance]
+    rw [Quot.liftOn_mk]
     rw [if_neg (show ¬ a = loose by intro con ; rw [Q,← con] at h_lt ; apply lt_irrefl _ h_lt)]
     rw [if_pos Q.symm]
     rw [if_neg (show ¬ b = loose by intro con ;rw [Q,← con] at abnot ; apply abnot ; apply Sym2.eq_swap)]
@@ -1226,8 +1227,12 @@ lemma Enhance_gain_sum (W : FunToMax G) (loose gain : α) (h_lt : W.w gain < W.w
         exfalso
         apply G.ne_of_adj abAdj
         rw [← Q, ← q.1]
-    rw [tec, Q]
+    have tec' : Sym2.Mem.other' (helper_gain_mem G s(a, b) (small_helpI G (in_sdiff_left hab))) = b := by simpa [Sym2.other_eq_other'] using tec
+    have hgain : W.w gain = W.w a := by simp [Q]
+    rw [Quot.liftOn_mk, tec']
+    exact congrFun (congrArg HAdd.hAdd (congrFun (congrArg HMul.hMul hgain) (W.w (a, b).2))) (ε * W.w (a, b).2)
   · dsimp [Enhance]
+    rw [Quot.liftOn_mk]
     rw [if_neg (show ¬ b = loose by intro con ; rw [Q,← con] at h_lt ; apply lt_irrefl _ h_lt)]
     rw [if_pos Q.symm]
     rw [if_neg (show ¬ a = loose by intro con ;rw [Q,← con] at abnot ; apply abnot ; rfl)]
@@ -1244,7 +1249,10 @@ lemma Enhance_gain_sum (W : FunToMax G) (loose gain : α) (h_lt : W.w gain < W.w
         rw [← Q, ← q.1]
       · rw [Prod.ext_iff] at q
         exact q.2
-    rw[tec, Q]; rw [mul_comm (W.w a) ε]
+    have tec' : Sym2.Mem.other' (helper_gain_mem G s(a, b) (small_helpI G (in_sdiff_left hab))) = a := by simpa [Sym2.other_eq_other'] using tec
+    rw [Quot.liftOn_mk, tec']
+    have hgain : W.w gain = W.w b := by simp [Q]
+    simp [hgain, mul_comm]
 
 /-- Helper: provides a bound: for any edge in the supported incidence set of `loose` (without s(loose,gain)), the
 product of ε and the weight of the "other" vertex is bounded by the edge's value -/
@@ -1267,7 +1275,7 @@ lemma epsilon_weight_bound (W : FunToMax G) (loose gain : α) (h_lt : W.w gain <
   apply @Sym2.inductionOn α (fun X => ∀ (HX : X ∈ G.supIncidenceFinset W loose \ {s(loose, gain)}), ε * W.w (Sym2.Mem.other (helper_gain_mem G (X) (small_helpI G (in_sdiff_left (HX)))))≤ vp W.w X) ↑x
   intro a b hab
   dsimp [vp]
-  rw [mem_sdiff, not_mem_singleton, mem_supIncidenceFinset,mem_incidenceFinset, mk'_mem_incidenceSet_iff] at hab
+  rw [mem_sdiff, notMem_singleton, mem_supIncidenceFinset,mem_incidenceFinset, mk'_mem_incidenceSet_iff] at hab
   obtain ⟨⟨⟨abAdj,Q⟩,abSupp⟩,abnot⟩ := hab
   have h_tec : ε ≤ W.w loose := by
             replace elt := add_le_of_le_tsub_left_of_le (le_of_lt h_lt) (le_of_lt elt)
@@ -1284,8 +1292,9 @@ lemma epsilon_weight_bound (W : FunToMax G) (loose gain : α) (h_lt : W.w gain <
         exfalso
         apply G.ne_of_adj abAdj
         rw [← Q, ← q.1]
-    rw[tec, mul_comm, mul_comm (W.w a)]; rw[Q] at h_tec
-    exact mul_le_mul_of_nonneg_left h_tec (W.w b).prop
+    rw [tec, Quot.liftOn_mk]
+    have htec' : ε ≤ W.w a := by simpa [Q] using h_tec
+    exact mul_le_mul_of_nonneg_right htec' (W.w b).prop
   · have tec : Sym2.Mem.other (helper_gain_mem G s(a, b) (small_helpI G (in_sdiff_left hab))) = a := by
       have := Sym2.other_spec (helper_gain_mem G s(a, b) (small_helpI G (in_sdiff_left hab)))
       rw [Sym2.mk_eq_mk_iff] at this
@@ -1331,8 +1340,8 @@ lemma Enhance_loose_sum (W : FunToMax G) (loose gain : α) (h_lt : W.w gain < W.
     vp (Enhance G W loose gain h_lt ε epos elt).w X =
     vp W.w X - ε * W.w (Sym2.Mem.other (helper_gain_mem G (X) (small_helpI G (in_sdiff_left HX))))) ↑x
   intro a b hab
-  dsimp! [vp]
-  rw [mem_sdiff, not_mem_singleton, mem_supIncidenceFinset, mem_incidenceFinset, mk'_mem_incidenceSet_iff] at hab
+  dsimp [vp]
+  rw [mem_sdiff, notMem_singleton, mem_supIncidenceFinset, mem_incidenceFinset, mk'_mem_incidenceSet_iff] at hab
   obtain ⟨⟨⟨abAdj, Q⟩, abSupp⟩, abnot⟩ := hab
   cases' Q with Q1 Q2
   · have nb : b ≠ loose := by
@@ -1343,8 +1352,8 @@ lemma Enhance_loose_sum (W : FunToMax G) (loose gain : α) (h_lt : W.w gain < W.
       exact abnot (Eq.refl (s(a, b)))
     dsimp [Enhance] at *
     subst Q1
-    simp only [↓reduceIte, mul_ite, Sym2.other_eq_other']
-    rw [if_neg nb, if_neg ng]
+    rw [Quot.liftOn_mk]
+    simp [nb, ng]
     have tec : Sym2.Mem.other' (helper_gain_mem G s(loose, b) (small_helpI G (in_sdiff_left hab))) = b := by
       have := Sym2.other_spec' (helper_gain_mem G s(loose, b) (small_helpI G (in_sdiff_left hab)))
       rw [Sym2.mk_eq_mk_iff] at this
@@ -1365,19 +1374,19 @@ lemma Enhance_loose_sum (W : FunToMax G) (loose gain : α) (h_lt : W.w gain < W.
       exact abnot (Eq.refl (s(b, a)))
     dsimp [Enhance] at *
     subst Q2
-    simp only [↓reduceIte, mul_ite, Sym2.other_eq_other']
-    rw [if_neg na, if_neg ng]
+    rw [Quot.liftOn_mk]
+    simp [na, ng]
     have tec : Sym2.Mem.other' (helper_gain_mem G s(a, loose) (small_helpI G (in_sdiff_left hab))) = a := by
       have := Sym2.other_spec' (helper_gain_mem G s(a, loose) (small_helpI G (in_sdiff_left hab)))
       rw [Sym2.mk_eq_mk_iff] at this
       cases' this with q q
       · rw [Prod.ext_iff] at q
-        simp only [Prod.mk.injEq] at q
+        simp only at q
         obtain ⟨h1, h2⟩ := q
         simp [h1] at h2
         exact False.elim (na (id (Eq.symm h1)))
       · rw [Prod.ext_iff] at q
-        simp only [Prod.mk.injEq] at q
+        simp only at q
         obtain ⟨h1, h2⟩ := q
         exact h2
     rw [tec]; rw [@mul_tsub]; rw[mul_comm ε  (W.w a)]
@@ -1394,9 +1403,9 @@ def the_bij (W : FunToMax G) (loose gain : α) (h_lt : W.w gain < W.w loose)
   fun e h =>
     ⟨(s(gain,(Sym2.Mem.other (helper_gain_mem G e.val (G.small_helpI (in_sdiff_left e.prop)))))),
      (by
-        rw [mem_sdiff, not_mem_singleton, mem_supIncidenceFinset,mem_incidenceFinset, mk'_mem_incidenceSet_iff]
+        rw [mem_sdiff, notMem_singleton, mem_supIncidenceFinset,mem_incidenceFinset, mk'_mem_incidenceSet_iff]
         have tec := e.prop
-        rw [mem_sdiff, not_mem_singleton, mem_supIncidenceFinset,mem_incidenceFinset] at tec
+        rw [mem_sdiff, notMem_singleton, mem_supIncidenceFinset,mem_incidenceFinset] at tec
         obtain ⟨⟨⟨eAdj,Q⟩,eSupp⟩,enot⟩ := tec
         constructor
         · constructor
@@ -1465,34 +1474,32 @@ lemma the_bij_inj (W : FunToMax G) (loose gain : α) (h_lt : W.w gain < W.w loos
   intro a₁ ha₁ a₂ ha₂ h
   rcases a₁ with ⟨e₁, he₁⟩
   rcases a₂ with ⟨e₂, he₂⟩
-  dsimp [the_bij] at  h
+  dsimp [the_bij] at h
   injection h with h1
-  simp [the_bij]
-  have := Sym2.other_spec (the_bij.proof_1 G W loose gain ⟨e₁, he₁⟩)
-  dsimp at this
-  rw [← this]
-  have that := Sym2.other_spec (the_bij.proof_1 G W loose gain ⟨e₂, he₂⟩)
-  dsimp at that
-  rw [← that]
-  rw [Sym2.mk_eq_mk_iff] at *
+  simp
+  have hm1 : loose ∈ e₁ := helper_gain_mem G e₁ (G.small_helpI (in_sdiff_left he₁))
+  have hm2 : loose ∈ e₂ := helper_gain_mem G e₂ (G.small_helpI (in_sdiff_left he₂))
+  have this := Sym2.other_spec hm1
+  have that := Sym2.other_spec hm2
+  rw [Sym2.mk_eq_mk_iff] at h1
   cases h1 with
   | inl h_eq =>
-    left
-    have h_snd : Sym2.Mem.other (the_bij.proof_1 G W loose gain ⟨e₁, he₁⟩) =
-                Sym2.Mem.other (the_bij.proof_1 G W loose gain ⟨e₂, he₂⟩) :=
-      congrArg Prod.snd h_eq
-    exact congrArg (fun w => (loose, w)) h_snd
+    have h_snd : Sym2.Mem.other hm1 = Sym2.Mem.other hm2 := by
+      simpa using congrArg Prod.snd h_eq
+    have e1_eq : s(loose, Sym2.Mem.other hm1) = e₁ := this
+    have e2_eq : s(loose, Sym2.Mem.other hm2) = e₂ := that
+    calc
+      e₁ = s(loose, Sym2.Mem.other hm1) := e1_eq.symm
+      _  = s(loose, Sym2.Mem.other hm2) := by exact congrArg Sym2.mk (congrArg (Prod.mk loose) h_snd)
+      _  = e₂ := e2_eq
   | inr swapped =>
-    right
+    have h_left : Sym2.Mem.other' hm2 = gain := by simpa using (congrArg Prod.fst swapped).symm
+    have e2_is_slg : s(loose, gain) = e₂ := by
+      simpa [h_left] using that
+    rw [Finset.mem_sdiff] at he₂
     exfalso
-    dsimp at swapped
-    rw [Prod.ext_iff] at swapped
-    dsimp at swapped
-    rw [← swapped.left] at that
-    rw [mem_sdiff] at he₂
     apply he₂.2
-    rw [← that]
-    apply mem_singleton_self
+    exact Finset.mem_singleton.mpr e2_is_slg.symm
 
 /-- Surjectivity of the_bij -/
 lemma the_bij_surj (W : FunToMax G) (loose gain : α) (h_lt : W.w gain < W.w loose)
@@ -1575,32 +1582,31 @@ lemma the_bij_surj (W : FunToMax G) (loose gain : α) (h_lt : W.w gain < W.w loo
         rw [looseEqGain] at h_lt
         apply lt_irrefl (W.w gain)
         exact h_lt
-  use ⟨s(loose,x), hx⟩
+  use ⟨s(loose, x), hx⟩
   use (by apply mem_attach)
   dsimp [the_bij]
   congr
-  have := Sym2.other_spec (the_bij.proof_1 G W loose gain ⟨s(loose, x), hx⟩ )
-  dsimp at this
-  rw [Sym2.mk_eq_mk_iff] at this
-  cases' this with q q
-  · rw [Prod.ext_iff] at q
-    dsimp at q
-    rw [q.2]
-    exact that
-  · dsimp at q
-    rw [Prod.ext_iff] at q
-    dsimp at q
-    exfalso
-    apply G.ne_of_adj _ q.1
-    have inc : s(loose, x) ∈ G.edgeSet := by
-      rw [mem_sdiff] at hx
-      let ⟨hx_in, _⟩ := hx
-      rw [mem_supIncidenceFinset] at hx_in
-      let ⟨incid, _⟩ := hx_in
-      rw [mem_incidenceFinset] at incid
-      let ⟨inEdges, _looseIn⟩ := incid
-      exact inEdges
-    exact inc
+  have h_other_eq_x :
+      Sym2.Mem.other (helper_gain_mem G (s(loose, x)) (G.small_helpI (in_sdiff_left hx))) = x := by
+    have hspec :=
+      Sym2.other_spec (helper_gain_mem G (s(loose, x)) (G.small_helpI (in_sdiff_left hx)))
+    rw [Sym2.mk_eq_mk_iff] at hspec
+    cases hspec with
+    | inl hpair =>
+        rw [Prod.ext_iff] at hpair
+        exact hpair.2
+    | inr swapped2 =>
+        rw [Prod.ext_iff] at swapped2
+        have hx_inc : s(loose, x) ∈ G.incidenceFinset loose :=
+          G.small_helpI (in_sdiff_left hx)
+        have adj_loose_x : G.Adj loose x := by
+          rw [mem_incidenceFinset, mk'_mem_incidenceSet_iff] at hx_inc
+          exact hx_inc.1
+        have : False := (G.ne_of_adj adj_loose_x) swapped2.1
+        exact this.elim
+  have : s(gain, Sym2.Mem.other (helper_gain_mem G (s(loose, x)) (G.small_helpI (in_sdiff_left hx)))) = s(gain, x) := by
+    simpa using congrArg (fun z => s(gain, z)) h_other_eq_x
+  exact this.trans that
 
 /-- Shows that `the_bij` preserves the "other" weight: for any edge from the supported incidence set of loose, the weight
 at the "other" vertex equals that in its image uneder the bijection-/
@@ -1612,39 +1618,27 @@ lemma the_bij_same (W : FunToMax G) (loose gain : α) (h_lt : W.w gain < W.w loo
       (W.w (Sym2.Mem.other (helper_gain_mem G e.val (G.small_helpI (in_sdiff_left e.prop)))))
       = (fun e => W.w (Sym2.Mem.other (helper_gain_mem G e.val (G.small_helpI (in_sdiff_left e.prop)))))
         ((the_bij G W loose gain h_lt ε epos elt hc h_supp) e he) := by
-  dsimp[Enhance]
   intro e he
-  congr 1
-  have h_right := Sym2.other_spec (helper_gain_mem G (↑(the_bij G W loose gain h_lt ε epos elt hc h_supp e he))
-    (small_helpI G (in_sdiff_left (Subtype.prop (the_bij G W loose gain h_lt ε epos elt hc h_supp e he)))))
-  dsimp [the_bij] at h_right
-  have pi : Sym2.Mem.other (helper_gain_mem G s(gain, Sym2.Mem.other (the_bij.proof_1 G W loose gain e))
-    (small_helpI G
-      (in_sdiff_left
-        (Subtype.prop
-          ⟨s(gain, Sym2.Mem.other (the_bij.proof_1 G W loose gain e)), the_bij.proof_2 G W loose gain h_lt hc h_supp e⟩))))
-    = Sym2.Mem.other (helper_gain_mem G (↑(the_bij G W loose gain h_lt ε epos elt hc h_supp e he))
-      (small_helpI G (in_sdiff_left (Subtype.prop (the_bij G W loose gain h_lt ε epos elt hc h_supp e he))))) := by congr
-  rw [← pi]; clear pi
-  have pi : Sym2.Mem.other (helper_gain_mem G (↑e) (small_helpI G (in_sdiff_left (Subtype.prop e))) )
-    = Sym2.Mem.other (the_bij.proof_1 G W loose gain e) := by congr
-  nth_rewrite 1 [pi]
-  clear pi
-  rw [Sym2.mk_eq_mk_iff] at h_right
-  cases' h_right with q q
-  · rw [Prod.ext_iff] at q
-    dsimp at q
-    exact q.2.symm
-  · rw [Prod.ext_iff] at q
-    dsimp at q
-    have problem := Sym2.other_spec (the_bij.proof_1 G W loose gain e)
-    rw [← q.1] at problem
-    have ohoh := e.prop
-    rw [mem_sdiff] at ohoh
-    exfalso
-    apply ohoh.2
-    rw [mem_singleton]
-    exact problem.symm
+  set y := Sym2.Mem.other (helper_gain_mem G e.val (G.small_helpI (in_sdiff_left e.prop))) with hy
+  set im := (the_bij G W loose gain h_lt ε epos elt hc h_supp) e he with him
+  have him_mem : gain ∈ im.val :=
+    helper_gain_mem G im.val (G.small_helpI (in_sdiff_left im.property))
+  have eq_other_img : Sym2.Mem.other him_mem = y := by
+    have h1 := Sym2.other_spec him_mem
+    have h2 : im.val = s(gain, y) := by
+      dsimp [im, the_bij, y]
+    have h' : s(gain, Sym2.Mem.other him_mem) = s(gain, y) :=
+      Eq.trans h1 h2
+    rw [Sym2.mk_eq_mk_iff] at h'
+    cases h' with
+    | inl q =>
+        rw [Prod.ext_iff] at q
+        exact q.2
+    | inr q =>
+        rw [Prod.ext_iff] at q
+        exact q.2.trans q.1
+  have hw : W.w y = W.w (Sym2.Mem.other him_mem) := by simpa using congrArg W.w eq_other_img.symm
+  simpa [him_mem] using hw
 
 /-- Uses `the_bij` to show that the total sum of the weights, on the "other" vertices in the supported incidence
 set, is preserved when switching fom `loose` to `gain`-/
@@ -1748,7 +1742,7 @@ lemma Enhance_sum_complement_unchanged (W : FunToMax G) (loose gain : α) (h_lt 
       · rw[h]; exact mem_edgeFinset.mp this
       · rw [h]; exact Sym2.mem_mk_right x gain
     · exact (Finset.mem_filter.mp he.1).2
-  simp only [x_ne_loose, x_ne_gain, y_ne_loose, y_ne_gain]; rfl
+  simp [vp_sym2_mk, x_ne_loose, x_ne_gain, y_ne_loose, y_ne_gain]
 
 /-- Proves that after `Enhance`, the value of the edge connecting `loose` and `gain`
 is strictly increased in comparisson to that under the original weight function. -/
@@ -1791,7 +1785,7 @@ lemma Enhance_support_edges_same (W : FunToMax G) (loose gain : α) (h_lt : W.w 
     intro a b
     rw [Sym2.inSupport_explicit, Sym2.inSupport_explicit, ← Enhance_support_unchanged, ← Enhance_support_unchanged]
     exact h_supp.2 ; exact h_supp.2
-  simp_all only [ne_eq, gt_iff_lt, Set.mem_toFinset]
+  simp_all only [gt_iff_lt, Set.mem_toFinset]
 
 /-- Combining previous lemmas, shows that the total edge weight increases or remains the same under `Enhance`.
 
@@ -2112,13 +2106,13 @@ lemma FunToMax.sum_supp_eq_one (W : FunToMax G) :
 lemma FunToMax.avg_le_max (W : FunToMax G) :
     W.max_weight G ≥ 1 / (↑((Finset.univ.filter (fun i => W.w i > 0)).card)) := by
   set S := Finset.univ.filter (fun i => W.w i > 0)
-  have h_sum : ∑ v in S, W.w v = 1 := W.sum_supp_eq_one
+  have h_sum : ∑ v ∈ S, W.w v = (1 : NNReal) := W.sum_supp_eq_one
   have bound : ∀ v ∈ S, W.w v ≤ W.max_weight G := fun v _ => W.max_weight_max G v
   have h_max : 1 ≤ (S.card : ℝ) * W.max_weight G := by
     calc
-      1 = ((∑ v in S, W.w v : NNReal) : ℝ) := by rw [h_sum]; norm_cast
-      _ = ∑ v in S, (W.w v : ℝ) := by rw [NNReal.coe_sum]
-      _ ≤ ∑ v in S, (W.max_weight G : ℝ) := by exact Finset.sum_le_sum (fun v hv => NNReal.coe_le_coe.mpr (bound v hv))
+      1 = ((∑ v ∈ S, W.w v : NNReal) : ℝ) := by rw [h_sum]; norm_cast
+      _ = ∑ v ∈ S, (W.w v : ℝ) := by rw [NNReal.coe_sum]
+      _ ≤ ∑ v ∈ S, (W.max_weight G : ℝ) := by exact Finset.sum_le_sum (fun v hv => NNReal.coe_le_coe.mpr (bound v hv))
       _ = (S.card : ℝ) * W.max_weight G := by rw [Finset.sum_const, nsmul_eq_mul]
   exact NNReal.div_le_of_le_mul' h_max
 
@@ -2128,15 +2122,15 @@ lemma FunToMax.min_le_avg  (W : FunToMax G) :
   let S := (Finset.univ : Finset α).filter (fun i => W.w i > 0)
   obtain ⟨x, hx⟩ := FunToMax.supp_nonempty G W
   have hS_pos : 0 < (S.card : ℝ) := Nat.cast_pos.mpr (Finset.card_pos.mpr ⟨x, hx⟩)
-  have h_sum : ∑ v in S, W.w v = 1 := W.sum_supp_eq_one
+  have h_sum : ∑ v ∈ S, W.w v = 1 := W.sum_supp_eq_one
   have bound : ∀ v ∈ S, (W.min_weight G : ℝ) ≤ (W.w v : ℝ) :=
     fun v hv => NNReal.coe_le_coe.mpr (W.min_weight_min G v hv)
   have h_min : (S.card : ℝ) * (W.min_weight G : ℝ) ≤ 1 := by
     calc
       (S.card : ℝ) * (W.min_weight G : ℝ)
-          = ∑ v in S, (W.min_weight G : ℝ) := by rw [Finset.sum_const, nsmul_eq_mul]
-      _ ≤ ∑ v in S, (W.w v : ℝ) := Finset.sum_le_sum bound
-      _ = (∑ v in S, W.w v : NNReal) := by norm_cast
+          = ∑ v ∈ S, (W.min_weight G : ℝ) := by rw [Finset.sum_const, nsmul_eq_mul]
+      _ ≤ ∑ v ∈ S, (W.w v : ℝ) := Finset.sum_le_sum bound
+      _ = (∑ v ∈ S, W.w v : NNReal) := by norm_cast
       _ = 1 := by rw [h_sum]; rfl
   have h_div : (W.min_weight G : ℝ) ≤ 1 / (S.card : ℝ) := by
     rw [le_div_iff₀' hS_pos]
@@ -2151,12 +2145,12 @@ lemma FunToMax.sum_supp_lt_max  (W : FunToMax G) (h : W.min_weight G < W.max_wei
   nth_rewrite 1 [← Finset.insert_erase (W.argmin_mem G)]
   rw [sum_insert]
   swap
-  · apply not_mem_erase
+  · apply notMem_erase
   · rw [card_eq_sum_ones,  Nat.cast_sum, sum_mul]
     nth_rewrite 2 [← Finset.insert_erase (W.argmin_mem G)]
     rw [sum_insert]
     swap
-    · apply not_mem_erase
+    · apply notMem_erase
     · rw [Nat.cast_one, one_mul]
       apply add_lt_add_of_lt_of_le
       · rw [← W.argmin_weight] at h
@@ -2168,17 +2162,17 @@ lemma FunToMax.sum_supp_lt_max  (W : FunToMax G) (h : W.min_weight G < W.max_wei
 /-- Shows that if the minimun weight is strictily less that the maximum weight, then the sum over the support
 is strictly greater than the support size times the minimum weight-/
 lemma FunToMax.min_lt_sum_supp (W : FunToMax G) (h : W.min_weight G < W.max_weight G) :
-  ∑ v in ((Finset.univ : Finset α).filter (fun i => W.w i > 0)), W.w v
+  ∑ v ∈ ((Finset.univ : Finset α).filter (fun i => W.w i > 0)), W.w v
     > (((Finset.univ : Finset α).filter (fun i => W.w i > 0)).card : NNReal) * W.min_weight G := by
   nth_rewrite 1 [← Finset.insert_erase (W.argmax_mem G)]
   rw [sum_insert]
   swap
-  · apply not_mem_erase
+  · apply notMem_erase
   · rw [card_eq_sum_ones, Nat.cast_sum, sum_mul]
     nth_rewrite 2 [← Finset.insert_erase (W.argmax_mem G)]
     rw [sum_insert]
     swap
-    · apply not_mem_erase
+    · apply notMem_erase
     · rw [Nat.cast_one, one_mul]
       apply add_lt_add_of_lt_of_le
       · rw [← W.argmax_weight] at h
@@ -2217,7 +2211,7 @@ lemma FunToMax.min_lt_avg (W : FunToMax G) (h : W.min_weight G < W.max_weight G)
   have x_gt : W.min_weight G < W.w x := by
     rw [argmax_weight]
     exact h
-  have sum_eq : ∑ v in S, W.w v = 1 := W.sum_supp_eq_one
+  have sum_eq : ∑ v ∈ S, W.w v = 1 := W.sum_supp_eq_one
   have card_pos : 0 < S.card := by
     apply Finset.card_pos.mpr
     use x
@@ -2235,7 +2229,7 @@ lemma FunToMax.min_eq_max  (W : FunToMax G) (h : W.min_weight G = W.max_weight G
   ∀ v ∈ ((Finset.univ : Finset α).filter (fun i => W.w i > 0)),
     W.w v = 1 / (((Finset.univ : Finset α).filter (fun i => W.w i > 0)).card) := by
   let S := (Finset.univ.filter (λ i => W.w i > 0))
-  have sumS : ∑ v in S, W.w v = 1 := W.sum_supp_eq_one
+  have sumS : ∑ v ∈ S, W.w v = 1 := W.sum_supp_eq_one
   have each_eq_min : ∀ v ∈ S, W.w v = W.min_weight G := by
     intros v hv
     have A := W.min_weight_min G v hv
@@ -2243,7 +2237,7 @@ lemma FunToMax.min_eq_max  (W : FunToMax G) (h : W.min_weight G = W.max_weight G
     rw [← h] at B
     exact le_antisymm B A
   have eq_card : (S.card : NNReal) * W.min_weight G = 1 := by
-    have all_min : ∑ v in S, W.w v = ∑ v in S, W.min_weight G :=
+    have all_min : ∑ v ∈ S, W.w v = ∑ v ∈ S, W.min_weight G :=
       Finset.sum_congr rfl (λ v hv => each_eq_min v hv)
     rw [all_min] at sumS
     rw [Finset.sum_const, nsmul_eq_mul] at sumS
@@ -2381,14 +2375,12 @@ lemma UniformBetter_support_equiv (W : FunToMax G) (hW : G.IsClique ↑(filter (
   W.w i > 0 ↔ (UniformBetter G W hW).w i > 0:= by
     rw [← not_iff_not]
     constructor
-    · intro h
-      intro con
+    · intro h con
       replace h := NNReal.eq_zero_of_ne_pos  h
       rw [UniformBetter_support_zero G W hW] at h
       rw [h] at con
       exact lt_irrefl _ con
-    · intro h
-      intro con
+    · intro h con
       replace h := NNReal.eq_zero_of_ne_pos  h
       rw [← UniformBetter_support_zero G W hW] at h
       rw [h] at con
@@ -2423,7 +2415,7 @@ lemma UniformBetter_constant_support (W : FunToMax G)
     have h_subset := UniformBetter_support_zero G W hW
     have h_eq : {i | (UniformBetter G W hW).w i > 0} = {i | W.w i > 0} := by
       ext i
-      simp only [Set.mem_setOf_eq, gt_iff_lt, not_lt]
+      simp only [Set.mem_setOf_eq, gt_iff_lt]
       rw [←not_iff_not]
       simp only [not_lt, le_zero_iff]
       exact (h_subset i).symm
@@ -2535,22 +2527,16 @@ lemma UniformBetter_edges_value (W : FunToMax G)
   apply @Sym2.inductionOn α (fun e => e ∈ G.supEdgeFinset W → vp (UniformBetter G W hW).w e = (1 / ↑(#(filter (fun i ↦ W.w i > 0) univ))) ^ 2)
   intro x y hxy
   dsimp [vp]
-  rw [UniformBetter_constant_support G W hW, UniformBetter_constant_support G W hW]
-  · rw [pow_two]
-  · rw [SimpleGraph.supEdgeFinset] at hxy
-    rw [Finset.mem_filter] at hxy
-    rcases hxy with ⟨_, vp_pos⟩
-    rw [Sym2.inSupport] at vp_pos
-    simp only [gt_iff_lt, mem_filter, mem_univ, true_and]
-    simp[Quot.lift] at vp_pos
-    exact vp_pos.2
-  · rw [SimpleGraph.supEdgeFinset] at hxy
-    rw [Finset.mem_filter] at hxy
-    rcases hxy with ⟨_, vp_pos⟩
-    rw [Sym2.inSupport] at vp_pos
-    simp only [gt_iff_lt, mem_filter, mem_univ, true_and]
-    simp[Quot.lift] at vp_pos
-    exact vp_pos.1
+  rw [Quot.liftOn_mk]
+  have hsupp : (s(x,y)).inSupport G W :=
+    (SimpleGraph.mem_supEdgeFinset (W:=W)).1 hxy |>.2
+  have hxpos : W.w x > 0 :=
+    (Sym2.inSupport_explicit (G:=G) (W:=W) (x:=x) (y:=y)).1 hsupp |>.1
+  have hypos : W.w y > 0 :=
+    (Sym2.inSupport_explicit (G:=G) (W:=W) (x:=x) (y:=y)).1 hsupp |>.2
+  have hx := UniformBetter_constant_support G W hW x (by simpa [Set.mem_setOf_eq] using hxpos)
+  have hy := UniformBetter_constant_support G W hW y (by simpa [Set.mem_setOf_eq] using hypos)
+  simp [hx, hy, pow_two]
 
 /-- Computes the number of edges in a k clique-/
 lemma clique_size (W : FunToMax G)
@@ -2570,7 +2556,7 @@ lemma clique_size (W : FunToMax G)
   · rintro ⟨h_adj, hx, hy⟩
     rw [SimpleGraph.mem_edgeSet] at h_adj
     use (x, y)
-    simp [hx, hy, h_adj, mem_univ]
+    simp [hx, hy, mem_univ]
     exact G.ne_of_adj h_adj
   · rintro ⟨⟨a, b⟩, ⟨⟨a1, ha⟩, ⟨a2, hb⟩, hab⟩, hsym⟩
     have h_adj : G.Adj a b := hW (Finset.mem_filter.mpr ⟨a1, ha⟩) (Finset.mem_filter.mpr ⟨a2, hb⟩) hab
@@ -2585,12 +2571,11 @@ lemma computation (k : Nat) (hk : 0 < k) :
   have hk_ne : (k : ℝ) ≠ 0 := by exact_mod_cast Nat.pos_iff_ne_zero.mp hk
   have hk2_ne : (↑k ^ 2 : ℝ) ≠ 0 := pow_ne_zero 2 hk_ne
   field_simp [hk2_ne]
-  ring
 
 /-- Bound-/
 lemma bound (k q: Nat) (hk : 0 < k) (h : k ≤ q):
   (1/2 : ℝ)*(1 - (1/k)) ≤ (1 / 2) * (1 - (1 / q)) := by
-  rw [mul_le_mul_left (by linarith)]
+  rw [mul_le_mul_iff_right₀ (by linarith)]
   apply sub_le_sub_left
   apply div_le_div₀
   · linarith
@@ -2618,16 +2603,21 @@ theorem finale_bound (h0 : p ≥ 2) (h1 : G.CliqueFree p) (W : FunToMax G) : W.f
   apply le_trans (UniformBetter_fw_ge G _ (Better_forms_clique G W))
   -- f(w) in a uniform distributino is the sum of all vp of edges
   have sum_clique : (UniformBetter G _ (Better_forms_clique G W)).fw = ∑ e ∈ G.supEdgeFinset (Better G W), vp (UniformBetter G _ (Better_forms_clique G W)).w e := by
-    rw [FunToMax.fw]
-    rw [sum_over_support]
-    congr 1
-    dsimp [supEdgeFinset]
-    congr
-    ext x
-    apply @Sym2.inductionOn α (fun x => Sym2.inSupport G (UniformBetter G (Better G W) (Better_forms_clique G W)) x ↔ Sym2.inSupport G (Better G W) x)
-    intro a b
-    rw [Sym2.inSupport_explicit, Sym2.inSupport_explicit]
-    rw [← UniformBetter_support_equiv,← UniformBetter_support_equiv]
+    rw [FunToMax.fw, sum_over_support]
+    -- the supported edge sets coincide under UniformBetter
+    have supp_edges_eq :
+        G.supEdgeFinset (UniformBetter G (Better G W) (Better_forms_clique G W))
+          = G.supEdgeFinset (Better G W) := by
+      ext e
+      simp [SimpleGraph.supEdgeFinset]
+      intro _
+      apply
+        @Sym2.inductionOn α
+          (fun e => Sym2.inSupport G (UniformBetter G (Better G W) (Better_forms_clique G W)) e ↔ Sym2.inSupport G (Better G W) e) e
+      intro a b
+      simp [Sym2.inSupport_explicit,
+        UniformBetter_support_equiv G (Better G W) (Better_forms_clique G W)]
+    exact congrFun (congrArg Finset.sum supp_edges_eq) fun e => vp (UniformBetter G (Better G W) (Better_forms_clique G W)).w e
   -- every supported edge has value 1/k^2
   have edge_value := UniformBetter_edges_value G _ (Better_forms_clique G W)
   -- shows support really is a clique
@@ -2692,11 +2682,11 @@ theorem finale_bound (h0 : p ≥ 2) (h1 : G.CliqueFree p) (W : FunToMax G) : W.f
     · simp only [one_div]
       rw [inv_le_one₀]
       · dsimp [inner]
-        simp only [Nat.one_le_cast, inner]
+        simp only [Nat.one_le_cast]
         rw [Nat.succ_le]
         exact hk_pos
       · dsimp [inner]
-        simp only [Nat.cast_pos, inner]
+        simp only [Nat.cast_pos]
         exact hk_pos
   rw [NNReal.coe_inj] at h_lhs'
   dsimp [inner] at h_lhs'
@@ -2705,7 +2695,7 @@ theorem finale_bound (h0 : p ≥ 2) (h1 : G.CliqueFree p) (W : FunToMax G) : W.f
   rw [cast_help] at h_rhs
   dsimp at h_rhs
   have h_rhs' : NNReal.toReal (((inner p) - 1) * ((inner p) - 1 - 1) / 2 * (1 / ((inner p) - 1)) ^ 2) = NNReal.toReal (1 / 2 * (1 - 1 / ((inner p) - 1)) ) := by
-    simp only [NNReal.coe_mul, NNReal.coe_div, NNReal.coe_ofNat, NNReal.coe_inv, NNReal.coe_pow]
+    simp only [NNReal.coe_mul, NNReal.coe_div, NNReal.coe_ofNat, NNReal.coe_pow]
     rw [NNReal.coe_sub]
     · rw [NNReal.coe_sub]
       · rw [NNReal.coe_sub]
@@ -2722,9 +2712,9 @@ theorem finale_bound (h0 : p ≥ 2) (h1 : G.CliqueFree p) (W : FunToMax G) : W.f
             · dsimp [inner]
               rw [le_tsub_iff_left]
               · rw [show (1 : NNReal) + 1 = 2 by norm_num]
-                simp only [Nat.ofNat_le_cast, inner]
+                simp only [Nat.ofNat_le_cast]
                 exact h0
-              · simp only [Nat.one_le_cast, inner]
+              · simp only [Nat.one_le_cast]
                 rw [Nat.succ_le]
                 exact lt_trans hk_pos tec
             · rw [tsub_pos_iff_lt]
@@ -2768,7 +2758,7 @@ theorem finale_bound (h0 : p ≥ 2) (h1 : G.CliqueFree p) (W : FunToMax G) : W.f
       rw [inv_le_one₀]
       · rw [le_tsub_iff_left]
         · rw [show (1 : NNReal) + 1 = 2 by norm_num]
-          simp only [Nat.ofNat_le_cast, inner]
+          simp only [Nat.ofNat_le_cast]
           exact h0
         · simp only [Nat.one_le_cast]
           rw [Nat.succ_le]
@@ -2828,9 +2818,8 @@ theorem turans [Inhabited α]  (h0 : p ≥ 2) (h1 : G.CliqueFree p):
     swap
     · exact pow_pos (Nat.cast_pos.mpr (Fintype.card_pos_iff.mpr ⟨default⟩)) 2
     · rw [← NNReal.coe_le_coe] at this
-      simp only [NNReal.coe_natCast, NNReal.val_eq_coe,
-        inv_pow, card_univ, NNReal.coe_mul, NNReal.coe_div, NNReal.coe_ofNat,
-        NNReal.coe_inv, NNReal.coe_pow] at this
+      simp only [NNReal.coe_natCast, card_univ, NNReal.coe_mul, NNReal.coe_div, NNReal.coe_ofNat,
+        NNReal.coe_pow] at this
       rw [NNReal.coe_sub] at this
       · rw [NNReal.coe_sub] at this
         · rw [NNReal.coe_one] at this
