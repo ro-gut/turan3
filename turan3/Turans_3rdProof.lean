@@ -166,8 +166,7 @@ def Improve (W : FunToMax G) (loose gain : α) (h_neq : gain  ≠ loose) : FunTo
         have loose_filter : filter (fun x => x = loose) univ = {loose} := by
           ext x; simp[Finset.mem_filter, Finset.mem_univ]
         rw[gain_filter, loose_filter, Finset.sum_singleton, Finset.sum_singleton]
-        have compl_eq : ({gain} ∪ {loose})ᶜ = S := by ext x; simp [Finset.mem_compl, Finset.mem_singleton, S]; exact
-          And.comm
+        have compl_eq : ({gain} ∪ {loose})ᶜ = S := by ext x; simp [Finset.mem_compl, Finset.mem_singleton, S]; exact And.comm
         rw[compl_eq]
       · rw[Finset.disjoint_left]
         intros x hx h'x
