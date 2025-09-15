@@ -5,8 +5,8 @@ Authors: Rodrigo Gutierrez, Yves Jäckle
 -/
 
 import Mathlib.Topology.Basic
-
 import Mathlib
+
 variable {α : Type*} (G : SimpleGraph α)
 variable [Fintype α] [DecidableEq α] [DecidableRel G.Adj]
 
@@ -18,17 +18,18 @@ local notation "n" => Fintype.card α
 set_option linter.unusedSectionVars false
 set_option linter.unusedVariables false
 
-set_option autoImplicit true -- I need this∈v.4.18
+set_option autoImplicit true
 
 open Finset SimpleGraph
 
-/-- Structure FunToMax : Represents a weight function on the vertices of the graph that sums to 1.
-Mirroring the probability distribution in the informal proof-/
+/-- Structure FunToMax : Represents weight distribution on the vertex set, all weights
+sum up to 1.-/
 structure FunToMax (G : SimpleGraph α) [Fintype α] where
   w   : α → NNReal
   h_w : ∑ v∈(Finset.univ : Finset α), w v = 1
 
-/-- Definition vp : Computes the weight contribution of an edge -/
+/-- Computes the weight contribution of an edge multiplying the edge's vertice's
+weights-/
 def vp (w : α → NNReal) (e : Sym2 α) :=
   Quot.liftOn e (λ pair : α × α => w pair.1 * w pair.2)
     (by intros x y h; cases h;
@@ -46,33 +47,33 @@ end FunToMax
 
 -- section Section_1
 /-!
-## Section 1: Concentrating weight on a clique
+## Section 1: Concentrating weights on a clique
 
-From the written proof: starting from any weight function `W`, we “improve” it without decreasing `fw`
+Starting from any weight function `W`, we “improve” it without decreasing `fw`
 until its support is a clique.
 
-1. We have an improved wegith function `Better` with
+1. We have an better performing wegith distribution `Better` with
    • zeros preserved
    • support size = m
    • Better.fw ≥ W.fw
 
 2. `m` finds the minimal support size (for `Better`) we can achieve without decreasing the total edge weight `Better.fw ≥ W.fw`.
 
-3. Defining a function `Improve` we move all weight from one vertex `loose` to another `gain` (non adjacent).
+3. We define the operation `Improve` which moves all weight from one vertex `loose` to another `gain` (non adjacent).
    • `Improve_total_weight_nondec`: shoes the total value `fw` is equal or greater
    • `ImproveReducesSupportSize`: support size strictly decreases under `Improve`
 
-4. By minimality of `m`, `Better_forms_clique` shows the final support forms a clique.
+4. By minimality of `m`, `Better_forms_clique` shows by contradiction that the final support forms a clique.
 -/
 
 /--
 States that for any weight function `W : FunToMax G`, there exists a natural number `m` and a new weight
-function (called `better`) such that:
+function (`better`) such that:
   + The support of the new weight function is included in that of `W` (vertices with weight 0 remain 0 under `better`),
-  + The number of vertices with positive weight is exactly `m`, and
+  + The number of vertices with positive weight is exactly `m` (support size), and
   + The total edge weight of the new weight function is equal or greater than that of `W`.
 -/
-theorem exists_better_distribution (W : FunToMax G) :
+lemma exists_better_distribution (W : FunToMax G) :
   ∃ num : ℕ,
   ∃ better : FunToMax G,
     (∀ i, W.w i = 0 → better.w i = 0) ∧ -- support is included∈that of W
@@ -97,11 +98,11 @@ theorem exists_better_distribution (W : FunToMax G) :
 
 open Classical
 
-/-- This definition computes the smallest possible "m" satisfying the properties under `exists_better_distribution` for a weight function `W` -/
+/-- computes the smallest possible "m" satisfying the properties under `exists_better_distribution` for a weight function `W` -/
 noncomputable
 def m (W : FunToMax G) := Nat.find (exists_better_distribution G W)
 
-/-- Guarantees that for a distribution W, an "improved" one `better` exist where :
+/-- Guarantees that for a distribution W, an "improved" one (`better`) exists where :
 - vertices with weight 0 remain 0,
 - Support size (vertices with positive weight) is equal to `m` (smallest possible "m" satisfying `exists_better_distribution` for a weight function `W)
 - Has non decreasing total weight (`fw`) than the original distribution. -/
@@ -114,7 +115,7 @@ lemma exists_better_distribution_min_support (W : FunToMax G):
 
 /-- Returns an improved weight function under the conditions of `exists_better_distribution_min_support`
 - vertices with weight 0 remain 0,
-- Support size (vertices with positive weight) is equal to `m`
+- Support size (vertices with positive weight) is equal to `m` (minimal size)
 - Has non decreasing total weight (`fw`) than the original distribution..-/
 noncomputable
 def Better (W : FunToMax G) : FunToMax G := Classical.choose (exists_better_distribution_min_support G W)
@@ -655,7 +656,6 @@ This lemma shows that the total edge weight does not decrease under `Improve`, u
 - `Improve_unchanged_edge_sum`: shows all edges not incident to "loose" or "gain" remain unchanged.
 - `Improve_gain_contribution_increase`: shows that gain’s contribution increases by the weight of loose times the other values incident to "gain"
 - `Improve_loose_contribution_zero`: shows that loose’s new contribution is zero
-- `loose_edge_sum`: expresses the original contribution of loose  as `W.w loose * sum of its neighbors`.
 --/
 lemma Improve_total_weight_nondec (W : FunToMax G) (loose gain : α)
   (h : ∑ e∈(G.incidenceFinset gain).attach,
@@ -727,7 +727,7 @@ applies `Improve` to move all the weight from `loose` to `gain`.  By
 this contradicts the minimality of `Better`’s support size `m`.
 Therefore no such non‑adjacent pair exists.
 -/
-lemma Better_forms_clique (W : FunToMax G) :
+theorem Better_forms_clique (W : FunToMax G) :
   G.IsClique ((Finset.univ : Finset α).filter (fun i => (Better G W).w i > 0)) := by
   by_contra con
   dsimp [IsClique, Set.Pairwise] at con
@@ -769,23 +769,23 @@ lemma Better_forms_clique (W : FunToMax G) :
 
 -- section Section_2
 /-!
-Section 2: Second weight moving argument in a clique configuration
+Section 2:
 
 We aim to show that any non‑uniform weight distribution on a clique can be further improved by a small transfer:
 
 1. Define `Enhance` to move a tiny ε (with 0 < ε < W.w loose – W.w gain) from `loose` to `gain`.
 
-2. Proves with `Enhance_total_weight_nondec` that under `Enhance`:
+2. Proves with `Enhance_total_weightstricinc` that under `Enhance`:
    - the support remains the same clique,
    - only `loose` and `gain` change weight,
-   - the total edge‐weight `fw` does not decrease (and strictly increases unless W was already uniform).
-
--- Applying `Enhance`, will force all positive weights on the clique to become equal.-/
+   - the total edge‐weight `fw` is strictly increasing.
+-/
 
 /-- Constructs a new weight function by moving a small amount of weight `ε < W(loose) - W(gain)` from vertex loose to vertex gain
 assuming W.w gain < W.w loose. It preservers the total weight improving the weight function-/
 noncomputable
-def Enhance (W : FunToMax G) (loose gain : α) (h_lt : W.w gain < W.w loose)
+def Enhance
+  (W : FunToMax G) (loose gain : α) (h_lt : W.w gain < W.w loose)
   (ε : NNReal) (_ : 0 < ε) (elt : ε < W.w loose - W.w gain) : FunToMax G where
   w := fun i =>
           if i = loose
@@ -938,6 +938,7 @@ lemma Enhance_clique (W : FunToMax G) (loose gain : α)
   (h_lt : W.w gain < W.w loose) (ah : 0 < W.w gain)
   (ε : NNReal) (epos : 0 < ε) (elt : ε < W.w loose - W.w gain)
   (hc : G.IsClique ((Finset.univ : Finset α).filter (fun i => W.w i > 0))) :
+
   G.IsClique ((Finset.univ : Finset α).filter
               (fun i => (Enhance G W loose gain h_lt ε epos elt).w i > 0)) := by
     dsimp [IsClique]
@@ -1118,7 +1119,7 @@ def inci_loose_gain_full (W : FunToMax G) (loose gain : α) (h_neq : gain ≠ lo
     (incidence_loose_gain G W loose gain h_neq) {s(loose,gain)}
     (disjoint_inci_singleton G W loose gain h_neq)
 
-/-- Shows that if gain and loose are adjacent (and their weights are positive), then the supported edge set can be
+/-- Shows that if vertices in the support gain and loose are adjacent, then the supported edge set can be
 decomposed as a disjoint union of `inci_loose_gain_full` and its complement-/
 lemma supported_edge_partition (W : FunToMax G) (loose gain : α) (h_adj : G.Adj gain loose) (h_supp : W.w loose > 0 ∧ W.w gain > 0) :
   G.supEdgeFinset W =
@@ -1662,7 +1663,7 @@ lemma Enhance_sum_loose_gain_equal (W : FunToMax G) (loose gain : α) (h_lt : W.
     (the_bij_surj G W loose gain h_lt ε epos elt hc h_supp)
     (the_bij_same G W loose gain h_lt ε epos elt hc h_supp)
 
-/-- Shows that, for the edges in the  graph's support not in the set
+/-- Shows that, for the edges in the  graph's support outside the set
 `inci_loose_gain_full`, the total sum of edge values remains unchanged under `Enhance`. -/
 lemma Enhance_sum_complement_unchanged (W : FunToMax G) (loose gain : α) (h_lt : W.w gain < W.w loose)
   (ε : NNReal) (epos : 0 < ε) (elt : ε < W.w loose - W.w gain) :
@@ -1812,36 +1813,38 @@ to loose to edges incid. to gain, we show that the change is 0.
 - with `Enhance_edge_gainloose_increase` we show that the only change comes from the edge `gain-loose`
 Therefore concluding that `Enhance` forms an strictly greater weight distribution
 -/
-lemma Enhance_total_weight_nondec (W : FunToMax G) (loose gain : α) (h_lt : W.w gain < W.w loose)
-  (h_adj : G.Adj gain loose) (h_supp : W.w loose > 0 ∧ W.w gain > 0)
+theorem Enhance_total_weight_stricinc
+  (W : FunToMax G) (loose gain : α)
+  (h_lt : W.w gain < W.w loose) (h_adj : G.Adj gain loose)
+  (h_supp : W.w loose > 0 ∧ W.w gain > 0)
   (ε : NNReal) (epos : 0 < ε) (elt : ε < W.w loose - W.w gain)
   (hc : G.IsClique ((Finset.univ : Finset α).filter (fun i => W.w i > 0))) :
-  W.fw ≤ (Enhance G W loose gain h_lt ε epos elt).fw := by
+  W.fw < (Enhance G W loose gain h_lt ε epos elt).fw := by
   simp_rw [FunToMax.fw]
-  rw [sum_over_support G W, supported_edge_partition G W loose gain h_adj h_supp, sum_disjUnion]
-  have todo : (Enhance G W loose gain h_lt ε epos elt).w loose > 0 ∧ (Enhance G W loose gain h_lt ε epos elt).w gain > 0 := by
-    rw [← Enhance_support_unchanged, ← Enhance_support_unchanged] ; exact h_supp ; exact h_supp.2 ; exact h_supp.2
-  rw [sum_over_support G (Enhance G W loose gain h_lt ε epos elt),← Enhance_support_edges_same G W loose gain h_lt ε epos elt h_supp]
+  rw [sum_over_support G W,
+      supported_edge_partition G W loose gain h_adj h_supp,
+      sum_disjUnion]
+  rw [sum_over_support G (Enhance G W loose gain h_lt ε epos elt),
+      ← Enhance_support_edges_same G W loose gain h_lt ε epos elt h_supp]
   nth_rewrite 2 [supported_edge_partition G W loose gain h_adj h_supp]
   rw [sum_disjUnion]
-  apply add_le_add
+  apply add_lt_add_of_lt_of_le
   · dsimp [inci_loose_gain_full]
-    rw [sum_disjUnion,sum_disjUnion]
-    apply add_le_add
+    rw [sum_disjUnion, sum_disjUnion]
+    apply add_lt_add_of_le_of_lt
     · dsimp [incidence_loose_gain]
-      rw [sum_disjUnion,sum_disjUnion]
+      rw [sum_disjUnion, sum_disjUnion]
       rw [Enhance_gain_sum G W loose gain h_lt ε epos elt]
       rw [Enhance_loose_sum G W loose gain h_lt ε epos elt]
       rw [Enhance_sum_loose_gain_equal G W loose gain h_lt ε epos elt hc h_supp]
       rw [add_assoc]
-      rw [add_tsub_cancel_of_le] -- seems to have done le_refl automaticly
+      rw [add_tsub_cancel_of_le]
       rw [← Enhance_sum_loose_gain_equal G W loose gain h_lt ε epos elt hc h_supp]
       rw [mul_sum]
       nth_rewrite 2 [← sum_attach]
       apply sum_le_sum
       apply epsilon_weight_bound G W loose gain h_lt ε epos elt
     · rw [sum_singleton, sum_singleton]
-      apply le_of_lt -- so the bound is actually strict
       apply Enhance_edge_gainloose_increase
       · apply neq_of_W_lt G h_lt
       · exact h_supp
@@ -1864,7 +1867,7 @@ Given any weight function `W` whose support is a clique here we:
     - strictly showing `min < max ↔ avg < max` and `min < avg`
 
  3. set `the_ε := max_weight − (1/|support|) > 0` (when `min < max`), and define
-    another improved weight function `Enhanced` that moves `ε` from `argmax` to `argmin`
+    another improved weight function `Enhanced` that moves this defined `ε` from `argmax` to `argmin`.
 
  4. show `Enhanced` preserves total weight, support, and clique structure AND
     strictly increases the number of vertices with weight exactly `1/|support|`
@@ -1873,7 +1876,7 @@ Given any weight function `W` whose support is a clique here we:
 --/
 
 /-- Helper lemma Shows that the support of a weight distribution is nonempty -/
-lemma support_size_nonempty (W : FunToMax G) : ((Finset.univ : Finset α).filter (fun i => W.w i > 0)).card ≠ 0 := by
+lemma supp_size_pos (W : FunToMax G) : ((Finset.univ : Finset α).filter (fun i => W.w i > 0)).card ≠ 0 := by
   intro h_empty
   have all_zero : ∀ i, W.w i = 0 :=
     fun i =>
@@ -1935,7 +1938,7 @@ lemma exists_best_uniform (W : FunToMax G)
         · rw [hi.2]
           let j := (#(filter (fun i => W.w i > 0) univ))
           have j_nonzero : j ≠ 0 :=
-            @support_size_nonempty α G (inferInstance : Fintype α)
+            @supp_size_pos α G (inferInstance : Fintype α)
             (inferInstance : DecidableEq α) (inferInstance : DecidableRel G.Adj) W
           have j_pos : j > 0 := Nat.pos_of_ne_zero j_nonzero
           rw [div_eq_mul_inv]
@@ -1957,13 +1960,12 @@ lemma exists_best_uniform (W : FunToMax G)
         · rfl
         · exact le_refl W.fw)
 
-/-- For a given weight function W, whose support forms a clique (hW), UniformBetter gives a new weight function (using `exists_best_uniform`)
-with same support but where every vertex has the same weight (1/m, where m is the support size). Total edge
-value does not decrease -/
+/-- UniformBetter gives a new weight function (via exists_best_uniform) with the same support, clique structure, and improved edge weight.
+In later lemmas (UniformBetter_constant_support), we prove that this distribution is in fact uniform on the support. -/
 noncomputable
 def UniformBetter (W : FunToMax G) (hW : G.IsClique ((Finset.univ : Finset α).filter (fun i => W.w i > 0))) : FunToMax G := Classical.choose (exists_best_uniform G W hW)
 
-/-- Ensures if a vertex is zero in W if and only if it is zero in `UniformBetter` W -/
+/-- zeros preserved : Ensures if a vertex is zero in W if and only if it is zero in `UniformBetter` W -/
 lemma UniformBetter_support_zero (W : FunToMax G) (hW : G.IsClique ((Finset.univ : Finset α).filter (fun i => W.w i > 0))) (i : α) : W.w i = 0 ↔ (UniformBetter G W hW).w i = 0 :=
   (Classical.choose_spec (exists_best_uniform G W hW)).1 i
 
@@ -1980,7 +1982,6 @@ lemma UniformBetter_fw_ge (W : FunToMax G) (hW : G.IsClique ((Finset.univ : Fins
 lemma UniformBetter_clique (W : FunToMax G) (hW : G.IsClique ((Finset.univ : Finset α).filter (fun i => W.w i > 0))) :
    G.IsClique ((Finset.univ : Finset α).filter (fun i => (UniformBetter G W hW).w i > 0)) :=
   (Classical.choose_spec (exists_best_uniform G W hW)).2.1
-
 
 /-- Assures the support of a weight function is non empty-/
 lemma FunToMax.supp_nonempty (W : FunToMax G) : ((Finset.univ : Finset α).filter (fun i => W.w i > 0)).Nonempty := by
@@ -2249,7 +2250,7 @@ lemma FunToMax.min_eq_max  (W : FunToMax G) (h : W.min_weight G = W.max_weight G
     exact sumS
   have card_nonzero : (S.card : NNReal) ≠ 0 := by
     apply Nat.cast_ne_zero.2
-    exact support_size_nonempty G W
+    exact supp_size_pos G W
   intros v hv
   rw [each_eq_min v hv]
   have : W.min_weight G = 1 / (S.card : NNReal) := by
@@ -2288,8 +2289,12 @@ lemma arg_help {W : FunToMax G} (h_con : W.w (W.argmin G) <  W.w (W.argmax G)) :
 /-- Defines `Enhanced` weight function : transfering weight from the argmax vertex `loose` to the argmin
 vertex `gain`, using the previous in Section 2 defined function `Enhance` by the amount defined `the_ε`. -/
 noncomputable
-def Enhanced (W : FunToMax G) (h_con : W.w (W.argmin G) <  W.w (W.argmax G)) :=
-  (Enhance G W (W.argmax G) (W.argmin G) h_con (the_ε G W) (the_ε_pos G W (arg_help G h_con)) (the_ε_lt G W (arg_help G h_con)))
+def Enhanced (W : FunToMax G)
+  (h_con : W.w (W.argmin G) <  W.w (W.argmax G)) :=
+  Enhance G W (W.argmax G) (W.argmin G) h_con
+    (the_ε G W)
+    (the_ε_pos G W (arg_help G h_con))
+    (the_ε_lt G W (arg_help G h_con))
 
 /-- Shows that under `Enhanced` every vertex that originally had weight 1/|support|, remains with the same weight -/
 lemma Enhanced_unaffceted (W : FunToMax G) (h_con : W.w (W.argmin G) <  W.w (W.argmax G)) :
@@ -2404,7 +2409,7 @@ lemma clique_support_adjacent (W : FunToMax G)
   · exact lol
 
 /--
-Shows that under the `UniformBetter`, every vertex in the support has an equal weight
+Shows that under the `UniformBetter` distribution, every vertex in the support has an equal weight
 of 1/|support|.
 -/
 lemma UniformBetter_constant_support (W : FunToMax G)
@@ -2415,7 +2420,6 @@ lemma UniformBetter_constant_support (W : FunToMax G)
   have q := le_iff_eq_or_lt.mp ((UniformBetter G W hW).min_weight_le_max_weight G)
   cases' q with q h_con
   · have := (UniformBetter G W hW).min_eq_max G q v
-    have support_subset := UniformBetter_support_zero G W hW
     have h_subset := UniformBetter_support_zero G W hW
     have h_eq : {i | (UniformBetter G W hW).w i > 0} = {i | W.w i > 0} := by
       ext i
@@ -2476,7 +2480,7 @@ lemma UniformBetter_constant_support (W : FunToMax G)
         have : gain ∈ ((Finset.univ : Finset α).filter (fun j => eW.w j > 0)) :=
         FunToMax.argmin_mem (G:=G) (W:=eW)
         exact (Finset.mem_filter.1 this).2
-      let ε   : NNReal := the_ε G eW
+      let ε : NNReal := the_ε G eW
       have h_lt : eW.w gain < eW.w loose := by
         dsimp [gain, loose] at *; simpa [FunToMax.argmin_weight, FunToMax.argmax_weight] using h_con
       have epos : 0 < ε := by exact the_ε_pos G eW h_con
@@ -2517,11 +2521,11 @@ lemma UniformBetter_constant_support (W : FunToMax G)
         have h_neq : gain ≠ loose := by exact neq_of_W_lt G h_lt
         have h_adj : G.Adj gain loose := clique_support_adjacent (G:=G) (W:=eW) hc gain loose h_gain_pos h_loose_pos h_neq
         have h2 : eW.fw ≤ (Enhanced G eW h_lt).fw := by
-          have hE := Enhance_total_weight_nondec (G:=G) (W:=eW) (loose:=loose) (gain:=gain) h_lt h_adj h_supp ε epos elt hc
-          exact hE
+          have hE := Enhance_total_weight_stricinc (G:=G) (W:=eW) (loose:=loose) (gain:=gain) h_lt h_adj h_supp ε epos elt hc
+          exact le_of_lt hE
         exact le_trans h1 h2
 
-/-- Shows that after `UniformBetter` every edge connecting vertices in the support has edge value equal to
+/-- Shows that after `UniformBetter` every supported edge has value equal to
 the square of the uniform weight. -/
 lemma UniformBetter_edges_value (W : FunToMax G)
   (hW : G.IsClique ((Finset.univ : Finset α).filter (fun i => W.w i > 0))) :
@@ -2548,7 +2552,7 @@ lemma UniformBetter_edges_value (W : FunToMax G)
     simp[Quot.lift] at vp_pos
     exact vp_pos.1
 
-/-- Computes the size of the clique induced by the support of W by counting the edges in the support-/
+/-- Computes the number of edges in a k clique-/
 lemma clique_size (W : FunToMax G)
   (hW : G.IsClique ((Finset.univ : Finset α).filter (fun i => W.w i > 0))) :
   let k := ((Finset.univ : Finset α).filter (fun i => W.w i > 0)).card
@@ -2585,7 +2589,7 @@ lemma computation (k : Nat) (hk : 0 < k) :
 
 /-- Bound-/
 lemma bound (k q: Nat) (hk : 0 < k) (h : k ≤ q):
-  (1/2 : ℝ)*(1 - (1/k)) ≤ (1/2)*(1 - (1/q)) := by
+  (1/2 : ℝ)*(1 - (1/k)) ≤ (1 / 2) * (1 - (1 / q)) := by
   rw [mul_le_mul_left (by linarith)]
   apply sub_le_sub_left
   apply div_le_div₀
@@ -2600,7 +2604,8 @@ lemma bound_real (k p : Nat) (hk : 0 < k) (hkp : k ≤ p) :
     (1 : ℝ) / 2 * (1 - 1 / ↑k) ≤ 1 / 2 * (1 - 1 / ↑p) :=
   by exact_mod_cast bound k p hk hkp
 
-theorem cast_help : @Nat.cast ℝ Real.instNatCast = fun x => (@Nat.cast NNReal AddMonoidWithOne.toNatCast x).val := by
+/- Auxiliary lemma: casting help-/
+lemma cast_help : @Nat.cast ℝ Real.instNatCast = fun x => (@Nat.cast NNReal AddMonoidWithOne.toNatCast x).val := by
   apply funext
   intro x
   induction' x with x ih
@@ -2608,7 +2613,7 @@ theorem cast_help : @Nat.cast ℝ Real.instNatCast = fun x => (@Nat.cast NNReal 
   · simp only [Nat.cast_add, Nat.cast_one, NNReal.val_eq_coe, NNReal.coe_add, NNReal.coe_natCast,
     NNReal.coe_one]
 
-lemma finale_bound (h0 : p ≥ 2) (h1 : G.CliqueFree p) (W : FunToMax G) : W.fw ≤ ((p-1) * ((p-1) - 1) / 2 ) * (1/(p-1))^2 := by
+theorem finale_bound (h0 : p ≥ 2) (h1 : G.CliqueFree p) (W : FunToMax G) : W.fw ≤ ((p-1) * ((p-1) - 1) / 2 ) * (1/(p-1))^2 := by
   apply le_trans (Better_non_decr G W)
   apply le_trans (UniformBetter_fw_ge G _ (Better_forms_clique G W))
   -- f(w) in a uniform distributino is the sum of all vp of edges
@@ -2646,7 +2651,7 @@ lemma finale_bound (h0 : p ≥ 2) (h1 : G.CliqueFree p) (W : FunToMax G) : W.fw 
 --------------------------
   set k := #(filter (fun i => 0 < (Better G W).w i) univ) with hkdef
   have hk_pos : 0 < k := by
-    have hne := support_size_nonempty (G := G) (W := Better G W)
+    have hne := supp_size_pos (G := G) (W := Better G W)
     have : ((Finset.univ : Finset α).filter (fun i => 0 < (Better G W).w i)).card = k := by
       simp [hkdef]
     have : k ≠ 0 := by
@@ -2657,7 +2662,6 @@ lemma finale_bound (h0 : p ≥ 2) (h1 : G.CliqueFree p) (W : FunToMax G) : W.fw 
   have hp1_pos : 0 < p - 1 := by
     have hp : 0 < p := (Nat.zero_lt_two.trans_le h0)
     exact Nat.zero_lt_sub_of_lt h0
-  have k_ne_zero : (k : ℝ) ≠ 0 := by exact_mod_cast Nat.pos_iff_ne_zero.mp hk_pos
   have div_ok : 2 ∣ k * (k - 1) := by exact Nat.dvd_of_mod_eq_zero (Nat.even_iff.mp (Nat.even_mul_pred_self k))
   have h_div : ↑(k * (k - 1) / 2) = (k : ℝ) * (k - 1) / 2 := by
     have two_ne_zero : (2 : ℝ) ≠ 0 := by norm_num
@@ -2796,7 +2800,7 @@ the number of edges times the square of the uniform vertex weight.-/
 lemma UnivFun_weight [Inhabited α] : (UnivFun G).fw = #E * (1/#(univ : Finset α))^2 := by
   dsimp [UnivFun, FunToMax.fw]
   have h : ∀ e ∈ G.edgeFinset, vp (fun x : α => 1 / ↑n) e = (1 / #(univ : Finset α))^2 := by
-    intro e he; revert he; rw [vp]
+    intro e; rw [vp]
     refine Quot.inductionOn e ?_; intro ⟨a, b⟩ _
     dsimp; rw [@sq]
   rw [Finset.sum_eq_card_nsmul]
@@ -2818,6 +2822,8 @@ theorem turans [Inhabited α]  (h0 : p ≥ 2) (h1 : G.CliqueFree p):
   rw [inv_pow] at this
   swap
   · exact Nat.zero_lt_sub_of_lt h0
+  swap
+  · exact Nat.le_of_lt (Nat.lt_of_lt_of_le (by norm_num) h0)
   · rw [mul_inv_le_iff₀] at this
     swap
     · exact pow_pos (Nat.cast_pos.mpr (Fintype.card_pos_iff.mpr ⟨default⟩)) 2
@@ -2848,6 +2854,6 @@ theorem turans [Inhabited α]  (h0 : p ≥ 2) (h1 : G.CliqueFree p):
       · rw [← Nat.cast_one]
         rw [Nat.cast_le]
         linarith
-  · exact Nat.le_of_lt (Nat.lt_of_lt_of_le (by norm_num) h0)
+
 
 #print axioms turans
