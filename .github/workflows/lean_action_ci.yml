@@ -1,4 +1,4 @@
-name: Lean Action CI
+name: CI
 on:
   push:
   pull_request:
@@ -8,14 +8,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Set up Lean toolchain
-        uses: leanprover/lean-action@v1
-        with:
-          toolchain: leanprover/lean4:v4.24.0-rc1
-          auto-cache: true
+
+      - uses: leanprover/lean-action@v1
+
       - name: Resolve deps
         run: lake update
+
       - name: Get mathlib cache
-        run: lake exe cache get
+        run: lake exe cache get || true
+
       - name: Build
         run: lake build
