@@ -263,37 +263,6 @@ lemma Improve_gain_loose_disjoint {loose gain : α} (h_neq : gain ≠ loose) (h_
     rw [adj_iff_exists_edge]
     exact ⟨h_neq,⟨x,xg.1,xg.2,xl.2 ⟩⟩
 
-/-- With the help of `Improve_gain_loose_disjoint`, introduces the set `affectedEdges` as the disjoint union of all edges
-that are incident to the vertex “gain” and all edges that are incident to “loose.”
-Shows that the whole edge Set (`G.edgeFinset`) can be partitioned as the disjoint union of
-`affectedEdges` and `G.edgeFinset` \ `affectedEdges`. -/
-lemma Improve_edgeFinset_partition (loose gain : α)
-  (h_neq : gain ≠ loose) (h_adj : ¬ G.Adj gain loose) :
-  let affectedEdges :=
-    disjUnion
-      (G.incidenceFinset gain)
-      (G.incidenceFinset loose)
-      (Improve_gain_loose_disjoint G h_neq h_adj)
-  G.edgeFinset = disjUnion affectedEdges (G.edgeFinset \ affectedEdges) (disjoint_sdiff) := by
-  intro affectedEdges
-  have h_disj_union : affectedEdges = G.incidenceFinset gain ∪ G.incidenceFinset loose :=
-    Finset.disjUnion_eq_union _ _ _
-  ext e
-  simp only [Finset.mem_disjUnion, Finset.mem_union, Finset.mem_sdiff, h_disj_union]
-  apply Iff.intro
-  · intro he
-    by_cases h' : e ∈ G.incidenceFinset gain ∨ e ∈ G.incidenceFinset loose
-    · exact Or.inl h'
-    · exact Or.inr ⟨he, h'⟩
-  · intro h
-    rcases h with (h_left | h_right)
-    rcases h_left with (h_gain | h_loose)
-    · apply SimpleGraph.incidenceFinset_subset at h_gain
-      exact h_gain
-    · apply SimpleGraph.incidenceFinset_subset at h_loose
-      exact h_loose
-    · exact h_right.left
-
 /-- Using the same definition  `affectedEdges`, translates the partition into an equality of Sums.
 Shows that the toal edge weight is equal to
 - The sum over the edges incident to gain
@@ -2290,7 +2259,7 @@ def Enhanced (W : FunToMax G)
     (the_ε_lt G W (arg_help G h_con))
 
 /-- Shows that under `Enhanced` every vertex that originally had weight 1/|support|, remains with the same weight -/
-lemma Enhanced_unaffceted (W : FunToMax G) (h_con : W.w (W.argmin G) <  W.w (W.argmax G)) :
+lemma Enhanced_unaffected (W : FunToMax G) (h_con : W.w (W.argmin G) <  W.w (W.argmax G)) :
   ∀ v ∈ ((Finset.univ : Finset α).filter (fun i => W.w i = 1 / ((Finset.univ : Finset α).filter (fun i => W.w i > 0)).card)),
     (Enhanced G W h_con).w v = 1 / ((Finset.univ : Finset α).filter (fun i => W.w i > 0)).card := by
   intro v hv
@@ -2350,7 +2319,7 @@ lemma Enhanced_inc_uniform_count (W : FunToMax G) (h_con : W.w (W.argmin G) <  W
     simp only [T, Finset.mem_filter, Finset.mem_univ, true_and]
     rw [← Enhanced_effect_argmax G W h_con]
     rw [Enhanced_effect_argmax G W h_con]
-    rw [Enhanced_unaffceted G W h_con i]
+    rw [Enhanced_unaffected G W h_con i]
     rw [mem_filter]
     refine' ⟨ by apply mem_univ, _ ⟩
     apply hi_val
@@ -2368,7 +2337,7 @@ lemma Enhanced_inc_uniform_count (W : FunToMax G) (h_con : W.w (W.argmin G) <  W
       exact h_con
   exact card_lt_card h_ssub
 
-/-- Helper lemma: Relates the support of the `UniformBetter` weight function to that of the original weight function `W`. THAT
+/-- Helper lemma: Relates the support of the `UniformBetter` weight distribution to that of the original weight function `W`. That
 is having W, whose support forms a clique, UniformBetter support also forms a clique -/
 lemma UniformBetter_support_equiv (W : FunToMax G) (hW : G.IsClique ↑(filter (fun i ↦ W.w i > 0) univ)) (i : α) :
   W.w i > 0 ↔ (UniformBetter G W hW).w i > 0:= by
