@@ -16,58 +16,96 @@
 \begin{definition}[A better distribution]
     \label{def:Better}
     \lean{Better}
-Given a weight function $W$, a choice of a weight function $\texttt{Better}\;W$ with $\mathrm{supp}(\texttt{Better}\;W)\subseteq\mathrm{supp}(W)$ and $W.\mathrm{fw}\le (\texttt{Better}\;W).\mathrm{fw}$.
+Given a weight function \(W\), define \(w^* := \texttt{Better}(W)\) such that \(\mathrm{supp}(w^*) \subseteq \mathrm{supp}(W)\) and 
+\[
+W.\mathrm{fw} \leq w^*.\mathrm{fw}.
+\]
+In words: \(w^*\) is a distribution improving or preserving the edge weight and supported within that of \(W\).
 \end{definition}
 
 \begin{definition}[Single transfer]
     \label{def:Improve}
     \lean{Improve}
-Given distinct vertices $\texttt{loose}\ne\texttt{gain}$, the weight function $\texttt{Improve}\;W\;\texttt{loose}\;\texttt{gain}$ moves a small amount from $\texttt{loose}$ to $\texttt{gain}$.
+Given distinct vertices \(v_j \neq v_i\), define \(w' := \texttt{Improve}(W, v_j, v_i)\) by transferring a small amount of weight from \(v_j\) (loose) to \(v_i\) (gain):
+\[
+w'(v_j) = W(v_j) - \varepsilon, \quad w'(v_i) = W(v_i) + \varepsilon,
+\]
+for some small \(\varepsilon > 0\), and \(w'(v) = W(v)\) for \(v \neq v_i, v_j\).
+In words: weight is shifted from \(v_j\) to \(v_i\) preserving total weight.
 \end{definition}
 
 \begin{lemma}[Sum splitting along the partition]
     \label{lem:Improve_partition_sum_split}
     \lean{Improve_partition_sum_split}
-Summing \(\texttt{vp}\) over \(E\) splits as the sum over the gain-incidence, plus the loose-incidence, plus the complement.
+The sum over edges \(E\) of the function \(\texttt{vp}\) splits as
+\[
+\sum_{e \in E} \texttt{vp}(w', e) = \sum_{\substack{e \in E \\ e \ni v_i}} \texttt{vp}(w', e) + \sum_{\substack{e \in E \\ e \ni v_j}} \texttt{vp}(w', e) + \sum_{\substack{e \in E \\ e \not\ni v_i, v_j}} \texttt{vp}(w', e).
+\]
+In words: the total sum decomposes into parts incident to \(v_i\), incident to \(v_j\), and the rest.
 \end{lemma}
 
 \begin{lemma}[Gain-incidence increases]
     \label{lem:Improve_gain_contribution_increase}
     \lean{Improve_gain_contribution_increase}
-    The sum on the gain-incidence increases by \(W.w\;\texttt{loose}\) times the sum of the other-endpoint weights incident to `gain`.
+The increment in the sum over edges incident to \(v_i\) is
+\[
+\sum_{e \ni v_i} \texttt{vp}(w', e) - \sum_{e \ni v_i} \texttt{vp}(W, e) = \varepsilon \sum_{v_k \in N(v_i)} W(v_k),
+\]
+where \(N(v_i)\) is the neighborhood of \(v_i\).
+In words: the gain vertex's contribution increases by \(\varepsilon\) times the sum of weights of its neighbors.
 \end{lemma}
 
 \begin{lemma}[Loose-incidence becomes zero]
     \label{lem:Improve_loose_contribution_zero}
     \lean{Improve_loose_contribution_zero}
-    The sum on the loose-incidence is zero after \texttt{Improve}.
+The sum over edges incident to \(v_j\) after the transfer satisfies
+\[
+\sum_{e \ni v_j} \texttt{vp}(w', e) = 0.
+\]
+In words: the loose vertex's incident edge contributions vanish after the transfer.
 \end{lemma}
 
 \begin{lemma}[Unchanged complement]
     \label{lem:Improve_unchanged_edge_sum}
     \lean{Improve_unchanged_edge_sum}
-    Edges outside the union of gain/loose incidences keep the same value under \texttt{Improve}.
+For edges \(e\) not incident to \(v_i\) or \(v_j\),
+\[
+\texttt{vp}(w', e) = \texttt{vp}(W, e).
+\]
+In words: edges outside the gain and loose neighborhoods remain unchanged.
 \end{lemma}
 
-\begin{lemma}[Transfer does not decrease $\mathrm{fw}$]
+\begin{lemma}[Transfer does not decrease \(\mathrm{fw}\)]
     \label{lem:Improve_total_weight_nondec}
     \lean{Improve_total_weight_nondec}
     \uses{lem:Improve_partition_sum_split, lem:Improve_unchanged_edge_sum, lem:Improve_gain_contribution_increase, lem:Improve_loose_contribution_zero}
-Under the neighbourhood condition used in the code, $W.\mathrm{fw}\le (\texttt{Improve}\;W\;\texttt{loose}\;\texttt{gain}).\mathrm{fw}$.
+Under the neighborhood condition (i.e., appropriate adjacency relations), we have
+\[
+W.\mathrm{fw} \leq w'.\mathrm{fw}.
+\]
+In words: the total edge weight does not decrease after applying \texttt{Improve}.
 \end{lemma}
 
 \begin{lemma}[Improve strictly reduces support]
     \label{lem:Improve_support_strictly_reduced}
     \lean{Improve_support_strictly_reduced}
     \uses{def:Improve}
-If the neighbourhood condition fails, the transfer strictly reduces the support of $W$.
+If the neighborhood condition fails, then
+\[
+|\mathrm{supp}(w')| < |\mathrm{supp}(W)|.
+\]
+In words: the transfer strictly reduces the number of vertices with positive weight.
 \end{lemma}
 
 \begin{theorem}[Support of \texttt{Better} is a clique]
     \label{thm:Better_forms_clique}
     \lean{Better_forms_clique}
     \uses{def:Improve, lem:Improve_total_weight_nondec, lem:Improve_support_strictly_reduced}
-The support of $(\texttt{Better}\,W)$ forms a clique: every two distinct vertices of positive weight are adjacent in $G$.
+The support of \(w^* := \texttt{Better}(W)\) forms a clique:
+\[
+\forall v_a, v_b \in \mathrm{supp}(w^*), v_a \neq v_b \implies \{v_a, v_b\} \in E.
+\]
+In words: every two distinct vertices with positive weight in \(w^*\) are adjacent.
 \end{theorem}
 
 
@@ -80,86 +118,128 @@ The support of $(\texttt{Better}\,W)$ forms a clique: every two distinct vertice
   \label{def:Enhance}
   \lean{Enhance}
   \leanok
-  Defines the operation of transferring weight from one vertex to another,
-  provided the two vertices are non-adjacent. This operation is central to the
-  second phase of the proof, where we later reduce the support size while ensuring
-  the edge weight does not decrease.
+Given distinct non-adjacent vertices \(v_j, v_i\), define \(w' := \texttt{Enhance}(W, v_j, v_i, \varepsilon)\) by transferring \(\varepsilon > 0\) weight from \(v_j\) to \(v_i\):
+\[
+w'(v_j) = W(v_j) - \varepsilon, \quad w'(v_i) = W(v_i) + \varepsilon, \quad w'(v) = W(v) \text{ for } v \neq v_i, v_j,
+\]
+with the condition \(\{v_j, v_i\} \notin E\).
+In words: Enhance transfers weight between non-adjacent vertices to increase edge weight.
 \end{definition}
 
 \begin{lemma}[Sum over support]
   \label{lem:sum_over_support}
   \lean{sum_over_support}
   \leanok
-  Expresses the total vertex weight as the sum of weights over the support.
+The total vertex weight satisfies
+\[
+\sum_{v \in \mathrm{supp}(W)} W(v) = 1.
+\]
+In words: the weights sum to 1 over the support.
 \end{lemma}
 
 \begin{lemma}[Supported edge partition]
   \label{lem:supported_edge_partition}
   \lean{supported_edge_partition}
   \leanok
-  Splits the edge set into edges incident to the chosen vertices (“gain” and “loose”)
-  and the remaining edges.
+The edge set \(E\) partitions as
+\[
+E = E_{v_i} \cup E_{v_j} \cup E_{\mathrm{rest}},
+\]
+where
+\[
+E_{v_i} = \{e \in E : v_i \in e\}, \quad E_{v_j} = \{e \in E : v_j \in e\}, \quad E_{\mathrm{rest}} = E \setminus (E_{v_i} \cup E_{v_j}).
+\]
+In words: edges are split into those incident to \(v_i\), to \(v_j\), and the rest.
 \end{lemma}
 
 \begin{lemma}[Enhance gain sum]
   \label{lem:Enhance_gain_sum}
   \lean{Enhance_gain_sum}
   \leanok
-  Shows that under \ref{def:Enhance}, the contribution of the gain vertex’s edges
-  increases by exactly the transferred weight multiplied by the sum of its neighbor weights.
+Under \autoref{def:Enhance}, the change in the sum over edges incident to \(v_i\) satisfies
+\[
+\sum_{e \in E_{v_i}} \texttt{vp}(w', e) - \sum_{e \in E_{v_i}} \texttt{vp}(W, e) = \varepsilon \sum_{v_k \in N(v_i)} W(v_k).
+\]
+In words: the gain vertex's edge contribution increases by \(\varepsilon\) times the sum of its neighbors' weights.
 \end{lemma}
 
 \begin{lemma}[Enhance loose sum]
   \label{lem:Enhance_loose_sum}
   \lean{Enhance_loose_sum}
   \leanok
-  Shows that under \ref{def:Enhance}, the contribution of the loose vertex’s edges
-  becomes zero.
+Under \autoref{def:Enhance}, the sum over edges incident to \(v_j\) satisfies
+\[
+\sum_{e \in E_{v_j}} \texttt{vp}(w', e) = 0.
+\]
+In words: the loose vertex's incident edge contributions become zero after Enhance.
 \end{lemma}
 
 \begin{definition}[Bijection inside the clique]
     \label{def:the_bij}
     \lean{the_bij}
     \leanok
-    Provides a bijection between the supported incidence edges at `loose` (without s(loose, gain)) and the supported incidence edges at `gain` (without s(loose, gain))
+Define a bijection
+\[
+\phi: \{ e \in E_{v_j} \setminus \{s(v_j, v_i)\} \} \to \{ e \in E_{v_i} \setminus \{s(v_j, v_i)\} \}
+\]
+mapping edges incident to \(v_j\) (except \(s(v_j,v_i)\)) to edges incident to \(v_i\) (except \(s(v_j,v_i)\)).
+In words: this bijection pairs edges incident to \(v_j\) with edges incident to \(v_i\) within the clique.
 \end{definition}
 
 \begin{lemma}[Bijection preserves]
   \label{lem:the_bij_same}
   \lean{the_bij_same}
   \leanok
-   Shows that the bijection preserves the "other" weight: for any edge from the supported incidence set of loose, the weigh at the "other" vertex equals that in its image uneder the bijection
+For any edge \(e\) incident to \(v_j\) (excluding \(s(v_j, v_i)\)), the "other" vertex weight satisfies
+\[
+W(\mathrm{other}(e, v_j)) = W(\mathrm{other}(\phi(e), v_i)).
+\]
+In words: the bijection preserves weights at the other endpoints of edges.
 \end{lemma}
 
 \begin{lemma}[Loose/gain equality]
   \label{lem:Enhance_sum_loose_gain_equal}
   \lean{Enhance_sum_loose_gain_equal}
   \leanok
-  Shows that the total weight moved from the loose vertex to the gain vertex
-  balances correctly in the edge contributions.
   \uses{def:the_bij, lem:the_bij_same}
+The total weight transfer balances edge contributions:
+\[
+\sum_{e \in E_{v_j}} \texttt{vp}(w', e) + \sum_{e \in E_{v_i}} \texttt{vp}(w', e) \geq \sum_{e \in E_{v_j}} \texttt{vp}(W, e) + \sum_{e \in E_{v_i}} \texttt{vp}(W, e).
+\]
+In words: the combined edge contributions of loose and gain vertices do not decrease after Enhance.
 \end{lemma}
 
 \begin{lemma}[Complement unchanged]
   \label{lem:Enhance_sum_complement_unchanged}
   \lean{Enhance_sum_complement_unchanged}
   \leanok
-  Shows that edges not incident to gain or loose are unaffected by \ref{def:Enhance}.
+For edges \(e \in E_{\mathrm{rest}}\),
+\[
+\texttt{vp}(w', e) = \texttt{vp}(W, e).
+\]
+In words: edges not incident to \(v_i\) or \(v_j\) remain unaffected by Enhance.
 \end{lemma}
 
 \begin{lemma}[Edge contribution increase]
   \label{lem:Enhance_edge_gainloose_increase}
   \lean{Enhance_edge_gainloose_increase}
   \leanok
-  Proves that the net contribution from gain and loose together does not decrease.
+The net edge contribution satisfies
+\[
+\sum_{e \in E_{v_i} \cup E_{v_j}} \texttt{vp}(w', e) \geq \sum_{e \in E_{v_i} \cup E_{v_j}} \texttt{vp}(W, e).
+\]
+In words: the total contribution from gain and loose vertices does not decrease.
 \end{lemma}
 
 \begin{lemma}[Support edges unchanged]
   \label{lem:Enhance_support_edges_same}
   \lean{Enhance_support_edges_same}
   \leanok
-  Shows that for vertices outside of gain and loose, the contributions remain identical
-  before and after applying \ref{def:Enhance}.
+For any vertex \(v \notin \{v_i, v_j\}\), the edge contributions satisfy
+\[
+\sum_{e \ni v} \texttt{vp}(w', e) = \sum_{e \ni v} \texttt{vp}(W, e).
+\]
+In words: vertices outside gain and loose retain their edge contributions after Enhance.
 \end{lemma}
 
 \begin{theorem}[Enhance increases edge weight]
@@ -173,8 +253,11 @@ The support of $(\texttt{Better}\,W)$ forms a clique: every two distinct vertice
         lem:Enhance_sum_complement_unchanged,
         lem:Enhance_edge_gainloose_increase,
         lem:Enhance_support_edges_same}
-  Establishes that applying \ref{def:Enhance} strictly increases the total
-  edge weight
+Applying \texttt{Enhance} strictly increases the total edge weight:
+\[
+w'.\mathrm{fw} > W.\mathrm{fw}.
+\]
+In words: the Enhance operation strictly improves the total edge weight.
 \end{theorem}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -182,19 +265,26 @@ The support of $(\texttt{Better}\,W)$ forms a clique: every two distinct vertice
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Equalizing the weights on the clique - EnhanceD}
 
-\begin{definition}[Carefully chosen $\varepsilon$]
+\begin{definition}[Carefully chosen \(\varepsilon\)]
   \label{def:the_eps}
   \lean{the_eps}
   \leanok
-  Define $\displaystyle \mathsf{the\_\varepsilon} := \max - \frac{1}{|\mathrm{supp}|}$.
+Define
+\[
+\mathsf{the\_\varepsilon} := \max \left\{ \varepsilon > 0 \mid w'(v_j) = W(v_j) - \varepsilon \geq 0, \quad w'(v_i) = W(v_i) + \varepsilon \leq \frac{1}{|\mathrm{supp}(W)|} \right\}.
+\]
+In words: \(\mathsf{the\_\varepsilon}\) is the maximal \(\varepsilon\) transferring weight from the argmax vertex \(v_j\) to the argmin vertex \(v_i\) without violating support constraints.
 \end{definition}
 
 \begin{definition}[Maximising the number of uniform vertices]
   \label{def:max_uniform_support}
   \lean{max_uniform_support}
   \leanok
-  Define the maximal $m$ achievable by any distribution with support contained in that of $W$
-  and with at least as much edge weight.
+Define
+\[
+m := \max \{ k \mid \exists w \text{ with } \mathrm{supp}(w) \subseteq \mathrm{supp}(W),\ w.\mathrm{fw} \geq W.\mathrm{fw},\ \text{and } w(v) = \frac{1}{k} \text{ for at least } k \text{ vertices} \}.
+\]
+In words: \(m\) is the maximal number of vertices with uniform weight \(1/k\) achievable without decreasing edge weight.
 \end{definition}
 
 \begin{lemma}[Best uniform distribution exists]
@@ -202,7 +292,8 @@ The support of $(\texttt{Better}\,W)$ forms a clique: every two distinct vertice
   \lean{exists_best_uniform}
   \uses{def:max_uniform_support}
   \leanok
-  There exists a distribution realising this maximum with edge weight $\ge W.\mathrm{fw}$.
+There exists \(w_M\) with \(\mathrm{supp}(w_M) \subseteq \mathrm{supp}(W)\), \(w_M.\mathrm{fw} \geq W.\mathrm{fw}\), and with at least \(m\) vertices having weight \(1/m\).
+In words: a maximiser \(w_M\) achieving the maximal uniform vertex count exists.
 \end{lemma}
 
 \begin{definition}[UniformBetter]
@@ -210,7 +301,7 @@ The support of $(\texttt{Better}\,W)$ forms a clique: every two distinct vertice
   \lean{UniformBetter}
   \uses{lem:exists_best_uniform}
   \leanok
-  A choice of a maximiser from \autoref{lem:exists_best_uniform}.
+Define \(w_M := \texttt{UniformBetter}(W)\) as such a maximiser with maximal uniform support.
 \end{definition}
 
 \begin{definition}[Enhanced]
@@ -218,35 +309,56 @@ The support of $(\texttt{Better}\,W)$ forms a clique: every two distinct vertice
   \lean{Enhanced}
   \uses{def:Enhance, def:the_eps}
   \leanok
-  Defines the \verb|Enhanced| weight function: transferring weight from the argmax vertex \verb|loose| to the argmin vertex \verb|gain|, using \autoref{def:Enhance} with the amount \(\mathsf{the\_\varepsilon}\).
+Define
+\[
+w^+ := \texttt{Enhanced}(W) := \texttt{Enhance}(W, v_j, v_i, \mathsf{the\_\varepsilon}),
+\]
+where \(v_j = \arg\max_{v} W(v)\), \(v_i = \arg\min_{v} W(v)\).
+In words: Enhanced transfers maximal weight from the heaviest to the lightest vertex.
 \end{definition}
 
 \begin{lemma}
     \label{lem:Enhanced_unaffected}
     \lean{Enhanced_unaffected}
     \uses{def:Enhance, def:Enhanced}
-    Shows that under \verb|Enhanced| every vertex that originally had weight 1/|support|, remains with the same weight
+For any vertex \(v\) with \(W(v) = \frac{1}{|\mathrm{supp}(W)|}\),
+\[
+w^+(v) = W(v).
+\]
+In words: vertices already at uniform weight remain unchanged under Enhanced.
 \end{lemma}
 
 \begin{lemma}
     \label{lem:Enhanced_effect_argmax}
     \lean{Enhanced_effect_argmax}
     \uses{def:Enhance, def:Enhanced}
-    Shows that the weight at the argmax vertex becomes the target uniform weight after \verb|Enhanced|.
+The weight at the argmax vertex \(v_j\) after Enhanced satisfies
+\[
+w^+(v_j) = \frac{1}{|\mathrm{supp}(W)|}.
+\]
+In words: Enhanced reduces the argmax vertex's weight to the uniform level.
 \end{lemma}
 
 \begin{lemma}
     \label{lem:Enhanced_inc_uniform_count}
     \lean{Enhanced_inc_uniform_count}
     \uses{def:Enhanced, lem:Enhanced_effect_argmax, lem:Enhanced_unaffected}
-    Shows that the number of uniform weight vertices increases after \verb|Enhanced|.
+The number of vertices with weight \(\frac{1}{|\mathrm{supp}(W)|}\) increases after Enhanced:
+\[
+|\{ v : w^+(v) = 1/|\mathrm{supp}(W)| \}| > |\{ v : W(v) = 1/|\mathrm{supp}(W)| \}|.
+\]
+In words: Enhanced increases the count of uniform weight vertices.
 \end{lemma}
 
 \begin{lemma}
     \label{lem:UniformBetter_support_equiv}
     \uses{def:UniformBetter}
     \leanok
-    The support of $W$ forms a clique if and only if the support at UniformBetter also forms a clique.
+The support of \(W\) forms a clique if and only if the support of \(w_M = \texttt{UniformBetter}(W)\) forms a clique:
+\[
+\mathrm{supp}(W) \text{ clique } \iff \mathrm{supp}(w_M) \text{ clique}.
+\]
+In words: the clique property is preserved by UniformBetter.
 \end{lemma}
 
 \begin{lemma}[Uniform weights on the support]
@@ -254,7 +366,11 @@ The support of $(\texttt{Better}\,W)$ forms a clique: every two distinct vertice
   \lean{UniformBetter_constant_support}
   \uses{def:UniformBetter, def:Enhanced, lem:UniformBetter_support_equiv, lem:Enhanced_inc_uniform_count, thm:Enhance_total_weight_stricinc}
   \leanok
-  Every support vertex of $\texttt{UniformBetter}\,W$ has weight $1/|\mathrm{supp}|$.
+For every vertex \(v \in \mathrm{supp}(w_M)\),
+\[
+w_M(v) = \frac{1}{|\mathrm{supp}(w_M)|}.
+\]
+In words: the weights of all support vertices in UniformBetter are uniform.
 \end{lemma}
 
 \begin{lemma}[Edge values under UniformBetter]
@@ -262,7 +378,11 @@ The support of $(\texttt{Better}\,W)$ forms a clique: every two distinct vertice
   \lean{UniformBetter_edges_value}
   \uses{lem:UniformBetter_constant_support}
   \leanok
-  Every supported edge has value $(1/|\mathrm{supp}|)^2$.
+For any edge \(e = \{v_a, v_b\}\) with \(v_a, v_b \in \mathrm{supp}(w_M)\),
+\[
+\texttt{vp}(w_M, e) = \left(\frac{1}{|\mathrm{supp}(w_M)|}\right)^2.
+\]
+In words: every supported edge has value equal to the square of the uniform vertex weight.
 \end{lemma}
 
 \begin{lemma}[Edge count in a clique]
@@ -270,14 +390,22 @@ The support of $(\texttt{Better}\,W)$ forms a clique: every two distinct vertice
   \lean{clique_size}
   \uses{lem:UniformBetter_facts}
   \leanok
-  If the support has size $k$, then the number of supported edges is $k(k-1)/2$.
+If \(|\mathrm{supp}(w_M)| = k\), then
+\[
+|\{ e \in E : e \subseteq \mathrm{supp}(w_M) \}| = \frac{k(k-1)}{2}.
+\]
+In words: the supported edges form a complete graph on \(k\) vertices.
 \end{lemma}
 
 \begin{lemma}[A light computation]
   \label{lem:computation}
   \lean{computation}
   \leanok
-  $\displaystyle \big(k(k-1)/2\big)\cdot(1/k)^2=\tfrac12\,(1-1/k)$ for $k>0$.
+For \(k > 0\),
+\[
+\frac{k(k-1)}{2} \cdot \left(\frac{1}{k}\right)^2 = \frac{1}{2}\left(1 - \frac{1}{k}\right).
+\]
+In words: the total edge weight for a clique with uniform weights simplifies to \(\frac{1}{2}(1 - \frac{1}{k})\).
 \end{lemma}
 
 \begin{lemma}[Monotonicity of the bound]
@@ -285,33 +413,47 @@ The support of $(\texttt{Better}\,W)$ forms a clique: every two distinct vertice
   \lean{bound}
   \lean{bound_real}
   \leanok
-  The function $k\mapsto \tfrac12(1-\tfrac1k)$ is nondecreasing in $k$ (for $k\ge1$).
+The function
+\[
+f(k) := \frac{1}{2}\left(1 - \frac{1}{k}\right)
+\]
+is nondecreasing for \(k \geq 1\).
+In words: the bound increases as the clique size increases.
 \end{lemma}
 
 \begin{theorem}[Final bound inside a clique]
   \label{lem:finale_bound}
   \lean{finale_bound}
-  \uses{lem:Better_non_decr, lem:Better_forms_clique, lem:UniformBetter_fw_ge, def:UniformBetter, lem:UniformBetter_edges_value, lem:UniformBetter_clique, lem:bound_real, lem:computation, lem:clique_size, lem:UniformBetter_edges_value}
+  \uses{lem:Better_forms_clique, lem:Better_non_decr, lem:Better_forms_clique, lem:UniformBetter_fw_ge, def:UniformBetter, lem:UniformBetter_edges_value, lem:UniformBetter_clique, lem:bound_real, lem:computation, lem:clique_size, lem:UniformBetter_edges_value}
   \leanok
-  If $W$ is supported on a clique of size $k\le p-1$, then
-  \[
-    W.\mathrm{fw}\;\le\;\tfrac12\,(1-1/(p-1)).
-  \]
+If \(W\) is supported on a clique of size \(k \leq p-1\), then
+\[
+W.\mathrm{fw} \leq \frac{1}{2}\left(1 - \frac{1}{p-1}\right).
+\]
+In words: the total edge weight is bounded by the Turán bound for cliques of size less than \(p\).
 \end{theorem}
 
 \begin{definition}[Uniform weights over all vertices]
   \label{def:UnivFun}
   \lean{UnivFun}
   \leanok
-  The uniform vertex-weight function assigning $1/|V|$ to each vertex.
+Define
+\[
+\texttt{UnivFun}(G)(v) := \frac{1}{|V|} \quad \forall v \in V.
+\]
+In words: the uniform vertex weight function assigns equal weight \(1/|V|\) to every vertex.
 \end{definition}
 
-\begin{lemma}[Total weight under $\texttt{UnivFun}$]
+\begin{lemma}[Total weight under \(\texttt{UnivFun}\)]
   \label{lem:UnivFun_weight}
   \lean{UnivFun_weight}
   \uses{def:UnivFun}
   \leanok
-  $(\texttt{UnivFun}\,G).\mathrm{fw}=\#E\cdot(1/|V|)^2$.
+The total edge weight satisfies
+\[
+(\texttt{UnivFun}(G)).\mathrm{fw} = |E| \cdot \left(\frac{1}{|V|}\right)^2.
+\]
+In words: the total edge weight under uniform vertex weights equals the number of edges times the square of the uniform weight.
 \end{lemma}
 
 \begin{theorem}[Turán's Theorem]
@@ -319,8 +461,9 @@ The support of $(\texttt{Better}\,W)$ forms a clique: every two distinct vertice
   \lean{turans}
   \uses{def:UnivFun, lem:UnivFun_weight, lem:finale_bound, lem:computation}
   \leanok
-  Let $p\ge 2$ and let $G$ be a $p$-clique-free graph. Then
-  \[
-    \#E \;\le\; \tfrac12\Bigl(1-\tfrac1{p-1}\Bigr)\,(\#V)^2.
-  \]
+Let \(p \geq 2\) and let \(G\) be a \(p\)-clique-free graph. Then
+\[
+|E| \leq \frac{1}{2}\left(1 - \frac{1}{p-1}\right) |V|^2.
+\]
+In words: the number of edges in a \(p\)-clique-free graph is bounded by Turán's theorem.
 \end{theorem}
