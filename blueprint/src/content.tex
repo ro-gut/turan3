@@ -185,9 +185,9 @@ The support of $(\texttt{Better}\,W)$ forms a clique: every two distinct vertice
 
 \begin{definition}[Carefully chosen $\varepsilon$]
   \label{def:the_e}
-  \lean{the_ε}
+  \lean{the_e}
   \leanok
-  Define $\displaystyle \the_ε := \max\!-\!1/|\mathrm{supp}|$.
+  Define $\displaystyle \mathsf{the\_\varepsilon} := \max - \frac{1}{|\mathrm{supp}|}$.
 \end{definition}
 
 \begin{definition}[Maximising the number of uniform vertices]
@@ -217,9 +217,9 @@ The support of $(\texttt{Better}\,W)$ forms a clique: every two distinct vertice
 \begin{definition}[Enhanced]
   \label{def:Enhanced}
   \lean{Enhanced}
-  \uses{def:Enhance, def:the_ε}
+  \uses{def:Enhance, def:the_e}
   \leanok
-  Defines `Enhanced` weight function : transfering weight from the argmax vertex `loose` to the argmin vertex `gain`, using the previous in Section 2 defined function `Enhance` by the amount defined `the_ε`
+  Defines `Enhanced` weight function : transfering weight from the argmax vertex `loose` to the argmin vertex `gain`, using the previous in Section 2 defined function `Enhance` by the amount defined `the_\varepsilon`
 \end{definition}
 
 \begin{lemma}
@@ -253,7 +253,7 @@ The support of $(\texttt{Better}\,W)$ forms a clique: every two distinct vertice
 \begin{lemma}[Uniform weights on the support]
   \label{lem:UniformBetter_constant_support}
   \lean{UniformBetter_constant_support}
-  \uses{lem:UniformBetter, def:Enhanced, lem:UniformBetter_support_equiv, lem:Enhanced_inc_uniform_count, thm:Enhance_total_weight_stricinc}
+  \uses{def:UniformBetter, def:Enhanced, lem:UniformBetter_support_equiv, lem:Enhanced_inc_uniform_count, thm:Enhance_total_weight_stricinc}
   \leanok
   Every support vertex of $\texttt{UniformBetter}\,W$ has weight $1/|\mathrm{supp}|$.
 \end{lemma}
