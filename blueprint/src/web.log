@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.5.15)  16 SEP 2025 20:15
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.5.15)  17 SEP 2025 00:39
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -271,8 +271,7 @@ File: l3backend-xetex.def 2024-05-08 L3 backend support: XeTeX
 \l__pdf_internal_box=\box55
 \g__pdf_backend_annotation_int=\count295
 \g__pdf_backend_link_int=\count296
-)
-No file web.aux.
+) (./web.aux)
 \openout1 = `web.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 24.
@@ -298,6 +297,7 @@ LaTeX Font Info:    ... okay on input line 24.
 Package hyperref Info: Link coloring OFF on input line 24.
 \@outlinefile=\write3
 \openout3 = `web.out'.
+
 
 
 Package hyperref Warning: Rerun to get /PageLabels entry.
@@ -1704,7 +1704,7 @@ my insertion and my current dilemma will both disappear.
 
 ./content.tex:188: Undefined control sequence.
 l.188   \lean
-             {the_ε}
+             {the_e}
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
 misspelled it (e.g., `\hobx'), type `I' and the correct
@@ -1715,12 +1715,12 @@ and I'll forget about whatever was undefined.
 <inserted text> 
                 $
 l.188   \lean{the_
-                  ε}
+                  e}
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
 ./content.tex:188: Extra }, or forgotten $.
-l.188   \lean{the_ε}
+l.188   \lean{the_e}
                     
 I've deleted a group-closing symbol because it seems to be
 spurious, as in `$x}$'. But perhaps the } is legitimate and
@@ -1737,21 +1737,14 @@ misspelled it (e.g., `\hobx'), type `I' and the correct
 spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
-Missing character: There is no ε ("3B5) in font cmmi7!
 ./content.tex:190: Missing $ inserted.
 <inserted text> 
                 $
 l.190   Define $\displaystyle
-                              \the_ε := \max\!-\!1/|\mathrm{supp}|$.
+                              \mathsf{the\_\varepsilon} := \max - \frac{1}{|...
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
-./content.tex:190: You can't use `subscript character _' after \the.
-l.190   Define $\displaystyle \the_
-                                   ε := \max\!-\!1/|\mathrm{supp}|$.
-I'm forgetting what you said and using zero instead.
-
-Missing character: There is no ε ("3B5) in font cmmi10!
 ./content.tex:191: Missing } inserted.
 <inserted text> 
                 }
@@ -2006,7 +1999,7 @@ and I'll forget about whatever was undefined.
 
 ./content.tex:220: Undefined control sequence.
 l.220   \uses
-             {def:Enhance, def:the_ε}
+             {def:Enhance, def:the_e}
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
 misspelled it (e.g., `\hobx'), type `I' and the correct
@@ -2017,12 +2010,12 @@ and I'll forget about whatever was undefined.
 <inserted text> 
                 $
 l.220   \uses{def:Enhance, def:the_
-                                   ε}
+                                   e}
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
 ./content.tex:220: Extra }, or forgotten $.
-l.220   \uses{def:Enhance, def:the_ε}
+l.220   \uses{def:Enhance, def:the_e}
                                      
 I've deleted a group-closing symbol because it seems to be
 spurious, as in `$x}$'. But perhaps the } is legitimate and
@@ -2059,15 +2052,13 @@ l.223 \end{definition}
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
-Missing character: There is no ε ("3B5) in font cmmi7!
-Missing character: There is no ε ("3B5) in font cmmi7!
 
-Overfull \hbox (77.42905pt too wide) in paragraph at lines 219--223
+Overfull \hbox (81.22316pt too wide) in paragraph at lines 219--223
 []\TU/lmr/bx/n/10 Definition 26 \TU/lmr/m/n/10 (Enhanced)\TU/lmr/bx/n/10 . \TU/lmr/m/n/10 Enhanced def:Enhance, def:the$[]\OML/cmm/m/it/10 Defines\OT1/cmr/m/n/10 `\OML/cmm/m/it/10 Enhanced\OT1/cmr/m/n/10 `\OML/cmm/m/it/10 weightfunction \OT1/cmr/m/n/10 :
  []
 
 
-Overfull \hbox (341.09483pt too wide) in paragraph at lines 219--223
+Overfull \hbox (344.87297pt too wide) in paragraph at lines 219--223
 \OML/cmm/m/it/10 transferingweightfromtheargmaxvertex\OT1/cmr/m/n/10 `\OML/cmm/m/it/10 loose\OT1/cmr/m/n/10 `\OML/cmm/m/it/10 totheargminvertex\OT1/cmr/m/n/10 `\OML/cmm/m/it/10 gain\OT1/cmr/m/n/10 `\OML/cmm/m/it/10 ; usingthepreviousinSection\OT1/cmr/m/n/10 2\OML/cmm/m/it/10 definedfunction\OT1/cmr/m/n/10 `\OML/cmm/m/it/10 Enhance\OT1/cmr/m/n/10 `\OML/cmm/m/it/10 bytheamountdefined\OT1/cmr/m/n/10 `\OML/cmm/m/it/10 the[]\OT1/cmr/m/n/10 `
  []
 
@@ -2076,6 +2067,9 @@ Underfull \hbox (badness 10000) in paragraph at lines 219--223
 
  []
 
+
+
+[2]
 ./content.tex:223: Missing } inserted.
 <inserted text> 
                 }
@@ -2087,9 +2081,6 @@ With luck, this will get me unwedged. But if you
 really didn't forget anything, try typing `2' now; then
 my insertion and my current dilemma will both disappear.
 
-
-
-[2]
 ./content.tex:227: Undefined control sequence.
 l.227     \lean
                {Enhanced_unaffected}
@@ -2319,8 +2310,8 @@ really didn't forget anything, try typing `2' now; then
 my insertion and my current dilemma will both disappear.
 
 ./content.tex:248: Undefined control sequence.
-l.248     \use
-              {def:UniformBetter}
+l.248     \uses
+               {def:UniformBetter}
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
 misspelled it (e.g., `\hobx'), type `I' and the correct
@@ -2364,7 +2355,7 @@ deleted material, e.g., by typing `I$}'.
 
 ./content.tex:256: Undefined control sequence.
 l.256   \uses
-             {lem:UniformBetter, def:Enhanced, lem:UniformBetter_support_equ...
+             {def:UniformBetter, def:Enhanced, lem:UniformBetter_support_equ...
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
 misspelled it (e.g., `\hobx'), type `I' and the correct
@@ -2413,7 +2404,7 @@ I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
 
-Overfull \hbox (891.6683pt too wide) in paragraph at lines 255--259
+Overfull \hbox (890.88472pt too wide) in paragraph at lines 255--259
 []\TU/lmr/bx/n/10 Lemma 31 \TU/lmr/m/n/10 (Uniform weights on the support)\TU/lmr/bx/n/10 . \TU/lmr/m/it/10 UniformBetter$[]\OML/cmm/m/it/10 onstant[]upport[]Everysupportvertexof$\TU/lmtt/m/it/10 UniformBetter\TU/lmr/m/it/10 W$\OML/cmm/m/it/10 hasweight$\TU/lmr/m/it/10 1/|supp|$\OML/cmm/m/it/10 :
  []
 
@@ -2937,12 +2928,12 @@ Package rerunfilecheck Info: Checksums for `web.out':
 (rerunfilecheck)             After:  22B2F50AD11F4F20AE1832DBD3D3826E;793.
  ) 
 Here is how much of TeX's memory you used:
- 9105 strings out of 473832
- 139633 string characters out of 5729481
- 534649 words of memory out of 5000000
- 32057 multiletter control sequences out of 15000+600000
- 565693 words of font info for 82 fonts, out of 8000000 for 9000
+ 9113 strings out of 473832
+ 139723 string characters out of 5729481
+ 534640 words of memory out of 5000000
+ 32061 multiletter control sequences out of 15000+600000
+ 566598 words of font info for 85 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 72i,6n,79p,597b,346s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 72i,6n,79p,597b,412s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
 Output written on web.pdf (5 pages).
