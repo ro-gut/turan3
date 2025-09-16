@@ -1828,7 +1828,7 @@ Given any weight function `W` whose support is a clique here we:
     - `avg ≤ max`, `min ≤ avg`,
     - strictly showing `min < max ↔ avg < max` and `min < avg`
 
- 3. set `the_ε := max_weight − (1/|support|) > 0` (when `min < max`), and define
+ 3. set `the_eps := max_weight − (1/|support|) > 0` (when `min < max`), and define
     another improved weight function `Enhanced` that moves this defined `ε` from `argmax` to `argmin`.
 
  4. show `Enhanced` preserves total weight, support, and clique structure AND
@@ -2222,20 +2222,20 @@ lemma FunToMax.min_eq_max  (W : FunToMax G) (h : W.min_weight G = W.max_weight G
 
 -- Section 3.5 The last weight transfer
 
-/--Defines ε (the_ε) as the difference between maximum weight and the average weight 1/|support| -/
+/--Defines ε (the_eps) as the difference between maximum weight and the average weight 1/|support| -/
 noncomputable
-def the_ε (W : FunToMax G) :=
+def the_eps (W : FunToMax G) :=
   (W.max_weight G) - (1 / ((Finset.univ : Finset α).filter (fun i => W.w i > 0)).card)
 
 /-- Shows that ε is positive if the min. and max. weight are distinct -/
-lemma the_ε_pos (W : FunToMax G) (h : W.min_weight G < W.max_weight G) : 0 < the_ε G W := by
+lemma the_eps_pos (W : FunToMax G) (h : W.min_weight G < W.max_weight G) : 0 < the_eps G W := by
   have ineq := @FunToMax.avg_lt_max _ _ _ _ _ W h
   exact tsub_pos_of_lt ineq
 
 /-- Shows that ε is less than the difference between the weights between argmax argmin vertices -/
-lemma the_ε_lt (W : FunToMax G) (h : W.min_weight G < W.max_weight G) :
-  the_ε G W < W.w (W.argmax G) - W.w (W.argmin G) := by
-  unfold the_ε
+lemma the_eps_lt (W : FunToMax G) (h : W.min_weight G < W.max_weight G) :
+  the_eps G W < W.w (W.argmax G) - W.w (W.argmin G) := by
+  unfold the_eps
   rw [FunToMax.argmax_weight]
   rw [tsub_lt_tsub_iff_left_of_le]
   · rw [FunToMax.argmin_weight]
@@ -2249,14 +2249,14 @@ lemma arg_help {W : FunToMax G} (h_con : W.w (W.argmin G) <  W.w (W.argmax G)) :
   by rw [← W.argmin_weight, ← W.argmax_weight] ; exact h_con
 
 /-- Defines `Enhanced` weight function : transfering weight from the argmax vertex `loose` to the argmin
-vertex `gain`, using the previous in Section 2 defined function `Enhance` by the amount defined `the_ε`. -/
+vertex `gain`, using the previous in Section 2 defined function `Enhance` by the amount defined `the_eps`. -/
 noncomputable
 def Enhanced (W : FunToMax G)
   (h_con : W.w (W.argmin G) <  W.w (W.argmax G)) :=
   Enhance G W (W.argmax G) (W.argmin G) h_con
-    (the_ε G W)
-    (the_ε_pos G W (arg_help G h_con))
-    (the_ε_lt G W (arg_help G h_con))
+    (the_eps G W)
+    (the_eps_pos G W (arg_help G h_con))
+    (the_eps_lt G W (arg_help G h_con))
 
 /-- Shows that under `Enhanced` every vertex that originally had weight 1/|support|, remains with the same weight -/
 lemma Enhanced_unaffected (W : FunToMax G) (h_con : W.w (W.argmin G) <  W.w (W.argmax G)) :
@@ -2276,8 +2276,8 @@ lemma Enhanced_unaffected (W : FunToMax G) (h_con : W.w (W.argmin G) <  W.w (W.a
     have eqMax : W.max_weight = c := by
       rw [← FunToMax.argmax_weight G W]
       exact wM_eq_c
-    have zero_eps : the_ε G W = 0 := by
-      dsimp [the_ε]
+    have zero_eps : the_eps G W = 0 := by
+      dsimp [the_eps]
       rw [eqMax, hc]
       exact tsub_self c
     rw[zero_eps, tsub_zero]
@@ -2296,7 +2296,7 @@ lemma Enhanced_effect_argmax (W : FunToMax G) (h_con : W.w (W.argmin G) <  W.w (
   (Enhanced G W h_con).w (W.argmax G) = 1 / ((Finset.univ : Finset α).filter (fun i => W.w i > 0)).card := by
   dsimp [Enhanced,Enhance]
   rw [if_pos rfl]
-  dsimp [the_ε]
+  dsimp [the_eps]
   rw [FunToMax.argmax_weight]
   rw [tsub_tsub_assoc]
   · rw [tsub_self,zero_add]
@@ -2421,9 +2421,9 @@ lemma UniformBetter_constant_support (W : FunToMax G)
                       (fun i => (UniformBetter G W hW).w i > 0)) := FunToMax.argmin_mem (G := G) (W := UniformBetter G W hW)
             exact (Finset.mem_filter.1 hmem).2
           exact h_gain_pos            )
-        (the_ε G (UniformBetter G W hW))
-        (by exact the_ε_pos G (UniformBetter G W hW) h_con)
-        (by exact the_ε_lt G (UniformBetter G W hW) h_con)
+        (the_eps G (UniformBetter G W hW))
+        (by exact the_eps_pos G (UniformBetter G W hW) h_con)
+        (by exact the_eps_lt G (UniformBetter G W hW) h_con)
       rw [this, xdef.2]
       exact one_div_pos.mpr (Nat.cast_pos.mpr (card_pos.mpr ⟨v, by
         simp only [mem_filter, mem_univ, true_and]
@@ -2440,11 +2440,11 @@ lemma UniformBetter_constant_support (W : FunToMax G)
         have : gain ∈ ((Finset.univ : Finset α).filter (fun j => eW.w j > 0)) :=
         FunToMax.argmin_mem (G:=G) (W:=eW)
         exact (Finset.mem_filter.1 this).2
-      let ε : NNReal := the_ε G eW
+      let ε : NNReal := the_eps G eW
       have h_lt : eW.w gain < eW.w loose := by
         dsimp [gain, loose] at *; simpa [FunToMax.argmin_weight, FunToMax.argmax_weight] using h_con
-      have epos : 0 < ε := by exact the_ε_pos G eW h_con
-      have elt  : ε < eW.w loose - eW.w gain := by exact the_ε_lt G eW h_con
+      have epos : 0 < ε := by exact the_eps_pos G eW h_con
+      have elt  : ε < eW.w loose - eW.w gain := by exact the_eps_lt G eW h_con
       have hc : G.IsClique ((Finset.univ : Finset α).filter (fun i => eW.w i > 0)) := (UniformBetter_clique (G:=G) (W:=W) (hW:=hW))
       split_ands
       · intro i

@@ -1,5 +1,5 @@
 # Fdb version 4
-["pdflatex"] 1758063508.94306 "/Users/ro_solocode/Documents/UNI/BA/turan3/blueprint/src/web.tex" "web.pdf" "web" 1758063509.82009 2
+["pdflatex"] 1758064619.47661 "/Users/ro_solocode/Documents/UNI/BA/turan3/blueprint/src/web.tex" "web.pdf" "web" 1758064620.59323 2
   "/Users/ro_solocode/Documents/UNI/BA/turan3/blueprint/src/web.tex" 1757972836.06787 680 41815fc8ae647f5c0dc84888f58355e4 ""
   "/usr/local/texlive/2025/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/local/texlive/2025/texmf-dist/fonts/tfm/adobe/zapfding/pzdr.tfm" 1136768653 1528 f853c4d1b4e0550255e02831fdc8496f ""
@@ -69,11 +69,11 @@
   "/usr/local/texlive/2025/texmf-var/web2c/xetex/xelatex.fmt" 1747289541 5639808 ac67aa08fa48f3b8732787a64d78d6f1 ""
   "/usr/local/texlive/2025/texmf.cnf" 1741450484 577 418a7058ec8e006d8704f60ecd22c938 ""
   "blueprint.sty" 1757972836.05432 64 041de65dd253d01ad50ada0ef6772cd2 ""
-  "content.tex" 1758063507.5687 12041 43122daa77ee270b1c65e01991398437 ""
+  "content.tex" 1758064619.85004 12047 02db2c57e1e629aaef2d8c76b8cde938 ""
   "macros/common.tex" 1757972836.06066 820 60fafcc3aa944a5e60030581a943ef6b ""
   "macros/web.tex" 1757972836.0625 260 cdb7c9ac756cf5815dc98c2bb10a4f5b ""
-  "web.aux" 1758063509.34067 3780 38517cba365859175c6ba476f9ad0f50 "pdflatex"
-  "web.out" 1758063509.34142 793 22b2f50ad11f4f20ae1832dbd3d3826e "pdflatex"
+  "web.aux" 1758064620.06656 3782 8172b2d6dec4e6db566784f9a75ece8e "pdflatex"
+  "web.out" 1758064620.06727 793 22b2f50ad11f4f20ae1832dbd3d3826e "pdflatex"
   "web.tex" 1757972836.06787 680 41815fc8ae647f5c0dc84888f58355e4 ""
   (generated)
   "web.aux"

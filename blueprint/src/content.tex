@@ -183,8 +183,8 @@ The support of $(\texttt{Better}\,W)$ forms a clique: every two distinct vertice
 \section{Equalizing the weights on the clique - EnhanceD}
 
 \begin{definition}[Carefully chosen $\varepsilon$]
-  \label{def:the_e}
-  \lean{the_e}
+  \label{def:the_eps}
+  \lean{the_eps}
   \leanok
   Define $\displaystyle \mathsf{the\_\varepsilon} := \max - \frac{1}{|\mathrm{supp}|}$.
 \end{definition}
@@ -216,7 +216,7 @@ The support of $(\texttt{Better}\,W)$ forms a clique: every two distinct vertice
 \begin{definition}[Enhanced]
   \label{def:Enhanced}
   \lean{Enhanced}
-  \uses{def:Enhance, def:the_e}
+  \uses{def:Enhance, def:the_eps}
   \leanok
   Defines the \verb|Enhanced| weight function: transferring weight from the argmax vertex \verb|loose| to the argmin vertex \verb|gain|, using \autoref{def:Enhance} with the amount \(\mathsf{the\_\varepsilon}\).
 \end{definition}
