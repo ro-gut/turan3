@@ -100,9 +100,6 @@ INPUT ./macros/web.tex
 INPUT macros/web.tex
 INPUT /usr/local/texlive/2025/texmf-dist/tex/latex/l3backend/l3backend-xetex.def
 INPUT /usr/local/texlive/2025/texmf-dist/tex/latex/l3backend/l3backend-xetex.def
-INPUT ./web.aux
-INPUT ./web.aux
-INPUT web.aux
 OUTPUT web.aux
 OUTPUT web.out
 INPUT /usr/local/texlive/2025/texmf-dist/fonts/tfm/public/cm/cmr12.tfm

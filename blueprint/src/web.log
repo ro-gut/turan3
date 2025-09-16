@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.5.15)  16 SEP 2025 18:38
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.5.15)  16 SEP 2025 20:15
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -271,7 +271,8 @@ File: l3backend-xetex.def 2024-05-08 L3 backend support: XeTeX
 \l__pdf_internal_box=\box55
 \g__pdf_backend_annotation_int=\count295
 \g__pdf_backend_link_int=\count296
-) (./web.aux)
+)
+No file web.aux.
 \openout1 = `web.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 24.
@@ -297,7 +298,6 @@ LaTeX Font Info:    ... okay on input line 24.
 Package hyperref Info: Link coloring OFF on input line 24.
 \@outlinefile=\write3
 \openout3 = `web.out'.
-
 
 
 Package hyperref Warning: Rerun to get /PageLabels entry.
@@ -2937,10 +2937,10 @@ Package rerunfilecheck Info: Checksums for `web.out':
 (rerunfilecheck)             After:  22B2F50AD11F4F20AE1832DBD3D3826E;793.
  ) 
 Here is how much of TeX's memory you used:
- 9108 strings out of 473832
- 139669 string characters out of 5729481
- 534640 words of memory out of 5000000
- 32058 multiletter control sequences out of 15000+600000
+ 9105 strings out of 473832
+ 139633 string characters out of 5729481
+ 534649 words of memory out of 5000000
+ 32057 multiletter control sequences out of 15000+600000
  565693 words of font info for 82 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  72i,6n,79p,597b,346s stack positions out of 10000i,1000n,20000p,200000b,200000s

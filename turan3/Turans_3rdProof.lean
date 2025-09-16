@@ -1877,7 +1877,7 @@ def max_uniform_support (W : FunToMax G) :=
   Nat.findGreatest (exists_uniform_clique G W) ((Finset.univ : Finset α).filter (fun i => W.w i > 0)).card
 
 /--Provides the specification for the `Nat.findGreates` in `max_uniform_support`. Shows that for any weight function whose support forms a clique
-There is an improved weight function (with the specified support and uniform weights) with improved total edge weight value
+There is an improved weight function (with the specified support and uniform weights) with non decreaseing total edge weight value
 having exactly m vertices with 1/m  support size-/
 lemma exists_best_uniform (W : FunToMax G)
   (hW : G.IsClique ((Finset.univ : Finset α).filter (fun i => W.w i > 0))) :
@@ -2772,8 +2772,8 @@ on the number of edges.-/
 theorem turans [Inhabited α]  (h0 : p ≥ 2) (h1 : G.CliqueFree p):
   (#E : ℝ) ≤ (1/2)* (1 -  1 / (p - 1)) * (#(univ : Finset α))^2 := by
   have := finale_bound G h0 h1 (UnivFun G)
-  rw [UnivFun_weight] at this
   have c := computation (p-1)
+  rw [UnivFun_weight] at this
   rw [Nat.cast_sub, Nat.cast_one] at c
   rw [← c]
   nth_rewrite 1 [one_div] at this
