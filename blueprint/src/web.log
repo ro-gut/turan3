@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.5.15)  17 SEP 2025 00:39
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.5.15)  17 SEP 2025 00:58
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -361,37 +361,28 @@ you forgot something else, as in `\hbox{$x}'. In such cases
 the way to recover is to insert both the forgotten and the
 deleted material, e.g., by typing `I$}'.
 
-./content.tex:31: Undefined control sequence.
-l.31     \uses
-              {lem:Improve_edgeFinset_partition}
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
 
-
-./content.tex:32: LaTeX Error: Bad math environment delimiter.
+./content.tex:31: LaTeX Error: Bad math environment delimiter.
 
 See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.32 Summing \(
+l.31 Summing \(
                \texttt{vp}\) over \(E\) splits as the sum over the gain-inci...
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
 or  <return>  to continue without it.
 
 
-Overfull \hbox (178.71307pt too wide) in paragraph at lines 30--33
-[]\TU/lmr/bx/n/10 Lemma 3 \TU/lmr/m/n/10 (Sum splitting along the partition)\TU/lmr/bx/n/10 . \TU/lmr/m/it/10 Improve$[]\OML/cmm/m/it/10 artition[]um[]plit[]Summing[]$
+Overfull \hbox (26.1069pt too wide) in paragraph at lines 30--32
+[]\TU/lmr/bx/n/10 Lemma 3 \TU/lmr/m/n/10 (Sum splitting along the partition)\TU/lmr/bx/n/10 . \TU/lmr/m/it/10 Improve$[]\OML/cmm/m/it/10 artition[]um[]plitSumming[]$
  []
 
-./content.tex:33: Missing } inserted.
+./content.tex:32: Missing } inserted.
 <inserted text> 
                 }
-l.33 \end{lemma}
+l.32 \end{lemma}
                 
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
@@ -399,8 +390,8 @@ With luck, this will get me unwedged. But if you
 really didn't forget anything, try typing `2' now; then
 my insertion and my current dilemma will both disappear.
 
-./content.tex:37: Undefined control sequence.
-l.37     \lean
+./content.tex:36: Undefined control sequence.
+l.36     \lean
               {Improve_gain_contribution_increase}
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -408,16 +399,16 @@ misspelled it (e.g., `\hobx'), type `I' and the correct
 spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
-./content.tex:37: Missing $ inserted.
+./content.tex:36: Missing $ inserted.
 <inserted text> 
                 $
-l.37     \lean{Improve_
+l.36     \lean{Improve_
                        gain_contribution_increase}
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
-./content.tex:37: Extra }, or forgotten $.
-l.37     \lean{Improve_gain_contribution_increase}
+./content.tex:36: Extra }, or forgotten $.
+l.36     \lean{Improve_gain_contribution_increase}
                                                   
 I've deleted a group-closing symbol because it seems to be
 spurious, as in `$x}$'. But perhaps the } is legitimate and
@@ -426,27 +417,27 @@ the way to recover is to insert both the forgotten and the
 deleted material, e.g., by typing `I$}'.
 
 
-./content.tex:38: LaTeX Error: Bad math environment delimiter.
+./content.tex:37: LaTeX Error: Bad math environment delimiter.
 
 See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.38 ... sum on the gain-incidence increases by \(
+l.37 ... sum on the gain-incidence increases by \(
                                                   W.w\;\texttt{loose}\) time...
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
 or  <return>  to continue without it.
 
 
-Overfull \hbox (59.30888pt too wide) in paragraph at lines 37--39
+Overfull \hbox (59.30888pt too wide) in paragraph at lines 36--38
 []\TU/lmr/bx/n/10 Lemma 4 \TU/lmr/m/n/10 (Gain-incidence increases)\TU/lmr/bx/n/10 . \TU/lmr/m/it/10 Improve$[]\OML/cmm/m/it/10 ain[]ontribution[]ncreaseThesumonthegain \OMS/cmsy/m/n/10 ^^@
  []
 
-./content.tex:39: Missing } inserted.
+./content.tex:38: Missing } inserted.
 <inserted text> 
                 }
-l.39 \end{lemma}
+l.38 \end{lemma}
                 
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
@@ -454,8 +445,8 @@ With luck, this will get me unwedged. But if you
 really didn't forget anything, try typing `2' now; then
 my insertion and my current dilemma will both disappear.
 
-./content.tex:43: Undefined control sequence.
-l.43     \lean
+./content.tex:42: Undefined control sequence.
+l.42     \lean
               {Improve_loose_contribution_zero}
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -463,16 +454,16 @@ misspelled it (e.g., `\hobx'), type `I' and the correct
 spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
-./content.tex:43: Missing $ inserted.
+./content.tex:42: Missing $ inserted.
 <inserted text> 
                 $
-l.43     \lean{Improve_
+l.42     \lean{Improve_
                        loose_contribution_zero}
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
-./content.tex:43: Extra }, or forgotten $.
-l.43     \lean{Improve_loose_contribution_zero}
+./content.tex:42: Extra }, or forgotten $.
+l.42     \lean{Improve_loose_contribution_zero}
                                                
 I've deleted a group-closing symbol because it seems to be
 spurious, as in `$x}$'. But perhaps the } is legitimate and
@@ -481,34 +472,34 @@ the way to recover is to insert both the forgotten and the
 deleted material, e.g., by typing `I$}'.
 
 
-./content.tex:45: LaTeX Error: Command \end{lemma} invalid in math mode.
+./content.tex:44: LaTeX Error: Command \end{lemma} invalid in math mode.
 
 See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.45 \end{lemma}
+l.44 \end{lemma}
                 
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
-./content.tex:45: Missing $ inserted.
+./content.tex:44: Missing $ inserted.
 <inserted text> 
                 $
-l.45 \end{lemma}
+l.44 \end{lemma}
                 
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
 
-Overfull \hbox (67.26378pt too wide) in paragraph at lines 43--45
+Overfull \hbox (67.26378pt too wide) in paragraph at lines 42--44
 []\TU/lmr/bx/n/10 Lemma 5 \TU/lmr/m/n/10 (Loose-incidence becomes zero)\TU/lmr/bx/n/10 . \TU/lmr/m/it/10 Improve$[]\OML/cmm/m/it/10 oose[]ontribution[]eroThesumontheloose \OMS/cmsy/m/n/10 ^^@
  []
 
-./content.tex:45: Missing } inserted.
+./content.tex:44: Missing } inserted.
 <inserted text> 
                 }
-l.45 \end{lemma}
+l.44 \end{lemma}
                 
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
@@ -516,8 +507,8 @@ With luck, this will get me unwedged. But if you
 really didn't forget anything, try typing `2' now; then
 my insertion and my current dilemma will both disappear.
 
-./content.tex:49: Undefined control sequence.
-l.49     \lean
+./content.tex:48: Undefined control sequence.
+l.48     \lean
               {Improve_unchanged_edge_sum}
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -525,16 +516,16 @@ misspelled it (e.g., `\hobx'), type `I' and the correct
 spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
-./content.tex:49: Missing $ inserted.
+./content.tex:48: Missing $ inserted.
 <inserted text> 
                 $
-l.49     \lean{Improve_
+l.48     \lean{Improve_
                        unchanged_edge_sum}
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
-./content.tex:49: Extra }, or forgotten $.
-l.49     \lean{Improve_unchanged_edge_sum}
+./content.tex:48: Extra }, or forgotten $.
+l.48     \lean{Improve_unchanged_edge_sum}
                                           
 I've deleted a group-closing symbol because it seems to be
 spurious, as in `$x}$'. But perhaps the } is legitimate and
@@ -543,39 +534,39 @@ the way to recover is to insert both the forgotten and the
 deleted material, e.g., by typing `I$}'.
 
 
-./content.tex:51: LaTeX Error: Command \end{lemma} invalid in math mode.
+./content.tex:50: LaTeX Error: Command \end{lemma} invalid in math mode.
 
 See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.51 \end{lemma}
+l.50 \end{lemma}
                 
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
-./content.tex:51: Missing $ inserted.
+./content.tex:50: Missing $ inserted.
 <inserted text> 
                 $
-l.51 \end{lemma}
+l.50 \end{lemma}
                 
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
 
-Overfull \hbox (293.42651pt too wide) in paragraph at lines 49--51
+Overfull \hbox (293.42651pt too wide) in paragraph at lines 48--50
 []\TU/lmr/bx/n/10 Lemma 6 \TU/lmr/m/n/10 (Unchanged complement)\TU/lmr/bx/n/10 . \TU/lmr/m/it/10 Improve$[]\OML/cmm/m/it/10 nchanged[]dge[]umEdgesoutsidetheunionofgain=looseincidenceskeepthesamevalueunder[]:
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 49--51
+Underfull \hbox (badness 10000) in paragraph at lines 48--50
 
  []
 
-./content.tex:51: Missing } inserted.
+./content.tex:50: Missing } inserted.
 <inserted text> 
                 }
-l.51 \end{lemma}
+l.50 \end{lemma}
                 
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
@@ -583,8 +574,8 @@ With luck, this will get me unwedged. But if you
 really didn't forget anything, try typing `2' now; then
 my insertion and my current dilemma will both disappear.
 
-./content.tex:55: Undefined control sequence.
-l.55     \lean
+./content.tex:54: Undefined control sequence.
+l.54     \lean
               {Improve_total_weight_nondec}
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -592,16 +583,16 @@ misspelled it (e.g., `\hobx'), type `I' and the correct
 spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
-./content.tex:55: Missing $ inserted.
+./content.tex:54: Missing $ inserted.
 <inserted text> 
                 $
-l.55     \lean{Improve_
+l.54     \lean{Improve_
                        total_weight_nondec}
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
-./content.tex:55: Extra }, or forgotten $.
-l.55     \lean{Improve_total_weight_nondec}
+./content.tex:54: Extra }, or forgotten $.
+l.54     \lean{Improve_total_weight_nondec}
                                            
 I've deleted a group-closing symbol because it seems to be
 spurious, as in `$x}$'. But perhaps the } is legitimate and
@@ -609,8 +600,8 @@ you forgot something else, as in `\hbox{$x}'. In such cases
 the way to recover is to insert both the forgotten and the
 deleted material, e.g., by typing `I$}'.
 
-./content.tex:56: Undefined control sequence.
-l.56     \uses
+./content.tex:55: Undefined control sequence.
+l.55     \uses
               {lem:Improve_partition_sum_split, lem:Improve_unchanged_edge_s...
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -619,34 +610,34 @@ spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
 
-./content.tex:57: LaTeX Error: \mathrm allowed only in math mode.
+./content.tex:56: LaTeX Error: \mathrm allowed only in math mode.
 
 See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.57 ...ood condition used in the code, $W.\mathrm
+l.56 ...ood condition used in the code, $W.\mathrm
                                                   {fw}\le (\texttt{Improve}\...
 You're in trouble here.  Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
-./content.tex:57: Missing $ inserted.
+./content.tex:56: Missing $ inserted.
 <inserted text> 
                 $
-l.57 ...dition used in the code, $W.\mathrm{fw}\le
+l.56 ...dition used in the code, $W.\mathrm{fw}\le
                                                    (\texttt{Improve}\;W\;\te...
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
 
-Overfull \hbox (842.12016pt too wide) in paragraph at lines 55--58
+Overfull \hbox (842.12016pt too wide) in paragraph at lines 54--57
 []\TU/lmr/bx/n/10 Lemma 7 \TU/lmr/m/n/10 (Transfer does not decrease $[]$)\TU/lmr/bx/n/10 . \TU/lmr/m/it/10 Improve$[]\OML/cmm/m/it/10 otal[]eight[]ondec[]Undertheneighbourhoodconditionusedinthecode;$\TU/lmr/m/it/10 W.fw$\OMS/cmsy/m/n/10 ^^T
  []
 
-./content.tex:58: Missing } inserted.
+./content.tex:57: Missing } inserted.
 <inserted text> 
                 }
-l.58 \end{lemma}
+l.57 \end{lemma}
                 
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
@@ -654,8 +645,8 @@ With luck, this will get me unwedged. But if you
 really didn't forget anything, try typing `2' now; then
 my insertion and my current dilemma will both disappear.
 
-./content.tex:62: Undefined control sequence.
-l.62     \lean
+./content.tex:61: Undefined control sequence.
+l.61     \lean
               {Improve_support_strictly_reduced}
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -663,16 +654,16 @@ misspelled it (e.g., `\hobx'), type `I' and the correct
 spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
-./content.tex:62: Missing $ inserted.
+./content.tex:61: Missing $ inserted.
 <inserted text> 
                 $
-l.62     \lean{Improve_
+l.61     \lean{Improve_
                        support_strictly_reduced}
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
-./content.tex:62: Extra }, or forgotten $.
-l.62     \lean{Improve_support_strictly_reduced}
+./content.tex:61: Extra }, or forgotten $.
+l.61     \lean{Improve_support_strictly_reduced}
                                                 
 I've deleted a group-closing symbol because it seems to be
 spurious, as in `$x}$'. But perhaps the } is legitimate and
@@ -680,9 +671,9 @@ you forgot something else, as in `\hbox{$x}'. In such cases
 the way to recover is to insert both the forgotten and the
 deleted material, e.g., by typing `I$}'.
 
-./content.tex:63: Undefined control sequence.
-l.63     \uses
-              {def:Improve, lem:Improve_loose_weight_zero}
+./content.tex:62: Undefined control sequence.
+l.62     \uses
+              {def:Improve}
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
 misspelled it (e.g., `\hobx'), type `I' and the correct
@@ -690,39 +681,39 @@ spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
 
-./content.tex:65: LaTeX Error: Command \end{lemma} invalid in math mode.
+./content.tex:64: LaTeX Error: Command \end{lemma} invalid in math mode.
 
 See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.65 \end{lemma}
+l.64 \end{lemma}
                 
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
-./content.tex:65: Missing $ inserted.
+./content.tex:64: Missing $ inserted.
 <inserted text> 
                 $
-l.65 \end{lemma}
+l.64 \end{lemma}
                 
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
 
-Overfull \hbox (543.7474pt too wide) in paragraph at lines 62--65
+Overfull \hbox (405.77783pt too wide) in paragraph at lines 61--64
 []\TU/lmr/bx/n/10 Lemma 8 \TU/lmr/m/n/10 (Improve strictly reduces support)\TU/lmr/bx/n/10 . \TU/lmr/m/it/10 Improve$[]\OML/cmm/m/it/10 upport[]trictly[]educed[]Iftheneighbourhoodconditionfails; thetransferstrictlyreducesthesupportof$\TU/lmr/m/it/10 W$\OML/cmm/m/it/10 :
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 62--65
+Underfull \hbox (badness 10000) in paragraph at lines 61--64
 
  []
 
-./content.tex:65: Missing } inserted.
+./content.tex:64: Missing } inserted.
 <inserted text> 
                 }
-l.65 \end{lemma}
+l.64 \end{lemma}
                 
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
@@ -730,8 +721,8 @@ With luck, this will get me unwedged. But if you
 really didn't forget anything, try typing `2' now; then
 my insertion and my current dilemma will both disappear.
 
-./content.tex:69: Undefined control sequence.
-l.69     \lean
+./content.tex:68: Undefined control sequence.
+l.68     \lean
               {Better_forms_clique}
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -739,16 +730,16 @@ misspelled it (e.g., `\hobx'), type `I' and the correct
 spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
-./content.tex:69: Missing $ inserted.
+./content.tex:68: Missing $ inserted.
 <inserted text> 
                 $
-l.69     \lean{Better_
+l.68     \lean{Better_
                       forms_clique}
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
-./content.tex:69: Extra }, or forgotten $.
-l.69     \lean{Better_forms_clique}
+./content.tex:68: Extra }, or forgotten $.
+l.68     \lean{Better_forms_clique}
                                    
 I've deleted a group-closing symbol because it seems to be
 spurious, as in `$x}$'. But perhaps the } is legitimate and
@@ -756,8 +747,8 @@ you forgot something else, as in `\hbox{$x}'. In such cases
 the way to recover is to insert both the forgotten and the
 deleted material, e.g., by typing `I$}'.
 
-./content.tex:70: Undefined control sequence.
-l.70     \uses
+./content.tex:69: Undefined control sequence.
+l.69     \uses
               {def:Improve, lem:Improve_total_weight_nondec, lem:Improve_sup...
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -766,34 +757,34 @@ spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
 
-./content.tex:72: LaTeX Error: Command \end{theorem} invalid in math mode.
+./content.tex:71: LaTeX Error: Command \end{theorem} invalid in math mode.
 
 See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.72 \end{theorem}
+l.71 \end{theorem}
                   
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
-./content.tex:72: Missing $ inserted.
+./content.tex:71: Missing $ inserted.
 <inserted text> 
                 $
-l.72 \end{theorem}
+l.71 \end{theorem}
                   
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
 
-Overfull \hbox (488.11076pt too wide) in paragraph at lines 69--72
+Overfull \hbox (488.11076pt too wide) in paragraph at lines 68--71
 []\TU/lmr/bx/n/10 Theorem 9 \TU/lmr/m/n/10 (Support of \TU/lmtt/m/n/10 Better \TU/lmr/m/n/10 is a clique)\TU/lmr/bx/n/10 . \TU/lmr/m/it/10 Better$[]\OML/cmm/m/it/10 orms[]lique[]Thesupportof$\TU/lmr/m/it/10 (\TU/lmtt/m/it/10 Better\TU/lmr/m/it/10 W)$\OML/cmm/m/it/10 formsaclique \OT1/cmr/m/n/10 :
  []
 
-./content.tex:72: Missing } inserted.
+./content.tex:71: Missing } inserted.
 <inserted text> 
                 }
-l.72 \end{theorem}
+l.71 \end{theorem}
                   
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
@@ -801,8 +792,8 @@ With luck, this will get me unwedged. But if you
 really didn't forget anything, try typing `2' now; then
 my insertion and my current dilemma will both disappear.
 
-./content.tex:82: Undefined control sequence.
-l.82   \lean
+./content.tex:81: Undefined control sequence.
+l.81   \lean
             {Enhance}
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -810,8 +801,8 @@ misspelled it (e.g., `\hobx'), type `I' and the correct
 spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
-./content.tex:83: Undefined control sequence.
-l.83   \leanok
+./content.tex:82: Undefined control sequence.
+l.82   \leanok
               
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -819,8 +810,8 @@ misspelled it (e.g., `\hobx'), type `I' and the correct
 spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
-./content.tex:92: Undefined control sequence.
-l.92   \lean
+./content.tex:91: Undefined control sequence.
+l.91   \lean
             {sum_over_support}
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -828,16 +819,16 @@ misspelled it (e.g., `\hobx'), type `I' and the correct
 spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
-./content.tex:92: Missing $ inserted.
+./content.tex:91: Missing $ inserted.
 <inserted text> 
                 $
-l.92   \lean{sum_
+l.91   \lean{sum_
                  over_support}
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
-./content.tex:92: Extra }, or forgotten $.
-l.92   \lean{sum_over_support}
+./content.tex:91: Extra }, or forgotten $.
+l.91   \lean{sum_over_support}
                               
 I've deleted a group-closing symbol because it seems to be
 spurious, as in `$x}$'. But perhaps the } is legitimate and
@@ -845,8 +836,8 @@ you forgot something else, as in `\hbox{$x}'. In such cases
 the way to recover is to insert both the forgotten and the
 deleted material, e.g., by typing `I$}'.
 
-./content.tex:93: Undefined control sequence.
-l.93   \leanok
+./content.tex:92: Undefined control sequence.
+l.92   \leanok
               
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -855,39 +846,39 @@ spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
 
-./content.tex:95: LaTeX Error: Command \end{lemma} invalid in math mode.
+./content.tex:94: LaTeX Error: Command \end{lemma} invalid in math mode.
 
 See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.95 \end{lemma}
+l.94 \end{lemma}
                 
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
-./content.tex:95: Missing $ inserted.
+./content.tex:94: Missing $ inserted.
 <inserted text> 
                 $
-l.95 \end{lemma}
+l.94 \end{lemma}
                 
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
 
-Overfull \hbox (167.82637pt too wide) in paragraph at lines 92--95
+Overfull \hbox (167.82637pt too wide) in paragraph at lines 91--94
 []\TU/lmr/bx/n/10 Lemma 11 \TU/lmr/m/n/10 (Sum over support)\TU/lmr/bx/n/10 . \TU/lmr/m/it/10 sum$[]\OML/cmm/m/it/10 ver[]upportExpressesthetotalvertexweightasthesumofweightsoverthesupport:
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 92--95
+Underfull \hbox (badness 10000) in paragraph at lines 91--94
 
  []
 
-./content.tex:95: Missing } inserted.
+./content.tex:94: Missing } inserted.
 <inserted text> 
                 }
-l.95 \end{lemma}
+l.94 \end{lemma}
                 
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
@@ -895,8 +886,8 @@ With luck, this will get me unwedged. But if you
 really didn't forget anything, try typing `2' now; then
 my insertion and my current dilemma will both disappear.
 
-./content.tex:99: Undefined control sequence.
-l.99   \lean
+./content.tex:98: Undefined control sequence.
+l.98   \lean
             {supported_edge_partition}
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -904,16 +895,16 @@ misspelled it (e.g., `\hobx'), type `I' and the correct
 spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
-./content.tex:99: Missing $ inserted.
+./content.tex:98: Missing $ inserted.
 <inserted text> 
                 $
-l.99   \lean{supported_
+l.98   \lean{supported_
                        edge_partition}
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
-./content.tex:99: Extra }, or forgotten $.
-l.99   \lean{supported_edge_partition}
+./content.tex:98: Extra }, or forgotten $.
+l.98   \lean{supported_edge_partition}
                                       
 I've deleted a group-closing symbol because it seems to be
 spurious, as in `$x}$'. But perhaps the } is legitimate and
@@ -921,9 +912,9 @@ you forgot something else, as in `\hbox{$x}'. In such cases
 the way to recover is to insert both the forgotten and the
 deleted material, e.g., by typing `I$}'.
 
-./content.tex:100: Undefined control sequence.
-l.100   \leanok
-               
+./content.tex:99: Undefined control sequence.
+l.99   \leanok
+              
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
 misspelled it (e.g., `\hobx'), type `I' and the correct
@@ -931,21 +922,21 @@ spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
 
-./content.tex:103: LaTeX Error: Command \end{lemma} invalid in math mode.
+./content.tex:102: LaTeX Error: Command \end{lemma} invalid in math mode.
 
 See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.103 \end{lemma}
+l.102 \end{lemma}
                  
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
-./content.tex:103: Missing $ inserted.
+./content.tex:102: Missing $ inserted.
 <inserted text> 
                 $
-l.103 \end{lemma}
+l.102 \end{lemma}
                  
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
@@ -955,19 +946,19 @@ Missing character: There is no ” ("201D) in font cmr10!
 Missing character: There is no “ ("201C) in font cmr10!
 Missing character: There is no ” ("201D) in font cmr10!
 
-Overfull \hbox (342.96643pt too wide) in paragraph at lines 99--103
+Overfull \hbox (342.96643pt too wide) in paragraph at lines 98--102
 []\TU/lmr/bx/n/10 Lemma 12 \TU/lmr/m/n/10 (Supported edge partition)\TU/lmr/bx/n/10 . \TU/lmr/m/it/10 supported$[]\OML/cmm/m/it/10 dge[]artitionSplitstheedgesetintoedgesincidenttothechosenvertices\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 gainandloose\OT1/cmr/m/n/10 )\OML/cmm/m/it/10 andtheremainingedges:
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 99--103
+Underfull \hbox (badness 10000) in paragraph at lines 98--102
 
  []
 
-./content.tex:103: Missing } inserted.
+./content.tex:102: Missing } inserted.
 <inserted text> 
                 }
-l.103 \end{lemma}
+l.102 \end{lemma}
                  
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
@@ -975,8 +966,8 @@ With luck, this will get me unwedged. But if you
 really didn't forget anything, try typing `2' now; then
 my insertion and my current dilemma will both disappear.
 
-./content.tex:107: Undefined control sequence.
-l.107   \lean
+./content.tex:106: Undefined control sequence.
+l.106   \lean
              {Enhance_gain_sum}
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -984,16 +975,16 @@ misspelled it (e.g., `\hobx'), type `I' and the correct
 spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
-./content.tex:107: Missing $ inserted.
+./content.tex:106: Missing $ inserted.
 <inserted text> 
                 $
-l.107   \lean{Enhance_
+l.106   \lean{Enhance_
                       gain_sum}
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
-./content.tex:107: Extra }, or forgotten $.
-l.107   \lean{Enhance_gain_sum}
+./content.tex:106: Extra }, or forgotten $.
+l.106   \lean{Enhance_gain_sum}
                                
 I've deleted a group-closing symbol because it seems to be
 spurious, as in `$x}$'. But perhaps the } is legitimate and
@@ -1001,8 +992,8 @@ you forgot something else, as in `\hbox{$x}'. In such cases
 the way to recover is to insert both the forgotten and the
 deleted material, e.g., by typing `I$}'.
 
-./content.tex:108: Undefined control sequence.
-l.108   \leanok
+./content.tex:107: Undefined control sequence.
+l.107   \leanok
                
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -1011,43 +1002,43 @@ spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
 
-LaTeX Warning: Reference `def:Enhance' on page 1 undefined on input line 109.
+LaTeX Warning: Reference `def:Enhance' on page 1 undefined on input line 108.
 
 
-./content.tex:111: LaTeX Error: Command \end{lemma} invalid in math mode.
+./content.tex:110: LaTeX Error: Command \end{lemma} invalid in math mode.
 
 See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.111 \end{lemma}
+l.110 \end{lemma}
                  
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
-./content.tex:111: Missing $ inserted.
+./content.tex:110: Missing $ inserted.
 <inserted text> 
                 $
-l.111 \end{lemma}
+l.110 \end{lemma}
                  
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
 Missing character: There is no ’ ("2019) in font cmr10!
 
-Overfull \hbox (507.96431pt too wide) in paragraph at lines 107--111
+Overfull \hbox (507.96431pt too wide) in paragraph at lines 106--110
 []\TU/lmr/bx/n/10 Lemma 13 \TU/lmr/m/n/10 (Enhance gain sum)\TU/lmr/bx/n/10 . \TU/lmr/m/it/10 Enhance$[]\OML/cmm/m/it/10 ain[]umShowsthatunder[]; thecontributionofthegainvertexsedgesincreasesbyexactlythetransferredweightmultipliedbythesumofitsneighborweights:
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 107--111
+Underfull \hbox (badness 10000) in paragraph at lines 106--110
 
  []
 
-./content.tex:111: Missing } inserted.
+./content.tex:110: Missing } inserted.
 <inserted text> 
                 }
-l.111 \end{lemma}
+l.110 \end{lemma}
                  
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
@@ -1058,8 +1049,8 @@ my insertion and my current dilemma will both disappear.
 
 
 [1]
-./content.tex:115: Undefined control sequence.
-l.115   \lean
+./content.tex:114: Undefined control sequence.
+l.114   \lean
              {Enhance_loose_sum}
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -1067,16 +1058,16 @@ misspelled it (e.g., `\hobx'), type `I' and the correct
 spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
-./content.tex:115: Missing $ inserted.
+./content.tex:114: Missing $ inserted.
 <inserted text> 
                 $
-l.115   \lean{Enhance_
+l.114   \lean{Enhance_
                       loose_sum}
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
-./content.tex:115: Extra }, or forgotten $.
-l.115   \lean{Enhance_loose_sum}
+./content.tex:114: Extra }, or forgotten $.
+l.114   \lean{Enhance_loose_sum}
                                 
 I've deleted a group-closing symbol because it seems to be
 spurious, as in `$x}$'. But perhaps the } is legitimate and
@@ -1084,8 +1075,8 @@ you forgot something else, as in `\hbox{$x}'. In such cases
 the way to recover is to insert both the forgotten and the
 deleted material, e.g., by typing `I$}'.
 
-./content.tex:116: Undefined control sequence.
-l.116   \leanok
+./content.tex:115: Undefined control sequence.
+l.115   \leanok
                
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -1094,43 +1085,43 @@ spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
 
-LaTeX Warning: Reference `def:Enhance' on page 2 undefined on input line 117.
+LaTeX Warning: Reference `def:Enhance' on page 2 undefined on input line 116.
 
 
-./content.tex:119: LaTeX Error: Command \end{lemma} invalid in math mode.
+./content.tex:118: LaTeX Error: Command \end{lemma} invalid in math mode.
 
 See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.119 \end{lemma}
+l.118 \end{lemma}
                  
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
-./content.tex:119: Missing $ inserted.
+./content.tex:118: Missing $ inserted.
 <inserted text> 
                 $
-l.119 \end{lemma}
+l.118 \end{lemma}
                  
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
 Missing character: There is no ’ ("2019) in font cmr10!
 
-Overfull \hbox (203.90157pt too wide) in paragraph at lines 115--119
+Overfull \hbox (203.90157pt too wide) in paragraph at lines 114--118
 []\TU/lmr/bx/n/10 Lemma 14 \TU/lmr/m/n/10 (Enhance loose sum)\TU/lmr/bx/n/10 . \TU/lmr/m/it/10 Enhance$[]\OML/cmm/m/it/10 oose[]umShowsthatunder[]; thecontributionoftheloosevertexsedgesbecomeszero:
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 115--119
+Underfull \hbox (badness 10000) in paragraph at lines 114--118
 
  []
 
-./content.tex:119: Missing } inserted.
+./content.tex:118: Missing } inserted.
 <inserted text> 
                 }
-l.119 \end{lemma}
+l.118 \end{lemma}
                  
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
@@ -1138,8 +1129,8 @@ With luck, this will get me unwedged. But if you
 really didn't forget anything, try typing `2' now; then
 my insertion and my current dilemma will both disappear.
 
-./content.tex:123: Undefined control sequence.
-l.123     \lean
+./content.tex:122: Undefined control sequence.
+l.122     \lean
                {the_bij}
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -1147,16 +1138,16 @@ misspelled it (e.g., `\hobx'), type `I' and the correct
 spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
-./content.tex:123: Missing $ inserted.
+./content.tex:122: Missing $ inserted.
 <inserted text> 
                 $
-l.123     \lean{the_
+l.122     \lean{the_
                     bij}
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
-./content.tex:123: Extra }, or forgotten $.
-l.123     \lean{the_bij}
+./content.tex:122: Extra }, or forgotten $.
+l.122     \lean{the_bij}
                         
 I've deleted a group-closing symbol because it seems to be
 spurious, as in `$x}$'. But perhaps the } is legitimate and
@@ -1164,8 +1155,8 @@ you forgot something else, as in `\hbox{$x}'. In such cases
 the way to recover is to insert both the forgotten and the
 deleted material, e.g., by typing `I$}'.
 
-./content.tex:124: Undefined control sequence.
-l.124     \leanok
+./content.tex:123: Undefined control sequence.
+l.123     \leanok
                  
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -1174,39 +1165,39 @@ spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
 
-./content.tex:126: LaTeX Error: Command \end{definition} invalid in math mode.
+./content.tex:125: LaTeX Error: Command \end{definition} invalid in math mode.
 
 See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.126 \end{definition}
+l.125 \end{definition}
                       
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
-./content.tex:126: Missing $ inserted.
+./content.tex:125: Missing $ inserted.
 <inserted text> 
                 $
-l.126 \end{definition}
+l.125 \end{definition}
                       
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
 
-Overfull \hbox (530.84895pt too wide) in paragraph at lines 123--126
+Overfull \hbox (530.84895pt too wide) in paragraph at lines 122--125
 []\TU/lmr/bx/n/10 Definition 15 \TU/lmr/m/n/10 (Bijection inside the clique)\TU/lmr/bx/n/10 . \TU/lmr/m/n/10 the$[]\OML/cmm/m/it/10 ijProvidesabijectionbetweenthesupportedincidenceedgesat\OT1/cmr/m/n/10 `\OML/cmm/m/it/10 loose\OT1/cmr/m/n/10 `(\OML/cmm/m/it/10 withouts\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 loose; gain\OT1/cmr/m/n/10 ))\OML/cmm/m/it/10 andthesupportedincidenceedgesat\OT1/cmr/m/n/10 `\OML/cmm/m/it/10 gain\OT1/cmr/m/n/10 `(\OML/cmm/m/it/10 withouts\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 loose; gain\OT1/cmr/m/n/10 ))
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 123--126
+Underfull \hbox (badness 10000) in paragraph at lines 122--125
 
  []
 
-./content.tex:126: Missing } inserted.
+./content.tex:125: Missing } inserted.
 <inserted text> 
                 }
-l.126 \end{definition}
+l.125 \end{definition}
                       
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
@@ -1214,8 +1205,8 @@ With luck, this will get me unwedged. But if you
 really didn't forget anything, try typing `2' now; then
 my insertion and my current dilemma will both disappear.
 
-./content.tex:130: Undefined control sequence.
-l.130   \lean
+./content.tex:129: Undefined control sequence.
+l.129   \lean
              {the_bij_same}
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -1223,16 +1214,16 @@ misspelled it (e.g., `\hobx'), type `I' and the correct
 spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
-./content.tex:130: Missing $ inserted.
+./content.tex:129: Missing $ inserted.
 <inserted text> 
                 $
-l.130   \lean{the_
+l.129   \lean{the_
                   bij_same}
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
-./content.tex:130: Extra }, or forgotten $.
-l.130   \lean{the_bij_same}
+./content.tex:129: Extra }, or forgotten $.
+l.129   \lean{the_bij_same}
                            
 I've deleted a group-closing symbol because it seems to be
 spurious, as in `$x}$'. But perhaps the } is legitimate and
@@ -1240,8 +1231,8 @@ you forgot something else, as in `\hbox{$x}'. In such cases
 the way to recover is to insert both the forgotten and the
 deleted material, e.g., by typing `I$}'.
 
-./content.tex:131: Undefined control sequence.
-l.131   \leanok
+./content.tex:130: Undefined control sequence.
+l.130   \leanok
                
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -1250,44 +1241,44 @@ spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
 
-./content.tex:133: LaTeX Error: Command \end{lemma} invalid in math mode.
+./content.tex:132: LaTeX Error: Command \end{lemma} invalid in math mode.
 
 See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.133 \end{lemma}
+l.132 \end{lemma}
                  
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
-./content.tex:133: Missing $ inserted.
+./content.tex:132: Missing $ inserted.
 <inserted text> 
                 $
-l.133 \end{lemma}
+l.132 \end{lemma}
                  
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
 
-Overfull \hbox (79.46227pt too wide) in paragraph at lines 130--133
+Overfull \hbox (79.46227pt too wide) in paragraph at lines 129--132
 []\TU/lmr/bx/n/10 Lemma 16 \TU/lmr/m/n/10 (Bijection preserves)\TU/lmr/bx/n/10 . \TU/lmr/m/it/10 the$[]\OML/cmm/m/it/10 ij[]ameShowsthatthebijectionpreservesthe\OT1/cmr/m/n/10 "\OML/cmm/m/it/10 other\OT1/cmr/m/n/10 "\OML/cmm/m/it/10 weight \OT1/cmr/m/n/10 :
  []
 
 
-Overfull \hbox (186.47957pt too wide) in paragraph at lines 130--133
+Overfull \hbox (186.47957pt too wide) in paragraph at lines 129--132
 \OML/cmm/m/it/10 foranyedgefromthesupportedincidencesetofloose; theweighatthe\OT1/cmr/m/n/10 "\OML/cmm/m/it/10 other\OT1/cmr/m/n/10 "\OML/cmm/m/it/10 vertexequalsthatinitsimageunederthebijection
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 130--133
+Underfull \hbox (badness 10000) in paragraph at lines 129--132
 
  []
 
-./content.tex:133: Missing } inserted.
+./content.tex:132: Missing } inserted.
 <inserted text> 
                 }
-l.133 \end{lemma}
+l.132 \end{lemma}
                  
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
@@ -1295,8 +1286,8 @@ With luck, this will get me unwedged. But if you
 really didn't forget anything, try typing `2' now; then
 my insertion and my current dilemma will both disappear.
 
-./content.tex:137: Undefined control sequence.
-l.137   \lean
+./content.tex:136: Undefined control sequence.
+l.136   \lean
              {Enhance_sum_loose_gain_equal}
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -1304,16 +1295,16 @@ misspelled it (e.g., `\hobx'), type `I' and the correct
 spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
-./content.tex:137: Missing $ inserted.
+./content.tex:136: Missing $ inserted.
 <inserted text> 
                 $
-l.137   \lean{Enhance_
+l.136   \lean{Enhance_
                       sum_loose_gain_equal}
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
-./content.tex:137: Extra }, or forgotten $.
-l.137   \lean{Enhance_sum_loose_gain_equal}
+./content.tex:136: Extra }, or forgotten $.
+l.136   \lean{Enhance_sum_loose_gain_equal}
                                            
 I've deleted a group-closing symbol because it seems to be
 spurious, as in `$x}$'. But perhaps the } is legitimate and
@@ -1321,8 +1312,8 @@ you forgot something else, as in `\hbox{$x}'. In such cases
 the way to recover is to insert both the forgotten and the
 deleted material, e.g., by typing `I$}'.
 
-./content.tex:138: Undefined control sequence.
-l.138   \leanok
+./content.tex:137: Undefined control sequence.
+l.137   \leanok
                
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -1330,8 +1321,8 @@ misspelled it (e.g., `\hobx'), type `I' and the correct
 spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
-./content.tex:141: Undefined control sequence.
-l.141   \uses
+./content.tex:140: Undefined control sequence.
+l.140   \uses
              {def:the_bij, lem:the_bij_same}
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -1340,39 +1331,39 @@ spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
 
-./content.tex:142: LaTeX Error: Command \end{lemma} invalid in math mode.
+./content.tex:141: LaTeX Error: Command \end{lemma} invalid in math mode.
 
 See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.142 \end{lemma}
+l.141 \end{lemma}
                  
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
-./content.tex:142: Missing $ inserted.
+./content.tex:141: Missing $ inserted.
 <inserted text> 
                 $
-l.142 \end{lemma}
+l.141 \end{lemma}
                  
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
 
-Overfull \hbox (539.64087pt too wide) in paragraph at lines 137--142
+Overfull \hbox (539.64087pt too wide) in paragraph at lines 136--141
 []\TU/lmr/bx/n/10 Lemma 17 \TU/lmr/m/n/10 (Loose/gain equality)\TU/lmr/bx/n/10 . \TU/lmr/m/it/10 Enhance$[]\OML/cmm/m/it/10 um[]oose[]ain[]qualShowsthatthetotalweightmovedfromtheloosevertextothegainvertexbalancescorrectlyintheedgecontributions:[]
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 137--142
+Underfull \hbox (badness 10000) in paragraph at lines 136--141
 
  []
 
-./content.tex:142: Missing } inserted.
+./content.tex:141: Missing } inserted.
 <inserted text> 
                 }
-l.142 \end{lemma}
+l.141 \end{lemma}
                  
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
@@ -1380,8 +1371,8 @@ With luck, this will get me unwedged. But if you
 really didn't forget anything, try typing `2' now; then
 my insertion and my current dilemma will both disappear.
 
-./content.tex:146: Undefined control sequence.
-l.146   \lean
+./content.tex:145: Undefined control sequence.
+l.145   \lean
              {Enhance_sum_complement_unchanged}
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -1389,16 +1380,16 @@ misspelled it (e.g., `\hobx'), type `I' and the correct
 spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
-./content.tex:146: Missing $ inserted.
+./content.tex:145: Missing $ inserted.
 <inserted text> 
                 $
-l.146   \lean{Enhance_
+l.145   \lean{Enhance_
                       sum_complement_unchanged}
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
-./content.tex:146: Extra }, or forgotten $.
-l.146   \lean{Enhance_sum_complement_unchanged}
+./content.tex:145: Extra }, or forgotten $.
+l.145   \lean{Enhance_sum_complement_unchanged}
                                                
 I've deleted a group-closing symbol because it seems to be
 spurious, as in `$x}$'. But perhaps the } is legitimate and
@@ -1406,8 +1397,8 @@ you forgot something else, as in `\hbox{$x}'. In such cases
 the way to recover is to insert both the forgotten and the
 deleted material, e.g., by typing `I$}'.
 
-./content.tex:147: Undefined control sequence.
-l.147   \leanok
+./content.tex:146: Undefined control sequence.
+l.146   \leanok
                
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -1416,42 +1407,42 @@ spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
 
-LaTeX Warning: Reference `def:Enhance' on page 2 undefined on input line 148.
+LaTeX Warning: Reference `def:Enhance' on page 2 undefined on input line 147.
 
 
-./content.tex:149: LaTeX Error: Command \end{lemma} invalid in math mode.
+./content.tex:148: LaTeX Error: Command \end{lemma} invalid in math mode.
 
 See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.149 \end{lemma}
+l.148 \end{lemma}
                  
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
-./content.tex:149: Missing $ inserted.
+./content.tex:148: Missing $ inserted.
 <inserted text> 
                 $
-l.149 \end{lemma}
+l.148 \end{lemma}
                  
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
 
-Overfull \hbox (257.03513pt too wide) in paragraph at lines 146--149
+Overfull \hbox (257.03513pt too wide) in paragraph at lines 145--148
 []\TU/lmr/bx/n/10 Lemma 18 \TU/lmr/m/n/10 (Complement unchanged)\TU/lmr/bx/n/10 . \TU/lmr/m/it/10 Enhance$[]\OML/cmm/m/it/10 um[]omplement[]nchangedShowsthatedgesnotincidenttogainorlooseareunaffectedby[]:
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 146--149
+Underfull \hbox (badness 10000) in paragraph at lines 145--148
 
  []
 
-./content.tex:149: Missing } inserted.
+./content.tex:148: Missing } inserted.
 <inserted text> 
                 }
-l.149 \end{lemma}
+l.148 \end{lemma}
                  
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
@@ -1459,8 +1450,8 @@ With luck, this will get me unwedged. But if you
 really didn't forget anything, try typing `2' now; then
 my insertion and my current dilemma will both disappear.
 
-./content.tex:153: Undefined control sequence.
-l.153   \lean
+./content.tex:152: Undefined control sequence.
+l.152   \lean
              {Enhance_edge_gainloose_increase}
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -1468,16 +1459,16 @@ misspelled it (e.g., `\hobx'), type `I' and the correct
 spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
-./content.tex:153: Missing $ inserted.
+./content.tex:152: Missing $ inserted.
 <inserted text> 
                 $
-l.153   \lean{Enhance_
+l.152   \lean{Enhance_
                       edge_gainloose_increase}
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
-./content.tex:153: Extra }, or forgotten $.
-l.153   \lean{Enhance_edge_gainloose_increase}
+./content.tex:152: Extra }, or forgotten $.
+l.152   \lean{Enhance_edge_gainloose_increase}
                                               
 I've deleted a group-closing symbol because it seems to be
 spurious, as in `$x}$'. But perhaps the } is legitimate and
@@ -1485,8 +1476,8 @@ you forgot something else, as in `\hbox{$x}'. In such cases
 the way to recover is to insert both the forgotten and the
 deleted material, e.g., by typing `I$}'.
 
-./content.tex:154: Undefined control sequence.
-l.154   \leanok
+./content.tex:153: Undefined control sequence.
+l.153   \leanok
                
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -1495,39 +1486,39 @@ spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
 
-./content.tex:156: LaTeX Error: Command \end{lemma} invalid in math mode.
+./content.tex:155: LaTeX Error: Command \end{lemma} invalid in math mode.
 
 See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.156 \end{lemma}
+l.155 \end{lemma}
                  
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
-./content.tex:156: Missing $ inserted.
+./content.tex:155: Missing $ inserted.
 <inserted text> 
                 $
-l.156 \end{lemma}
+l.155 \end{lemma}
                  
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
 
-Overfull \hbox (301.93056pt too wide) in paragraph at lines 153--156
+Overfull \hbox (301.93056pt too wide) in paragraph at lines 152--155
 []\TU/lmr/bx/n/10 Lemma 19 \TU/lmr/m/n/10 (Edge contribution increase)\TU/lmr/bx/n/10 . \TU/lmr/m/it/10 Enhance$[]\OML/cmm/m/it/10 dge[]ainloose[]ncreaseProvesthatthenetcontributionfromgainandloosetogetherdoesnotdecrease:
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 153--156
+Underfull \hbox (badness 10000) in paragraph at lines 152--155
 
  []
 
-./content.tex:156: Missing } inserted.
+./content.tex:155: Missing } inserted.
 <inserted text> 
                 }
-l.156 \end{lemma}
+l.155 \end{lemma}
                  
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
@@ -1535,8 +1526,8 @@ With luck, this will get me unwedged. But if you
 really didn't forget anything, try typing `2' now; then
 my insertion and my current dilemma will both disappear.
 
-./content.tex:160: Undefined control sequence.
-l.160   \lean
+./content.tex:159: Undefined control sequence.
+l.159   \lean
              {Enhance_support_edges_same}
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -1544,16 +1535,16 @@ misspelled it (e.g., `\hobx'), type `I' and the correct
 spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
-./content.tex:160: Missing $ inserted.
+./content.tex:159: Missing $ inserted.
 <inserted text> 
                 $
-l.160   \lean{Enhance_
+l.159   \lean{Enhance_
                       support_edges_same}
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
-./content.tex:160: Extra }, or forgotten $.
-l.160   \lean{Enhance_support_edges_same}
+./content.tex:159: Extra }, or forgotten $.
+l.159   \lean{Enhance_support_edges_same}
                                          
 I've deleted a group-closing symbol because it seems to be
 spurious, as in `$x}$'. But perhaps the } is legitimate and
@@ -1561,8 +1552,8 @@ you forgot something else, as in `\hbox{$x}'. In such cases
 the way to recover is to insert both the forgotten and the
 deleted material, e.g., by typing `I$}'.
 
-./content.tex:161: Undefined control sequence.
-l.161   \leanok
+./content.tex:160: Undefined control sequence.
+l.160   \leanok
                
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -1571,42 +1562,42 @@ spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
 
-LaTeX Warning: Reference `def:Enhance' on page 2 undefined on input line 163.
+LaTeX Warning: Reference `def:Enhance' on page 2 undefined on input line 162.
 
 
-./content.tex:164: LaTeX Error: Command \end{lemma} invalid in math mode.
+./content.tex:163: LaTeX Error: Command \end{lemma} invalid in math mode.
 
 See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.164 \end{lemma}
+l.163 \end{lemma}
                  
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
-./content.tex:164: Missing $ inserted.
+./content.tex:163: Missing $ inserted.
 <inserted text> 
                 $
-l.164 \end{lemma}
+l.163 \end{lemma}
                  
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
 
-Overfull \hbox (422.78322pt too wide) in paragraph at lines 160--164
+Overfull \hbox (422.78322pt too wide) in paragraph at lines 159--163
 []\TU/lmr/bx/n/10 Lemma 20 \TU/lmr/m/n/10 (Support edges unchanged)\TU/lmr/bx/n/10 . \TU/lmr/m/it/10 Enhance$[]\OML/cmm/m/it/10 upport[]dges[]ameShowsthatforverticesoutsideofgainandloose; thecontributionsremainidenticalbeforeandafterapplying[]:
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 160--164
+Underfull \hbox (badness 10000) in paragraph at lines 159--163
 
  []
 
-./content.tex:164: Missing } inserted.
+./content.tex:163: Missing } inserted.
 <inserted text> 
                 }
-l.164 \end{lemma}
+l.163 \end{lemma}
                  
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
@@ -1614,8 +1605,8 @@ With luck, this will get me unwedged. But if you
 really didn't forget anything, try typing `2' now; then
 my insertion and my current dilemma will both disappear.
 
-./content.tex:168: Undefined control sequence.
-l.168   \lean
+./content.tex:167: Undefined control sequence.
+l.167   \lean
              {Enhance_total_weight_stricinc}
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -1623,16 +1614,16 @@ misspelled it (e.g., `\hobx'), type `I' and the correct
 spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
-./content.tex:168: Missing $ inserted.
+./content.tex:167: Missing $ inserted.
 <inserted text> 
                 $
-l.168   \lean{Enhance_
+l.167   \lean{Enhance_
                       total_weight_stricinc}
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
-./content.tex:168: Extra }, or forgotten $.
-l.168   \lean{Enhance_total_weight_stricinc}
+./content.tex:167: Extra }, or forgotten $.
+l.167   \lean{Enhance_total_weight_stricinc}
                                             
 I've deleted a group-closing symbol because it seems to be
 spurious, as in `$x}$'. But perhaps the } is legitimate and
@@ -1640,8 +1631,8 @@ you forgot something else, as in `\hbox{$x}'. In such cases
 the way to recover is to insert both the forgotten and the
 deleted material, e.g., by typing `I$}'.
 
-./content.tex:169: Undefined control sequence.
-l.169   \leanok
+./content.tex:168: Undefined control sequence.
+l.168   \leanok
                
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -1649,8 +1640,8 @@ misspelled it (e.g., `\hobx'), type `I' and the correct
 spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
-./content.tex:170: Undefined control sequence.
-l.170   \uses
+./content.tex:169: Undefined control sequence.
+l.169   \uses
              {lem:supported_edge_partition,
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -1659,42 +1650,42 @@ spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
 
-LaTeX Warning: Reference `def:Enhance' on page 2 undefined on input line 177.
+LaTeX Warning: Reference `def:Enhance' on page 2 undefined on input line 176.
 
 
-./content.tex:179: LaTeX Error: Command \end{theorem} invalid in math mode.
+./content.tex:178: LaTeX Error: Command \end{theorem} invalid in math mode.
 
 See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.179 \end{theorem}
+l.178 \end{theorem}
                    
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
-./content.tex:179: Missing $ inserted.
+./content.tex:178: Missing $ inserted.
 <inserted text> 
                 $
-l.179 \end{theorem}
+l.178 \end{theorem}
                    
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
 
-Overfull \hbox (1267.09439pt too wide) in paragraph at lines 168--179
+Overfull \hbox (1267.09439pt too wide) in paragraph at lines 167--178
 []\TU/lmr/bx/n/10 Theorem 21 \TU/lmr/m/n/10 (Enhance increases edge weight)\TU/lmr/bx/n/10 . \TU/lmr/m/it/10 Enhance$[]\OML/cmm/m/it/10 otal[]eight[]tricinc[]Establishesthatapplying[]strictlyincreasesthetotaledgeweight
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 168--179
+Underfull \hbox (badness 10000) in paragraph at lines 167--178
 
  []
 
-./content.tex:179: Missing } inserted.
+./content.tex:178: Missing } inserted.
 <inserted text> 
                 }
-l.179 \end{theorem}
+l.178 \end{theorem}
                    
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
@@ -1702,8 +1693,8 @@ With luck, this will get me unwedged. But if you
 really didn't forget anything, try typing `2' now; then
 my insertion and my current dilemma will both disappear.
 
-./content.tex:188: Undefined control sequence.
-l.188   \lean
+./content.tex:187: Undefined control sequence.
+l.187   \lean
              {the_e}
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -1711,16 +1702,16 @@ misspelled it (e.g., `\hobx'), type `I' and the correct
 spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
-./content.tex:188: Missing $ inserted.
+./content.tex:187: Missing $ inserted.
 <inserted text> 
                 $
-l.188   \lean{the_
+l.187   \lean{the_
                   e}
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
-./content.tex:188: Extra }, or forgotten $.
-l.188   \lean{the_e}
+./content.tex:187: Extra }, or forgotten $.
+l.187   \lean{the_e}
                     
 I've deleted a group-closing symbol because it seems to be
 spurious, as in `$x}$'. But perhaps the } is legitimate and
@@ -1728,8 +1719,8 @@ you forgot something else, as in `\hbox{$x}'. In such cases
 the way to recover is to insert both the forgotten and the
 deleted material, e.g., by typing `I$}'.
 
-./content.tex:189: Undefined control sequence.
-l.189   \leanok
+./content.tex:188: Undefined control sequence.
+l.188   \leanok
                
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -1737,18 +1728,18 @@ misspelled it (e.g., `\hobx'), type `I' and the correct
 spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
-./content.tex:190: Missing $ inserted.
+./content.tex:189: Missing $ inserted.
 <inserted text> 
                 $
-l.190   Define $\displaystyle
+l.189   Define $\displaystyle
                               \mathsf{the\_\varepsilon} := \max - \frac{1}{|...
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
-./content.tex:191: Missing } inserted.
+./content.tex:190: Missing } inserted.
 <inserted text> 
                 }
-l.191 \end{definition}
+l.190 \end{definition}
                       
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
@@ -1756,8 +1747,8 @@ With luck, this will get me unwedged. But if you
 really didn't forget anything, try typing `2' now; then
 my insertion and my current dilemma will both disappear.
 
-./content.tex:195: Undefined control sequence.
-l.195   \lean
+./content.tex:194: Undefined control sequence.
+l.194   \lean
              {max_uniform_support}
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -1765,16 +1756,16 @@ misspelled it (e.g., `\hobx'), type `I' and the correct
 spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
-./content.tex:195: Missing $ inserted.
+./content.tex:194: Missing $ inserted.
 <inserted text> 
                 $
-l.195   \lean{max_
+l.194   \lean{max_
                   uniform_support}
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
-./content.tex:195: Extra }, or forgotten $.
-l.195   \lean{max_uniform_support}
+./content.tex:194: Extra }, or forgotten $.
+l.194   \lean{max_uniform_support}
                                   
 I've deleted a group-closing symbol because it seems to be
 spurious, as in `$x}$'. But perhaps the } is legitimate and
@@ -1782,8 +1773,8 @@ you forgot something else, as in `\hbox{$x}'. In such cases
 the way to recover is to insert both the forgotten and the
 deleted material, e.g., by typing `I$}'.
 
-./content.tex:196: Undefined control sequence.
-l.196   \leanok
+./content.tex:195: Undefined control sequence.
+l.195   \leanok
                
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -1792,39 +1783,39 @@ spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
 
-./content.tex:199: LaTeX Error: Command \end{definition} invalid in math mode.
+./content.tex:198: LaTeX Error: Command \end{definition} invalid in math mode.
 
 See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.199 \end{definition}
+l.198 \end{definition}
                       
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
-./content.tex:199: Missing $ inserted.
+./content.tex:198: Missing $ inserted.
 <inserted text> 
                 $
-l.199 \end{definition}
+l.198 \end{definition}
                       
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
 
-Overfull \hbox (532.91362pt too wide) in paragraph at lines 195--199
+Overfull \hbox (532.91362pt too wide) in paragraph at lines 194--198
 []\TU/lmr/bx/n/10 Definition 23 \TU/lmr/m/n/10 (Maximising the number of uniform vertices)\TU/lmr/bx/n/10 . \TU/lmr/m/n/10 max$[]\OML/cmm/m/it/10 niform[]upportDefinethemaximal$\TU/lmr/m/n/10 m$\OML/cmm/m/it/10 achievablebyanydistributionwithsupportcontainedinthatof$\TU/lmr/m/n/10 W$\OML/cmm/m/it/10 andwithatleastasmuchedgeweight:
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 195--199
+Underfull \hbox (badness 10000) in paragraph at lines 194--198
 
  []
 
-./content.tex:199: Missing } inserted.
+./content.tex:198: Missing } inserted.
 <inserted text> 
                 }
-l.199 \end{definition}
+l.198 \end{definition}
                       
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
@@ -1832,8 +1823,8 @@ With luck, this will get me unwedged. But if you
 really didn't forget anything, try typing `2' now; then
 my insertion and my current dilemma will both disappear.
 
-./content.tex:203: Undefined control sequence.
-l.203   \lean
+./content.tex:202: Undefined control sequence.
+l.202   \lean
              {exists_best_uniform}
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -1841,16 +1832,16 @@ misspelled it (e.g., `\hobx'), type `I' and the correct
 spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
-./content.tex:203: Missing $ inserted.
+./content.tex:202: Missing $ inserted.
 <inserted text> 
                 $
-l.203   \lean{exists_
+l.202   \lean{exists_
                      best_uniform}
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
-./content.tex:203: Extra }, or forgotten $.
-l.203   \lean{exists_best_uniform}
+./content.tex:202: Extra }, or forgotten $.
+l.202   \lean{exists_best_uniform}
                                   
 I've deleted a group-closing symbol because it seems to be
 spurious, as in `$x}$'. But perhaps the } is legitimate and
@@ -1858,8 +1849,8 @@ you forgot something else, as in `\hbox{$x}'. In such cases
 the way to recover is to insert both the forgotten and the
 deleted material, e.g., by typing `I$}'.
 
-./content.tex:204: Undefined control sequence.
-l.204   \uses
+./content.tex:203: Undefined control sequence.
+l.203   \uses
              {def:max_uniform_support}
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -1867,8 +1858,8 @@ misspelled it (e.g., `\hobx'), type `I' and the correct
 spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
-./content.tex:205: Undefined control sequence.
-l.205   \leanok
+./content.tex:204: Undefined control sequence.
+l.204   \leanok
                
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -1876,23 +1867,23 @@ misspelled it (e.g., `\hobx'), type `I' and the correct
 spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
-./content.tex:206: Missing $ inserted.
+./content.tex:205: Missing $ inserted.
 <inserted text> 
                 $
-l.206 ...lising this maximum with edge weight $\ge
+l.205 ...lising this maximum with edge weight $\ge
                                                    W.\mathrm{fw}$.
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
 
-Overfull \hbox (350.0221pt too wide) in paragraph at lines 203--207
+Overfull \hbox (350.0221pt too wide) in paragraph at lines 202--206
 []\TU/lmr/bx/n/10 Lemma 24 \TU/lmr/m/n/10 (Best uniform distribution exists)\TU/lmr/bx/n/10 . \TU/lmr/m/it/10 exists$[]\OML/cmm/m/it/10 est[]niform[]Thereexistsadistributionrealisingthismaximumwithedgeweight$$\OMS/cmsy/m/n/10 ^^U
  []
 
-./content.tex:207: Missing } inserted.
+./content.tex:206: Missing } inserted.
 <inserted text> 
                 }
-l.207 \end{lemma}
+l.206 \end{lemma}
                  
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
@@ -1900,8 +1891,8 @@ With luck, this will get me unwedged. But if you
 really didn't forget anything, try typing `2' now; then
 my insertion and my current dilemma will both disappear.
 
-./content.tex:211: Undefined control sequence.
-l.211   \lean
+./content.tex:210: Undefined control sequence.
+l.210   \lean
              {UniformBetter}
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -1909,8 +1900,8 @@ misspelled it (e.g., `\hobx'), type `I' and the correct
 spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
-./content.tex:212: Undefined control sequence.
-l.212   \uses
+./content.tex:211: Undefined control sequence.
+l.211   \uses
              {lem:exists_best_uniform}
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -1918,16 +1909,16 @@ misspelled it (e.g., `\hobx'), type `I' and the correct
 spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
-./content.tex:212: Missing $ inserted.
+./content.tex:211: Missing $ inserted.
 <inserted text> 
                 $
-l.212   \uses{lem:exists_
+l.211   \uses{lem:exists_
                          best_uniform}
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
-./content.tex:212: Extra }, or forgotten $.
-l.212   \uses{lem:exists_best_uniform}
+./content.tex:211: Extra }, or forgotten $.
+l.211   \uses{lem:exists_best_uniform}
                                       
 I've deleted a group-closing symbol because it seems to be
 spurious, as in `$x}$'. But perhaps the } is legitimate and
@@ -1935,8 +1926,8 @@ you forgot something else, as in `\hbox{$x}'. In such cases
 the way to recover is to insert both the forgotten and the
 deleted material, e.g., by typing `I$}'.
 
-./content.tex:213: Undefined control sequence.
-l.213   \leanok
+./content.tex:212: Undefined control sequence.
+l.212   \leanok
                
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -1945,42 +1936,42 @@ spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
 
-LaTeX Warning: Reference `lem:exists_best_uniform' on page 2 undefined on input line 214.
+LaTeX Warning: Reference `lem:exists_best_uniform' on page 2 undefined on input line 213.
 
 
-./content.tex:215: LaTeX Error: Command \end{definition} invalid in math mode.
+./content.tex:214: LaTeX Error: Command \end{definition} invalid in math mode.
 
 See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.215 \end{definition}
+l.214 \end{definition}
                       
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
-./content.tex:215: Missing $ inserted.
+./content.tex:214: Missing $ inserted.
 <inserted text> 
                 $
-l.215 \end{definition}
+l.214 \end{definition}
                       
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
 
-Overfull \hbox (103.49509pt too wide) in paragraph at lines 211--215
+Overfull \hbox (103.49509pt too wide) in paragraph at lines 210--214
 []\TU/lmr/bx/n/10 Definition 25 \TU/lmr/m/n/10 (UniformBetter)\TU/lmr/bx/n/10 . \TU/lmr/m/n/10 UniformBetter lem:exists$[]\OML/cmm/m/it/10 est[]niformAchoiceofamaximiserfrom[]:
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 211--215
+Underfull \hbox (badness 10000) in paragraph at lines 210--214
 
  []
 
-./content.tex:215: Missing } inserted.
+./content.tex:214: Missing } inserted.
 <inserted text> 
                 }
-l.215 \end{definition}
+l.214 \end{definition}
                       
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
@@ -1988,8 +1979,8 @@ With luck, this will get me unwedged. But if you
 really didn't forget anything, try typing `2' now; then
 my insertion and my current dilemma will both disappear.
 
-./content.tex:219: Undefined control sequence.
-l.219   \lean
+./content.tex:218: Undefined control sequence.
+l.218   \lean
              {Enhanced}
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -1997,8 +1988,8 @@ misspelled it (e.g., `\hobx'), type `I' and the correct
 spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
-./content.tex:220: Undefined control sequence.
-l.220   \uses
+./content.tex:219: Undefined control sequence.
+l.219   \uses
              {def:Enhance, def:the_e}
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -2006,16 +1997,16 @@ misspelled it (e.g., `\hobx'), type `I' and the correct
 spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
-./content.tex:220: Missing $ inserted.
+./content.tex:219: Missing $ inserted.
 <inserted text> 
                 $
-l.220   \uses{def:Enhance, def:the_
+l.219   \uses{def:Enhance, def:the_
                                    e}
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
-./content.tex:220: Extra }, or forgotten $.
-l.220   \uses{def:Enhance, def:the_e}
+./content.tex:219: Extra }, or forgotten $.
+l.219   \uses{def:Enhance, def:the_e}
                                      
 I've deleted a group-closing symbol because it seems to be
 spurious, as in `$x}$'. But perhaps the } is legitimate and
@@ -2023,8 +2014,8 @@ you forgot something else, as in `\hbox{$x}'. In such cases
 the way to recover is to insert both the forgotten and the
 deleted material, e.g., by typing `I$}'.
 
-./content.tex:221: Undefined control sequence.
-l.221   \leanok
+./content.tex:220: Undefined control sequence.
+l.220   \leanok
                
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -2033,47 +2024,38 @@ spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
 
-./content.tex:223: LaTeX Error: Command \end{definition} invalid in math mode.
+LaTeX Warning: Reference `def:Enhance' on page 2 undefined on input line 221.
+
+
+./content.tex:221: LaTeX Error: Bad math environment delimiter.
 
 See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.223 \end{definition}
-                      
-Try typing  <return>  to proceed.
-If that doesn't work, type  X <return>  to quit.
-
-./content.tex:223: Missing $ inserted.
-<inserted text> 
-                $
-l.223 \end{definition}
-                      
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
+l.221 ... \autoref{def:Enhance} with the amount \(
+                                                  \mathsf{the\_\varepsilon}\).
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
 
 
-Overfull \hbox (81.22316pt too wide) in paragraph at lines 219--223
-[]\TU/lmr/bx/n/10 Definition 26 \TU/lmr/m/n/10 (Enhanced)\TU/lmr/bx/n/10 . \TU/lmr/m/n/10 Enhanced def:Enhance, def:the$[]\OML/cmm/m/it/10 Defines\OT1/cmr/m/n/10 `\OML/cmm/m/it/10 Enhanced\OT1/cmr/m/n/10 `\OML/cmm/m/it/10 weightfunction \OT1/cmr/m/n/10 :
+Overfull \hbox (86.49738pt too wide) in paragraph at lines 218--222
+[]\TU/lmr/bx/n/10 Definition 26 \TU/lmr/m/n/10 (Enhanced)\TU/lmr/bx/n/10 . \TU/lmr/m/n/10 Enhanced def:Enhance, def:the$[]\OML/cmm/m/it/10 Definesthe[]weightfunction \OT1/cmr/m/n/10 :
  []
 
 
-Overfull \hbox (344.87297pt too wide) in paragraph at lines 219--223
-\OML/cmm/m/it/10 transferingweightfromtheargmaxvertex\OT1/cmr/m/n/10 `\OML/cmm/m/it/10 loose\OT1/cmr/m/n/10 `\OML/cmm/m/it/10 totheargminvertex\OT1/cmr/m/n/10 `\OML/cmm/m/it/10 gain\OT1/cmr/m/n/10 `\OML/cmm/m/it/10 ; usingthepreviousinSection\OT1/cmr/m/n/10 2\OML/cmm/m/it/10 definedfunction\OT1/cmr/m/n/10 `\OML/cmm/m/it/10 Enhance\OT1/cmr/m/n/10 `\OML/cmm/m/it/10 bytheamountdefined\OT1/cmr/m/n/10 `\OML/cmm/m/it/10 the[]\OT1/cmr/m/n/10 `
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 219--223
-
+Overfull \hbox (115.0146pt too wide) in paragraph at lines 218--222
+\OML/cmm/m/it/10 transferringweightfromtheargmaxvertex[]totheargminvertex[]; using[]withtheamount[]$\TU/lmr/m/n/10 . 
  []
 
 
 
 [2]
-./content.tex:223: Missing } inserted.
+./content.tex:222: Missing } inserted.
 <inserted text> 
                 }
-l.223 \end{definition}
+l.222 \end{definition}
                       
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
@@ -2081,8 +2063,8 @@ With luck, this will get me unwedged. But if you
 really didn't forget anything, try typing `2' now; then
 my insertion and my current dilemma will both disappear.
 
-./content.tex:227: Undefined control sequence.
-l.227     \lean
+./content.tex:226: Undefined control sequence.
+l.226     \lean
                {Enhanced_unaffected}
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -2090,16 +2072,16 @@ misspelled it (e.g., `\hobx'), type `I' and the correct
 spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
-./content.tex:227: Missing $ inserted.
+./content.tex:226: Missing $ inserted.
 <inserted text> 
                 $
-l.227     \lean{Enhanced_
+l.226     \lean{Enhanced_
                          unaffected}
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
-./content.tex:227: Extra }, or forgotten $.
-l.227     \lean{Enhanced_unaffected}
+./content.tex:226: Extra }, or forgotten $.
+l.226     \lean{Enhanced_unaffected}
                                     
 I've deleted a group-closing symbol because it seems to be
 spurious, as in `$x}$'. But perhaps the } is legitimate and
@@ -2107,8 +2089,8 @@ you forgot something else, as in `\hbox{$x}'. In such cases
 the way to recover is to insert both the forgotten and the
 deleted material, e.g., by typing `I$}'.
 
-./content.tex:228: Undefined control sequence.
-l.228     \uses
+./content.tex:227: Undefined control sequence.
+l.227     \uses
                {def:Enhance, def:Enhanced}
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -2117,39 +2099,39 @@ spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
 
-./content.tex:230: LaTeX Error: Command \end{lemma} invalid in math mode.
+./content.tex:229: LaTeX Error: Command \end{lemma} invalid in math mode.
 
 See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.230 \end{lemma}
+l.229 \end{lemma}
                  
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
-./content.tex:230: Missing $ inserted.
+./content.tex:229: Missing $ inserted.
 <inserted text> 
                 $
-l.230 \end{lemma}
+l.229 \end{lemma}
                  
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
 
-Overfull \hbox (409.84358pt too wide) in paragraph at lines 227--230
-[]\TU/lmr/bx/n/10 Lemma 27. \TU/lmr/m/it/10 Enhanced$[]\OML/cmm/m/it/10 naffected[]Showsthatunder\OT1/cmr/m/n/10 `\OML/cmm/m/it/10 Enhanced\OT1/cmr/m/n/10 `\OML/cmm/m/it/10 everyvertexthatoriginallyhadweight\OT1/cmr/m/n/10 1\OML/cmm/m/it/10 =\OMS/cmsy/m/n/10 j\OML/cmm/m/it/10 support\OMS/cmsy/m/n/10 j\OML/cmm/m/it/10 ; remainswiththesameweight
+Overfull \hbox (401.08884pt too wide) in paragraph at lines 226--229
+[]\TU/lmr/bx/n/10 Lemma 27. \TU/lmr/m/it/10 Enhanced$[]\OML/cmm/m/it/10 naffected[]Showsthatunder[]everyvertexthatoriginallyhadweight\OT1/cmr/m/n/10 1\OML/cmm/m/it/10 =\OMS/cmsy/m/n/10 j\OML/cmm/m/it/10 support\OMS/cmsy/m/n/10 j\OML/cmm/m/it/10 ; remainswiththesameweight
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 227--230
+Underfull \hbox (badness 10000) in paragraph at lines 226--229
 
  []
 
-./content.tex:230: Missing } inserted.
+./content.tex:229: Missing } inserted.
 <inserted text> 
                 }
-l.230 \end{lemma}
+l.229 \end{lemma}
                  
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
@@ -2157,8 +2139,8 @@ With luck, this will get me unwedged. But if you
 really didn't forget anything, try typing `2' now; then
 my insertion and my current dilemma will both disappear.
 
-./content.tex:234: Undefined control sequence.
-l.234     \lean
+./content.tex:233: Undefined control sequence.
+l.233     \lean
                {Enhanced_effect_argmax}
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -2166,16 +2148,16 @@ misspelled it (e.g., `\hobx'), type `I' and the correct
 spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
-./content.tex:234: Missing $ inserted.
+./content.tex:233: Missing $ inserted.
 <inserted text> 
                 $
-l.234     \lean{Enhanced_
+l.233     \lean{Enhanced_
                          effect_argmax}
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
-./content.tex:234: Extra }, or forgotten $.
-l.234     \lean{Enhanced_effect_argmax}
+./content.tex:233: Extra }, or forgotten $.
+l.233     \lean{Enhanced_effect_argmax}
                                        
 I've deleted a group-closing symbol because it seems to be
 spurious, as in `$x}$'. But perhaps the } is legitimate and
@@ -2183,8 +2165,8 @@ you forgot something else, as in `\hbox{$x}'. In such cases
 the way to recover is to insert both the forgotten and the
 deleted material, e.g., by typing `I$}'.
 
-./content.tex:235: Undefined control sequence.
-l.235     \uses
+./content.tex:234: Undefined control sequence.
+l.234     \uses
                {def:Enhance, def:Enhanced}
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -2193,39 +2175,39 @@ spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
 
-./content.tex:237: LaTeX Error: Command \end{lemma} invalid in math mode.
+./content.tex:236: LaTeX Error: Command \end{lemma} invalid in math mode.
 
 See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.237 \end{lemma}
+l.236 \end{lemma}
                  
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
-./content.tex:237: Missing $ inserted.
+./content.tex:236: Missing $ inserted.
 <inserted text> 
                 $
-l.237 \end{lemma}
+l.236 \end{lemma}
                  
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
 
-Overfull \hbox (353.6039pt too wide) in paragraph at lines 234--237
-[]\TU/lmr/bx/n/10 Lemma 28. \TU/lmr/m/it/10 Enhanced$[]\OML/cmm/m/it/10 ffect[]rgmax[]ShowsthattheweightattheargmaxvertexbecomesthetargetuniformweightafterEnhanced:
+Overfull \hbox (350.40472pt too wide) in paragraph at lines 233--236
+[]\TU/lmr/bx/n/10 Lemma 28. \TU/lmr/m/it/10 Enhanced$[]\OML/cmm/m/it/10 ffect[]rgmax[]Showsthattheweightattheargmaxvertexbecomesthetargetuniformweightafter[]:
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 234--237
+Underfull \hbox (badness 10000) in paragraph at lines 233--236
 
  []
 
-./content.tex:237: Missing } inserted.
+./content.tex:236: Missing } inserted.
 <inserted text> 
                 }
-l.237 \end{lemma}
+l.236 \end{lemma}
                  
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
@@ -2233,8 +2215,8 @@ With luck, this will get me unwedged. But if you
 really didn't forget anything, try typing `2' now; then
 my insertion and my current dilemma will both disappear.
 
-./content.tex:241: Undefined control sequence.
-l.241     \lean
+./content.tex:240: Undefined control sequence.
+l.240     \lean
                {Enhanced_inc_uniform_count}
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -2242,16 +2224,16 @@ misspelled it (e.g., `\hobx'), type `I' and the correct
 spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
-./content.tex:241: Missing $ inserted.
+./content.tex:240: Missing $ inserted.
 <inserted text> 
                 $
-l.241     \lean{Enhanced_
+l.240     \lean{Enhanced_
                          inc_uniform_count}
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
-./content.tex:241: Extra }, or forgotten $.
-l.241     \lean{Enhanced_inc_uniform_count}
+./content.tex:240: Extra }, or forgotten $.
+l.240     \lean{Enhanced_inc_uniform_count}
                                            
 I've deleted a group-closing symbol because it seems to be
 spurious, as in `$x}$'. But perhaps the } is legitimate and
@@ -2259,8 +2241,8 @@ you forgot something else, as in `\hbox{$x}'. In such cases
 the way to recover is to insert both the forgotten and the
 deleted material, e.g., by typing `I$}'.
 
-./content.tex:242: Undefined control sequence.
-l.242     \uses
+./content.tex:241: Undefined control sequence.
+l.241     \uses
                {def:Enhanced, lem:Enhanced_effect_argmax, lem:Enhanced_unaff...
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -2269,39 +2251,39 @@ spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
 
-./content.tex:244: LaTeX Error: Command \end{lemma} invalid in math mode.
+./content.tex:243: LaTeX Error: Command \end{lemma} invalid in math mode.
 
 See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.244 \end{lemma}
+l.243 \end{lemma}
                  
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
-./content.tex:244: Missing $ inserted.
+./content.tex:243: Missing $ inserted.
 <inserted text> 
                 $
-l.244 \end{lemma}
+l.243 \end{lemma}
                  
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
 
-Overfull \hbox (491.13275pt too wide) in paragraph at lines 241--244
-[]\TU/lmr/bx/n/10 Lemma 29. \TU/lmr/m/it/10 Enhanced$[]\OML/cmm/m/it/10 nc[]niform[]ount[]ShowsthatthenumberofuniformweightverticesincreasesafterEnhanced:
+Overfull \hbox (487.93358pt too wide) in paragraph at lines 240--243
+[]\TU/lmr/bx/n/10 Lemma 29. \TU/lmr/m/it/10 Enhanced$[]\OML/cmm/m/it/10 nc[]niform[]ount[]Showsthatthenumberofuniformweightverticesincreasesafter[]:
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 241--244
+Underfull \hbox (badness 10000) in paragraph at lines 240--243
 
  []
 
-./content.tex:244: Missing } inserted.
+./content.tex:243: Missing } inserted.
 <inserted text> 
                 }
-l.244 \end{lemma}
+l.243 \end{lemma}
                  
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
@@ -2309,8 +2291,8 @@ With luck, this will get me unwedged. But if you
 really didn't forget anything, try typing `2' now; then
 my insertion and my current dilemma will both disappear.
 
-./content.tex:248: Undefined control sequence.
-l.248     \uses
+./content.tex:247: Undefined control sequence.
+l.247     \uses
                {def:UniformBetter}
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -2318,8 +2300,8 @@ misspelled it (e.g., `\hobx'), type `I' and the correct
 spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
-./content.tex:249: Undefined control sequence.
-l.249     \leanok
+./content.tex:248: Undefined control sequence.
+l.248     \leanok
                  
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -2327,8 +2309,8 @@ misspelled it (e.g., `\hobx'), type `I' and the correct
 spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
-./content.tex:255: Undefined control sequence.
-l.255   \lean
+./content.tex:254: Undefined control sequence.
+l.254   \lean
              {UniformBetter_constant_support}
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -2336,16 +2318,16 @@ misspelled it (e.g., `\hobx'), type `I' and the correct
 spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
-./content.tex:255: Missing $ inserted.
+./content.tex:254: Missing $ inserted.
 <inserted text> 
                 $
-l.255   \lean{UniformBetter_
+l.254   \lean{UniformBetter_
                             constant_support}
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
-./content.tex:255: Extra }, or forgotten $.
-l.255   \lean{UniformBetter_constant_support}
+./content.tex:254: Extra }, or forgotten $.
+l.254   \lean{UniformBetter_constant_support}
                                              
 I've deleted a group-closing symbol because it seems to be
 spurious, as in `$x}$'. But perhaps the } is legitimate and
@@ -2353,8 +2335,8 @@ you forgot something else, as in `\hbox{$x}'. In such cases
 the way to recover is to insert both the forgotten and the
 deleted material, e.g., by typing `I$}'.
 
-./content.tex:256: Undefined control sequence.
-l.256   \uses
+./content.tex:255: Undefined control sequence.
+l.255   \uses
              {def:UniformBetter, def:Enhanced, lem:UniformBetter_support_equ...
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -2362,8 +2344,8 @@ misspelled it (e.g., `\hobx'), type `I' and the correct
 spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
-./content.tex:257: Undefined control sequence.
-l.257   \leanok
+./content.tex:256: Undefined control sequence.
+l.256   \leanok
                
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -2372,51 +2354,51 @@ spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
 
-./content.tex:258: LaTeX Error: \mathrm allowed only in math mode.
+./content.tex:257: LaTeX Error: \mathrm allowed only in math mode.
 
 See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.258 ...UniformBetter}\,W$ has weight $1/|\mathrm
+l.257 ...UniformBetter}\,W$ has weight $1/|\mathrm
                                                   {supp}|$.
 You're in trouble here.  Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
 
-./content.tex:259: LaTeX Error: Command \end{lemma} invalid in math mode.
+./content.tex:258: LaTeX Error: Command \end{lemma} invalid in math mode.
 
 See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.259 \end{lemma}
+l.258 \end{lemma}
                  
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
-./content.tex:259: Missing $ inserted.
+./content.tex:258: Missing $ inserted.
 <inserted text> 
                 $
-l.259 \end{lemma}
+l.258 \end{lemma}
                  
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
 
-Overfull \hbox (890.88472pt too wide) in paragraph at lines 255--259
+Overfull \hbox (890.88472pt too wide) in paragraph at lines 254--258
 []\TU/lmr/bx/n/10 Lemma 31 \TU/lmr/m/n/10 (Uniform weights on the support)\TU/lmr/bx/n/10 . \TU/lmr/m/it/10 UniformBetter$[]\OML/cmm/m/it/10 onstant[]upport[]Everysupportvertexof$\TU/lmtt/m/it/10 UniformBetter\TU/lmr/m/it/10 W$\OML/cmm/m/it/10 hasweight$\TU/lmr/m/it/10 1/|supp|$\OML/cmm/m/it/10 :
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 255--259
+Underfull \hbox (badness 10000) in paragraph at lines 254--258
 
  []
 
-./content.tex:259: Missing } inserted.
+./content.tex:258: Missing } inserted.
 <inserted text> 
                 }
-l.259 \end{lemma}
+l.258 \end{lemma}
                  
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
@@ -2424,8 +2406,8 @@ With luck, this will get me unwedged. But if you
 really didn't forget anything, try typing `2' now; then
 my insertion and my current dilemma will both disappear.
 
-./content.tex:263: Undefined control sequence.
-l.263   \lean
+./content.tex:262: Undefined control sequence.
+l.262   \lean
              {UniformBetter_edges_value}
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -2433,16 +2415,16 @@ misspelled it (e.g., `\hobx'), type `I' and the correct
 spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
-./content.tex:263: Missing $ inserted.
+./content.tex:262: Missing $ inserted.
 <inserted text> 
                 $
-l.263   \lean{UniformBetter_
+l.262   \lean{UniformBetter_
                             edges_value}
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
-./content.tex:263: Extra }, or forgotten $.
-l.263   \lean{UniformBetter_edges_value}
+./content.tex:262: Extra }, or forgotten $.
+l.262   \lean{UniformBetter_edges_value}
                                         
 I've deleted a group-closing symbol because it seems to be
 spurious, as in `$x}$'. But perhaps the } is legitimate and
@@ -2450,8 +2432,8 @@ you forgot something else, as in `\hbox{$x}'. In such cases
 the way to recover is to insert both the forgotten and the
 deleted material, e.g., by typing `I$}'.
 
-./content.tex:264: Undefined control sequence.
-l.264   \uses
+./content.tex:263: Undefined control sequence.
+l.263   \uses
              {lem:UniformBetter_constant_support}
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -2459,8 +2441,8 @@ misspelled it (e.g., `\hobx'), type `I' and the correct
 spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
-./content.tex:265: Undefined control sequence.
-l.265   \leanok
+./content.tex:264: Undefined control sequence.
+l.264   \leanok
                
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -2469,34 +2451,34 @@ spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
 
-./content.tex:266: LaTeX Error: \mathrm allowed only in math mode.
+./content.tex:265: LaTeX Error: \mathrm allowed only in math mode.
 
 See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.266 ...ery supported edge has value $(1/|\mathrm
+l.265 ...ery supported edge has value $(1/|\mathrm
                                                   {supp}|)^2$.
 You're in trouble here.  Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
-./content.tex:266: Missing $ inserted.
+./content.tex:265: Missing $ inserted.
 <inserted text> 
                 $
-l.266 ...rted edge has value $(1/|\mathrm{supp}|)^
+l.265 ...rted edge has value $(1/|\mathrm{supp}|)^
                                                   2$.
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
 
-Overfull \hbox (327.9999pt too wide) in paragraph at lines 263--267
+Overfull \hbox (327.9999pt too wide) in paragraph at lines 262--266
 []\TU/lmr/bx/n/10 Lemma 32 \TU/lmr/m/n/10 (Edge values under UniformBetter)\TU/lmr/bx/n/10 . \TU/lmr/m/it/10 UniformBetter$[]\OML/cmm/m/it/10 dges[]alue[]Everysupportededgehasvalue$\TU/lmr/m/it/10 (1/|supp|)$[]$. 
  []
 
-./content.tex:267: Missing } inserted.
+./content.tex:266: Missing } inserted.
 <inserted text> 
                 }
-l.267 \end{lemma}
+l.266 \end{lemma}
                  
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
@@ -2504,8 +2486,8 @@ With luck, this will get me unwedged. But if you
 really didn't forget anything, try typing `2' now; then
 my insertion and my current dilemma will both disappear.
 
-./content.tex:271: Undefined control sequence.
-l.271   \lean
+./content.tex:270: Undefined control sequence.
+l.270   \lean
              {clique_size}
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -2513,16 +2495,16 @@ misspelled it (e.g., `\hobx'), type `I' and the correct
 spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
-./content.tex:271: Missing $ inserted.
+./content.tex:270: Missing $ inserted.
 <inserted text> 
                 $
-l.271   \lean{clique_
+l.270   \lean{clique_
                      size}
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
-./content.tex:271: Extra }, or forgotten $.
-l.271   \lean{clique_size}
+./content.tex:270: Extra }, or forgotten $.
+l.270   \lean{clique_size}
                           
 I've deleted a group-closing symbol because it seems to be
 spurious, as in `$x}$'. But perhaps the } is legitimate and
@@ -2530,8 +2512,8 @@ you forgot something else, as in `\hbox{$x}'. In such cases
 the way to recover is to insert both the forgotten and the
 deleted material, e.g., by typing `I$}'.
 
-./content.tex:272: Undefined control sequence.
-l.272   \uses
+./content.tex:271: Undefined control sequence.
+l.271   \uses
              {lem:UniformBetter_facts}
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -2539,8 +2521,8 @@ misspelled it (e.g., `\hobx'), type `I' and the correct
 spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
-./content.tex:273: Undefined control sequence.
-l.273   \leanok
+./content.tex:272: Undefined control sequence.
+l.272   \leanok
                
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -2549,34 +2531,34 @@ spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
 
-./content.tex:275: LaTeX Error: Command \end{lemma} invalid in math mode.
+./content.tex:274: LaTeX Error: Command \end{lemma} invalid in math mode.
 
 See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.275 \end{lemma}
+l.274 \end{lemma}
                  
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
-./content.tex:275: Missing $ inserted.
+./content.tex:274: Missing $ inserted.
 <inserted text> 
                 $
-l.275 \end{lemma}
+l.274 \end{lemma}
                  
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
 
-Overfull \hbox (251.80284pt too wide) in paragraph at lines 271--275
+Overfull \hbox (251.80284pt too wide) in paragraph at lines 270--274
 []\TU/lmr/bx/n/10 Lemma 33 \TU/lmr/m/n/10 (Edge count in a clique)\TU/lmr/bx/n/10 . \TU/lmr/m/it/10 clique$[]\OML/cmm/m/it/10 ize[]Ifthesupporthassize$\TU/lmr/m/it/10 k$\OML/cmm/m/it/10 ; thenthenumberofsupportededgesis$\TU/lmr/m/it/10 k(k-
  []
 
-./content.tex:275: Missing } inserted.
+./content.tex:274: Missing } inserted.
 <inserted text> 
                 }
-l.275 \end{lemma}
+l.274 \end{lemma}
                  
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
@@ -2584,8 +2566,8 @@ With luck, this will get me unwedged. But if you
 really didn't forget anything, try typing `2' now; then
 my insertion and my current dilemma will both disappear.
 
-./content.tex:279: Undefined control sequence.
-l.279   \lean
+./content.tex:278: Undefined control sequence.
+l.278   \lean
              {computation}
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -2593,9 +2575,18 @@ misspelled it (e.g., `\hobx'), type `I' and the correct
 spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
-./content.tex:280: Undefined control sequence.
-l.280   \leanok
+./content.tex:279: Undefined control sequence.
+l.279   \leanok
                
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./content.tex:285: Undefined control sequence.
+l.285   \lean
+             {bound}
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
 misspelled it (e.g., `\hobx'), type `I' and the correct
@@ -2604,15 +2595,6 @@ and I'll forget about whatever was undefined.
 
 ./content.tex:286: Undefined control sequence.
 l.286   \lean
-             {bound}
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-./content.tex:287: Undefined control sequence.
-l.287   \lean
              {bound_real}
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -2620,16 +2602,16 @@ misspelled it (e.g., `\hobx'), type `I' and the correct
 spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
-./content.tex:287: Missing $ inserted.
+./content.tex:286: Missing $ inserted.
 <inserted text> 
                 $
-l.287   \lean{bound_
+l.286   \lean{bound_
                     real}
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
-./content.tex:287: Extra }, or forgotten $.
-l.287   \lean{bound_real}
+./content.tex:286: Extra }, or forgotten $.
+l.286   \lean{bound_real}
                          
 I've deleted a group-closing symbol because it seems to be
 spurious, as in `$x}$'. But perhaps the } is legitimate and
@@ -2637,8 +2619,8 @@ you forgot something else, as in `\hbox{$x}'. In such cases
 the way to recover is to insert both the forgotten and the
 deleted material, e.g., by typing `I$}'.
 
-./content.tex:288: Undefined control sequence.
-l.288   \leanok
+./content.tex:287: Undefined control sequence.
+l.287   \leanok
                
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -2646,18 +2628,18 @@ misspelled it (e.g., `\hobx'), type `I' and the correct
 spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
-./content.tex:289: Missing $ inserted.
+./content.tex:288: Missing $ inserted.
 <inserted text> 
                 $
-l.289   The function $k\mapsto
+l.288   The function $k\mapsto
                                \tfrac12(1-\tfrac1k)$ is nondecreasing in $k$...
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
-./content.tex:290: Missing } inserted.
+./content.tex:289: Missing } inserted.
 <inserted text> 
                 }
-l.290 \end{lemma}
+l.289 \end{lemma}
                  
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
@@ -2665,8 +2647,8 @@ With luck, this will get me unwedged. But if you
 really didn't forget anything, try typing `2' now; then
 my insertion and my current dilemma will both disappear.
 
-./content.tex:294: Undefined control sequence.
-l.294   \lean
+./content.tex:293: Undefined control sequence.
+l.293   \lean
              {finale_bound}
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -2674,16 +2656,16 @@ misspelled it (e.g., `\hobx'), type `I' and the correct
 spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
-./content.tex:294: Missing $ inserted.
+./content.tex:293: Missing $ inserted.
 <inserted text> 
                 $
-l.294   \lean{finale_
+l.293   \lean{finale_
                      bound}
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
-./content.tex:294: Extra }, or forgotten $.
-l.294   \lean{finale_bound}
+./content.tex:293: Extra }, or forgotten $.
+l.293   \lean{finale_bound}
                            
 I've deleted a group-closing symbol because it seems to be
 spurious, as in `$x}$'. But perhaps the } is legitimate and
@@ -2691,8 +2673,8 @@ you forgot something else, as in `\hbox{$x}'. In such cases
 the way to recover is to insert both the forgotten and the
 deleted material, e.g., by typing `I$}'.
 
-./content.tex:295: Undefined control sequence.
-l.295   \uses
+./content.tex:294: Undefined control sequence.
+l.294   \uses
              {lem:Better_non_decr, lem:Better_forms_clique, lem:UniformBette...
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -2700,8 +2682,8 @@ misspelled it (e.g., `\hobx'), type `I' and the correct
 spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
-./content.tex:296: Undefined control sequence.
-l.296   \leanok
+./content.tex:295: Undefined control sequence.
+l.295   \leanok
                
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -2709,23 +2691,23 @@ misspelled it (e.g., `\hobx'), type `I' and the correct
 spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
-./content.tex:297: Missing $ inserted.
+./content.tex:296: Missing $ inserted.
 <inserted text> 
                 $
-l.297 ...W$ is supported on a clique of size $k\le
+l.296 ...W$ is supported on a clique of size $k\le
                                                    p-1$, then
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
 
-Overfull \hbox (1126.46268pt too wide) in paragraph at lines 294--298
+Overfull \hbox (1126.46268pt too wide) in paragraph at lines 293--297
 []\TU/lmr/bx/n/10 Theorem 36 \TU/lmr/m/n/10 (Final bound inside a clique)\TU/lmr/bx/n/10 . \TU/lmr/m/it/10 finale$[]\OML/cmm/m/it/10 ound[]If$\TU/lmr/m/it/10 W$\OML/cmm/m/it/10 issupportedonacliqueofsize$\TU/lmr/m/it/10 k$\OMS/cmsy/m/n/10 ^^T
  []
 
-./content.tex:301: Missing } inserted.
+./content.tex:300: Missing } inserted.
 <inserted text> 
                 }
-l.301 \end{theorem}
+l.300 \end{theorem}
                    
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
@@ -2733,8 +2715,8 @@ With luck, this will get me unwedged. But if you
 really didn't forget anything, try typing `2' now; then
 my insertion and my current dilemma will both disappear.
 
-./content.tex:305: Undefined control sequence.
-l.305   \lean
+./content.tex:304: Undefined control sequence.
+l.304   \lean
              {UnivFun}
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -2742,8 +2724,8 @@ misspelled it (e.g., `\hobx'), type `I' and the correct
 spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
-./content.tex:306: Undefined control sequence.
-l.306   \leanok
+./content.tex:305: Undefined control sequence.
+l.305   \leanok
                
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -2752,12 +2734,12 @@ spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
 
-Overfull \hbox (1.55673pt too wide) in paragraph at lines 305--308
+Overfull \hbox (1.55673pt too wide) in paragraph at lines 304--307
 []\TU/lmr/bx/n/10 Definition 37 \TU/lmr/m/n/10 (Uniform weights over all vertices)\TU/lmr/bx/n/10 . \TU/lmr/m/n/10 UnivFun The uniform vertex-
  []
 
-./content.tex:312: Undefined control sequence.
-l.312   \lean
+./content.tex:311: Undefined control sequence.
+l.311   \lean
              {UnivFun_weight}
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -2765,16 +2747,16 @@ misspelled it (e.g., `\hobx'), type `I' and the correct
 spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
-./content.tex:312: Missing $ inserted.
+./content.tex:311: Missing $ inserted.
 <inserted text> 
                 $
-l.312   \lean{UnivFun_
+l.311   \lean{UnivFun_
                       weight}
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
-./content.tex:312: Extra }, or forgotten $.
-l.312   \lean{UnivFun_weight}
+./content.tex:311: Extra }, or forgotten $.
+l.311   \lean{UnivFun_weight}
                              
 I've deleted a group-closing symbol because it seems to be
 spurious, as in `$x}$'. But perhaps the } is legitimate and
@@ -2782,8 +2764,8 @@ you forgot something else, as in `\hbox{$x}'. In such cases
 the way to recover is to insert both the forgotten and the
 deleted material, e.g., by typing `I$}'.
 
-./content.tex:313: Undefined control sequence.
-l.313   \uses
+./content.tex:312: Undefined control sequence.
+l.312   \uses
              {def:UnivFun}
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -2791,8 +2773,8 @@ misspelled it (e.g., `\hobx'), type `I' and the correct
 spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
-./content.tex:314: Undefined control sequence.
-l.314   \leanok
+./content.tex:313: Undefined control sequence.
+l.313   \leanok
                
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -2801,34 +2783,34 @@ spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
 
-./content.tex:315: LaTeX Error: \mathrm allowed only in math mode.
+./content.tex:314: LaTeX Error: \mathrm allowed only in math mode.
 
 See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.315   $(\texttt{UnivFun}\,G).\mathrm
+l.314   $(\texttt{UnivFun}\,G).\mathrm
                                       {fw}=\#E\cdot(1/|V|)^2$.
 You're in trouble here.  Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
-./content.tex:315: Missing $ inserted.
+./content.tex:314: Missing $ inserted.
 <inserted text> 
                 $
-l.315 ...\texttt{UnivFun}\,G).\mathrm{fw}=\#E\cdot
+l.314 ...\texttt{UnivFun}\,G).\mathrm{fw}=\#E\cdot
                                                   (1/|V|)^2$.
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
 
-Overfull \hbox (107.65707pt too wide) in paragraph at lines 312--316
+Overfull \hbox (107.65707pt too wide) in paragraph at lines 311--315
 []\TU/lmr/bx/n/10 Lemma 38 \TU/lmr/m/n/10 (Total weight under $[]$)\TU/lmr/bx/n/10 . \TU/lmr/m/it/10 UnivFun$[]\OML/cmm/m/it/10 eight[]$\TU/lmr/m/it/10 (\TU/lmtt/m/it/10 UnivFun\TU/lmr/m/it/10 G).fw=#E$\OMS/cmsy/m/n/10 ^^A\OT1/cmr/m/n/10 (1\OML/cmm/m/it/10 =\OMS/cmsy/m/n/10 j\OML/cmm/m/it/10 V\OMS/cmsy/m/n/10 j\OT1/cmr/m/n/10 )[]$\TU/lmr/m/it/10 . 
  []
 
-./content.tex:316: Missing } inserted.
+./content.tex:315: Missing } inserted.
 <inserted text> 
                 }
-l.316 \end{lemma}
+l.315 \end{lemma}
                  
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
@@ -2836,8 +2818,8 @@ With luck, this will get me unwedged. But if you
 really didn't forget anything, try typing `2' now; then
 my insertion and my current dilemma will both disappear.
 
-./content.tex:320: Undefined control sequence.
-l.320   \lean
+./content.tex:319: Undefined control sequence.
+l.319   \lean
              {turans}
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -2845,8 +2827,8 @@ misspelled it (e.g., `\hobx'), type `I' and the correct
 spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
-./content.tex:321: Undefined control sequence.
-l.321   \uses
+./content.tex:320: Undefined control sequence.
+l.320   \uses
              {def:UnivFun, lem:UnivFun_weight, lem:finale_bound, lem:computa...
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -2854,16 +2836,16 @@ misspelled it (e.g., `\hobx'), type `I' and the correct
 spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
-./content.tex:321: Missing $ inserted.
+./content.tex:320: Missing $ inserted.
 <inserted text> 
                 $
-l.321   \uses{def:UnivFun, lem:UnivFun_
+l.320   \uses{def:UnivFun, lem:UnivFun_
                                        weight, lem:finale_bound, lem:computa...
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
-./content.tex:321: Extra }, or forgotten $.
-l.321 ...eight, lem:finale_bound, lem:computation}
+./content.tex:320: Extra }, or forgotten $.
+l.320 ...eight, lem:finale_bound, lem:computation}
                                                   
 I've deleted a group-closing symbol because it seems to be
 spurious, as in `$x}$'. But perhaps the } is legitimate and
@@ -2871,8 +2853,8 @@ you forgot something else, as in `\hbox{$x}'. In such cases
 the way to recover is to insert both the forgotten and the
 deleted material, e.g., by typing `I$}'.
 
-./content.tex:322: Undefined control sequence.
-l.322   \leanok
+./content.tex:321: Undefined control sequence.
+l.321   \leanok
                
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -2880,23 +2862,23 @@ misspelled it (e.g., `\hobx'), type `I' and the correct
 spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
-./content.tex:323: Missing $ inserted.
+./content.tex:322: Missing $ inserted.
 <inserted text> 
                 $
-l.323   Let $p\ge
+l.322   Let $p\ge
                   2$ and let $G$ be a $p$-clique-free graph. Then
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
 
-Overfull \hbox (6.05157pt too wide) in paragraph at lines 320--324
+Overfull \hbox (6.05157pt too wide) in paragraph at lines 319--323
 []\TU/lmr/bx/n/10 Theorem 39 \TU/lmr/m/n/10 (Turán’s Theorem)\TU/lmr/bx/n/10 . \TU/lmr/m/it/10 turans def:UnivFun, lem:UnivFun$[]\OML/cmm/m/it/10 eight; lem \OT1/cmr/m/n/10 :
  []
 
-./content.tex:327: Missing } inserted.
+./content.tex:326: Missing } inserted.
 <inserted text> 
                 }
-l.327 \end{theorem}
+l.326 \end{theorem}
                    
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)

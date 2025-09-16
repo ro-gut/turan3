@@ -28,7 +28,6 @@ Given distinct vertices $\texttt{loose}\ne\texttt{gain}$, the weight function $\
 \begin{lemma}[Sum splitting along the partition]
     \label{lem:Improve_partition_sum_split}
     \lean{Improve_partition_sum_split}
-    \uses{lem:Improve_edgeFinset_partition}
 Summing \(\texttt{vp}\) over \(E\) splits as the sum over the gain-incidence, plus the loose-incidence, plus the complement.
 \end{lemma}
 
@@ -60,7 +59,7 @@ Under the neighbourhood condition used in the code, $W.\mathrm{fw}\le (\texttt{I
 \begin{lemma}[Improve strictly reduces support]
     \label{lem:Improve_support_strictly_reduced}
     \lean{Improve_support_strictly_reduced}
-    \uses{def:Improve, lem:Improve_loose_weight_zero}
+    \uses{def:Improve}
 If the neighbourhood condition fails, the transfer strictly reduces the support of $W$.
 \end{lemma}
 
@@ -219,28 +218,28 @@ The support of $(\texttt{Better}\,W)$ forms a clique: every two distinct vertice
   \lean{Enhanced}
   \uses{def:Enhance, def:the_e}
   \leanok
-  Defines `Enhanced` weight function : transfering weight from the argmax vertex `loose` to the argmin vertex `gain`, using the previous in Section 2 defined function `Enhance` by the amount defined `the_\varepsilon`
+  Defines the \verb|Enhanced| weight function: transferring weight from the argmax vertex \verb|loose| to the argmin vertex \verb|gain|, using \autoref{def:Enhance} with the amount \(\mathsf{the\_\varepsilon}\).
 \end{definition}
 
 \begin{lemma}
     \label{lem:Enhanced_unaffected}
     \lean{Enhanced_unaffected}
     \uses{def:Enhance, def:Enhanced}
-    Shows that under `Enhanced` every vertex that originally had weight 1/|support|, remains with the same weight
+    Shows that under \verb|Enhanced| every vertex that originally had weight 1/|support|, remains with the same weight
 \end{lemma}
 
 \begin{lemma}
     \label{lem:Enhanced_effect_argmax}
     \lean{Enhanced_effect_argmax}
     \uses{def:Enhance, def:Enhanced}
-    Shows that the weight at the argmax vertex becomes the target uniform weight after Enhanced.
+    Shows that the weight at the argmax vertex becomes the target uniform weight after \verb|Enhanced|.
 \end{lemma}
 
 \begin{lemma}
     \label{lem:Enhanced_inc_uniform_count}
     \lean{Enhanced_inc_uniform_count}
     \uses{def:Enhanced, lem:Enhanced_effect_argmax, lem:Enhanced_unaffected}
-    Shows that the number of uniform weight vertices increases after Enhanced.
+    Shows that the number of uniform weight vertices increases after \verb|Enhanced|.
 \end{lemma}
 
 \begin{lemma}
