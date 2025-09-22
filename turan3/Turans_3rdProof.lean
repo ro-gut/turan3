@@ -2249,7 +2249,7 @@ lemma arg_help {W : FunToMax G} (h_con : W.w (W.argmin G) <  W.w (W.argmax G)) :
   by rw [← W.argmin_weight, ← W.argmax_weight] ; exact h_con
 
 /-- Defines `Enhanced` weight function : transfering weight from the argmax vertex `loose` to the argmin
-vertex `gain`, using the previous in Section 2 defined function `Enhance` by the amount defined `the_eps`. -/
+vertex `gain`, using the previous in Section 2 defined function `Enhance` by the amount defined `the_`. -/
 noncomputable
 def Enhanced (W : FunToMax G)
   (h_con : W.w (W.argmin G) <  W.w (W.argmax G)) :=
