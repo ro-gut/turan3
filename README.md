@@ -1,6 +1,9 @@
 # turan3
 Formalisation of (the 3rd) Turan's Theorem Proof from The Book (6th Edition)
 
+## Documentation
+ [Blueprint PDF](./home_page/blueprint.pdf)
+
 ## Theorem: 
    Let G = (V, E) be a simple graph on n vertices with no p-clique (p ≥ 2). 
    
