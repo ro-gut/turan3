@@ -402,7 +402,7 @@ lemma Improve_loose_contribution_zero (W : FunToMax G) (loose gain : α)
   simp
 
 /-- Shows that the edges not incident to gain or loose (not in `affectedEdges`)
-have the same weightw under the `Improve` function -/
+have the same weightw under the `Improve` operation -/
 lemma Improve_unchanged_edge_sum (W : FunToMax G) (loose gain : α)
   (h_neq : gain ≠ loose) (h_adj : ¬ G.Adj gain loose) :
   let affectedEdges :=
@@ -1131,7 +1131,7 @@ lemma supported_edge_partition (W : FunToMax G) (loose gain : α) (h_adj : G.Adj
     | inr h =>
       exact h.1
 
-/-- Shows that the total edge value obtained by summing vp W.w e over the whole edge set is the
+/-- Helper lemma: Shows that the total edge value obtained by summing vp W.w e over the whole edge set is the
 same as the sum taken only over the supported edges, (those in supEdgeFinset).  -/
 lemma sum_over_support (W : FunToMax G):
   ∑ e∈G.edgeFinset, vp W.w e = ∑ e∈G.supEdgeFinset W, vp W.w e := by
@@ -2430,7 +2430,7 @@ lemma UniformBetter_constant_support (W : FunToMax G)
         have hv_pos : W.w v > 0 := by rcases Finset.mem_filter.1 hv with ⟨-, hv_pos⟩; exact hv_pos
         have : (UniformBetter G W hW).w v > 0 := (UniformBetter_support_equiv (G:=G) (W:=W) (hW:=hW) v).mp hv_pos
         exact this⟩))
-    · clear ohoh -- clear bug
+    · clear ohoh
       dsimp [exists_uniform_clique]
       use (Enhanced G (UniformBetter G W hW) (by rw [@FunToMax.argmin_weight, @FunToMax.argmax_weight]; exact h_con))
       let eW : FunToMax G := UniformBetter G W hW
