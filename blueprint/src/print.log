@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.5.15)  24 SEP 2025 18:01
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.5.15)  24 SEP 2025 18:27
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -614,15 +614,6 @@ LaTeX Warning: Reference `lem:Better_forms_clique' on page 5 undefined on input 
 
 LaTeX Warning: Reference `lem:Better_non_decr' on page 5 undefined on input line 422.
 
-
-LaTeX Warning: Reference `lem:Better_forms_clique' on page 5 undefined on input line 422.
-
-
-LaTeX Warning: Reference `lem:UniformBetter_fw_ge' on page 5 undefined on input line 422.
-
-
-LaTeX Warning: Reference `lem:UniformBetter_clique' on page 5 undefined on input line 422.
-
 )
 
 [5] (./print.aux)
@@ -638,10 +629,10 @@ Package rerunfilecheck Info: File `print.out' has not changed.
 (rerunfilecheck)             Checksum: 22B2F50AD11F4F20AE1832DBD3D3826E;793.
  ) 
 Here is how much of TeX's memory you used:
- 16777 strings out of 473832
- 309079 string characters out of 5729481
+ 16775 strings out of 473832
+ 309028 string characters out of 5729481
  908329 words of memory out of 5000000
- 39628 multiletter control sequences out of 15000+600000
+ 39626 multiletter control sequences out of 15000+600000
  564272 words of font info for 93 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  90i,6n,107p,599b,481s stack positions out of 10000i,1000n,20000p,200000b,200000s
